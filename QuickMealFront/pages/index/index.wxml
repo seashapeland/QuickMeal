@@ -1,0 +1,14 @@
+<!--index.wxml-->
+<navigation-bar title="Weixin" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<view class="container">
+  <view class="one">1</view>
+  <view class="one">2</view>
+  <view class="one">3</view>
+  <view class="one">4</view>
+  <view class="one">5</view>
+  <view class="one">6</view>
+  <view class="one">7</view>
+  <view class="one">8</view>
+  <view class="one">9</view>
+  <view class="one">10</view>
+</view>
