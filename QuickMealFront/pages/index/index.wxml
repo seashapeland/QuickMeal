@@ -1,14 +1,62 @@
-<!--index.wxml-->
-<navigation-bar title="Weixin" back="{{false}}" color="black" background="#FFF"></navigation-bar>
 <view class="container">
-  <view class="one">1</view>
-  <view class="one">2</view>
-  <view class="one">3</view>
-  <view class="one">4</view>
-  <view class="one">5</view>
-  <view class="one">6</view>
-  <view class="one">7</view>
-  <view class="one">8</view>
-  <view class="one">9</view>
-  <view class="one">10</view>
+  <image class="bg-img" src="/images/bg.png" mode="widthFix" />
+  <!-- 顶部导航栏 -->
+  <view class="nav-bar">
+    <image class="logo-icon" src="/icons/logo.png" mode="aspectFit" />
+    <text class="nav-title">曲辰智慧点餐</text>
+  </view>
+
+  <!-- 搜索 + 扫码 -->
+  <view class="search-scan-row">
+    <view class="search-box">
+      <icon type="search" size="18" />
+      <input placeholder="搜索" />
+    </view>
+    <view class="scan-icon">
+      <image src="/icons/scan.png" class="scan-img" />
+    </view>
+  </view>
+
+  <view class="menu-section">
+    <!-- 分类选择 -->
+    <view class="tab-bar">
+      <view 
+        class="tab {{ activeCategoryIndex === index ? 'selected' : '' }}" 
+        wx:for="{{ categories }}" 
+        wx:key="index" 
+        bindtap="onTabChange" 
+        data-index="{{ index }}"
+      >
+        {{ item.name }}
+      </view>
+    </view>
+
+    <!-- 菜品展示 -->
+    <scroll-view
+      class="dish-list"
+      scroll-y="true"
+      refresher-enabled="true"
+      refresher-triggered="{{isRefreshing}}"
+      bindrefresherpulling="onPulling"
+      bindrefresherrefresh="onRefresh"
+      bindrefresherrestore="onRestore"
+      bindrefresherabort="onAbort"
+    >
+        <view class="dish-item" wx:for="{{ categories[activeCategoryIndex].dishes }}" wx:key="index">
+          <image class="dish-img" src="{{ item.img }}" mode="aspectFill" />
+          <view class="dish-info">
+            <text class="dish-name">{{ item.name }}</text>
+            <view class="price-line">
+              <text class="dish-price">¥{{ item.price }}</text>
+              <text wx:if="{{item.originalPrice}}" class="original-price">¥{{ item.originalPrice }}</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+
+  </view>
+
+
+  
+
 </view>

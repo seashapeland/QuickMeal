@@ -1,21 +1,159 @@
-/**index.wxss**/
-page {
-  height: 100vh;
-}
-
 .container {
-  display: flex;  
-  flex-direction: column;          
-  flex-wrap: wrap;          
-  height: 300rpx;
-  margin: 20rpx;
+  position: relative;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  border: 2rpx solid rgb(27, 101, 126);
+}
+.bg-img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: -1;           /* 背景图置底 */
 }
 
-.one {
-  width: 100rpx;               
-  height: 100rpx;            
-  background-color: lightblue;
-  margin: 10px;             
+.nav-bar {
+  display: flex;
+  align-items: center;
+  padding: 80rpx 20rpx 20rpx;
 }
+
+.logo-icon {
+  width: 50rpx;
+  height: 50rpx;
+  margin-right: 20rpx;
+}
+
+.nav-title {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.search-scan-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10rpx 20rpx;
+}
+
+.search-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 10rpx 20rpx;
+  border-radius: 999rpx; /* 左右半圆，胶囊效果 */
+  border: 2rpx solid #e0e0e0;
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.05);
+}
+
+.search-box input {
+  margin-left: 10rpx;
+  flex: 1;
+}
+
+.scan-icon {
+  width: 60rpx;
+  height: 60rpx;
+  margin-left: 20rpx;
+  background-color: #e6f5ec;         /* 淡绿色背景 */
+  border-radius: 12rpx;              /* 圆角边框 */
+  border: 3rpx solid #00b386;        /* 绿色边框 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.1); /* 轻微阴影美化 */
+}
+
+.scan-img {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.menu-section {
+  height: 1500rpx;
+  background-color: rgb(248, 248, 248);         /* 淡灰背景 */
+  border-top-left-radius: 20rpx;     /* 左上圆角 */
+  border-top-right-radius: 20rpx;    /* 右上圆角 */
+  margin-top: 20rpx;
+ 
+}
+
+.tab-bar {
+  display: flex;
+  padding: 16rpx 20rpx;   /* 上下加宽一点更舒适 */
+  background-color: transparent;
+}
+
+.tab {
+  margin-right: 36rpx;
+  font-size: 32rpx;        /* 字体调大 */
+  color: #666;
+  padding-bottom: 6rpx;    /* 保证底部线不挤 */
+  transition: all 0.2s ease;
+}
+
+.tab.selected {
+  font-weight: 600;                        /* 中等加粗 */
+  color: #000000;                          /* 更鲜明的主题色 */
+  border-bottom: 6rpx solid #00b386;       /* 更粗显眼 */
+}
+
+.dish-list {
+  flex: 1;
+  width: 100%;
+  height: calc(100vh - 350rpx);
+  overflow: scroll;
+  margin-top: -10rpx;
+}
+
+/* 每道菜封装成卡片样式 */
+.dish-item {
+  margin: 20rpx; /* 替代 gap 效果 */
+  display: flex;
+  padding: 20rpx;
+  border-radius: 16rpx;
+  background-color: #ffffff;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s;
+}
+
+.dish-img {
+  width: 180rpx;
+  height: 130rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.08);
+}
+
+.dish-info {
+  flex: 1;
+  margin-left: 24rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.dish-name {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.dish-price {
+  color: #e64545;
+  font-size: 30rpx;
+  font-weight: bold;
+}
+
+.price-line {
+  display: flex;
+  align-items: baseline;
+  gap: 12rpx;
+}
+
+.original-price {
+  color: #999;
+  font-size: 24rpx;
+  text-decoration: line-through;
+}
+
+

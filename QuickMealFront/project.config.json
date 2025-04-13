@@ -1,11 +1,5 @@
 {
-  "appid": "wx8eb6cb1ec79222d7",
   "compileType": "miniprogram",
-  "libVersion": "3.8.0",
-  "packOptions": {
-    "ignore": [],
-    "include": []
-  },
   "setting": {
     "coverView": true,
     "es6": true,
@@ -19,12 +13,20 @@
       "disablePlugins": [],
       "outputPath": ""
     },
-    "packNpmManually": true
+    "packNpmManually": true,
+    "packNpmRelationList": [],
+    "ignoreUploadUnusedFiles": true
   },
   "condition": {},
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
   },
+  "libVersion": "3.8.0",
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "appid": "wx8eb6cb1ec79222d7",
   "projectArchitecture": "miniProgram"
 }
