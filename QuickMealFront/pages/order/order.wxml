@@ -1,2 +1,49 @@
 <!--pages/order/order.wxml-->
-<text>pages/order/order.wxml</text>
+<view class="orders-page">
+  <view class="header">订单</view>
+
+  <view class="tabs">
+    <view class="tab" wx:for="{{ tabs }}" wx:key="index" data-index="{{ index }}" bindtap="switchTab">
+      <view class="tab-text {{ currentTab === index ? 'active' : '' }}">{{ item }}</view>
+      <view wx:if="{{ currentTab === index }}" class="tab-indicator"></view>
+    </view>
+  </view>
+
+  <scroll-view
+    scroll-y
+    class="order-list"
+    refresher-enabled="true"
+    refresher-triggered="{{isRefreshing}}"
+    bindrefresherrefresh="onRefresh"
+    bindrefresherpulling="onPulling"
+    bindrefresherabort="onAbort"
+    bindrefresherrestore="onRestore"
+  >
+    <block wx:for="{{ filteredOrders }}" wx:key="id">
+      <view class="order-card" bindtap="goToDetail" data-id="{{ item.id }}">
+        <view class="order-info-top">
+          <text class="order-id">订单号：{{ item.id }}</text>
+          <text class="order-time">{{ item.time }}</text>
+        </view>
+
+        <view class="order-summary">
+          <view class="order-label">桌号：<text class="order-table">{{ item.table }}</text></view>
+          <view class="order-label">状态：<text class="order-status">{{ item.status }}</text></view>
+        </view>
+
+        <view class="order-bottom">
+          <text class="order-total">共计：¥{{ item.total }}</text>
+          <text class="order-arrow">查看详情 ></text>
+        </view>
+      </view>
+    </block>
+    <!-- 空状态 -->
+    <view wx:if="{{ filteredOrders.length === 0 }}" class="empty">
+      <image src="/icons/empty-order.png" class="empty-img" mode="widthFix" />
+      <text class="empty-text">暂无订单</text>
+    </view>
+  </scroll-view>
+
+  
+
+</view>

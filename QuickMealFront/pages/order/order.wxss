@@ -1,1 +1,142 @@
 /* pages/order/order.wxss */
+.orders-page {
+  background-color: #f8f8f8;
+  min-height: 100vh;
+  font-family: sans-serif;
+  background-color: #00b386; /* 主色调绿色 */
+}
+
+/* 绿色顶部栏 */
+.header {
+  font-size: 34rpx;
+  font-weight: bold;
+  text-align: center;
+  padding-top: 100rpx;
+  padding-bottom: 20rpx;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* 标签栏 */
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  background-color: #ffffff;
+  border-bottom: 1rpx solid #e0e0e0;
+}
+
+/* 单个标签 */
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx 0;
+}
+
+/* 标签文字 */
+.tab-text {
+  font-size: 30rpx;
+  color: #666;
+  transition: color 0.2s;
+}
+
+/* 激活状态 */
+.tab-text.active {
+  color: #00b386;
+  font-weight: 600;
+}
+
+/* 下划线指示器 */
+.tab-indicator {
+  width: 40rpx;
+  height: 8rpx;
+  background-color: #00b386;
+  border-radius: 10rpx;
+  margin-top: 8rpx;
+}
+
+
+
+.order-list {
+  background-color: rgb(238, 238, 238);
+  height: calc(100vh - 250rpx);
+}
+
+.order-card {
+  background-color: #ffffff;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.05);
+  padding: 24rpx;
+  margin: 24rpx;
+}
+
+.order-info-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 26rpx;
+  color: #888;
+  margin-bottom: 12rpx;
+}
+
+.order-summary {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.order-label {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.order-status {
+  color: #00b386;
+  font-weight: 600;
+}
+
+.order-table {
+  color: #444;
+  font-weight: bold;
+}
+
+.order-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-total {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #e64545;
+}
+
+.order-arrow {
+  font-size: 26rpx;
+  color: #999;
+}
+
+/* 空状态 */
+.empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  text-align: center;
+  color: #999;
+}
+
+.empty-img {
+  width: 220rpx;
+  height: auto;
+  margin-bottom: 24rpx;
+  opacity: 0.9;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: rgb(98, 169, 102);
+}

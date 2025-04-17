@@ -1,0 +1,278 @@
+/* pages/food/food.wxss */
+.food-page {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    #e1f9e6 0%,
+    #d0f0dd 50%,
+    #c2ebd4 100%
+  );
+}
+
+
+/* 顶部导航区域 */
+.food-header {
+  display: flex;
+  flex-direction: column; /* 改为竖排 */
+  margin-bottom: 30rpx;
+}
+
+/* 返回按钮单独一行左对齐 */
+.back-icon {
+  width: 50rpx;
+  height: 50rpx;
+  margin-left: 30rpx;
+  margin-top: 80rpx;
+}
+
+
+
+/* 整体卡片样式 */
+.table-card {
+  margin: 40rpx 128rpx 0;
+  padding: 20rpx;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+
+  /* 玻璃感模拟背景 */
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.6),
+    rgba(255, 255, 255, 0.3)
+  );
+
+  /* 边框与阴影增强立体感 */
+  border: 1rpx solid rgba(0, 129, 50, 0.3);
+  box-shadow: 0 6rpx 18rpx rgba(0, 0, 0, 0.06);
+}
+
+/* 左侧图标占位符 */
+.table-icon {
+  width: 80rpx;
+  height: 80rpx;
+  background-color: #f0f0f0;
+  border-radius: 16rpx;
+  margin-right: 24rpx;
+}
+
+/* 右侧文字 */
+.table-info {
+  display: flex;
+  align-items: baseline;
+}
+
+.table-circle-number {
+  width: 48rpx;
+  height: 48rpx;
+  line-height: 48rpx;
+  text-align: center;
+  font-size: 38rpx;
+  font-weight: bold;
+  color: #00b386;
+  border: 2rpx solid #00b386;
+  border-radius: 50%;
+  margin-right: 10rpx;
+}
+
+
+.table-text {
+  font-size: 38rpx;
+  color: #00b386;
+}
+
+
+.food-select {
+  height: 100vh;
+  flex: 1;
+  margin: 20rpx 20rpx 0rpx;
+  background-color: #ffffff;
+  border-top-left-radius: 24rpx;
+  border-top-right-radius: 24rpx;
+}
+
+.top-color {
+  height: 20rpx;
+  background-color: rgb(64, 152, 100);
+  border-top-left-radius: 24rpx;
+  border-top-right-radius: 24rpx;
+}
+
+/* 容器：左右两栏 */
+.dish-container {
+  display: flex;
+  height: 100%;
+}
+
+/* 左边分类栏 */
+.category-scroll {
+  width: 200rpx;
+  height: calc(100vh - 300rpx);
+  background-color: #f5f5f5;
+}
+
+.category-item {
+  padding: 24rpx 0;
+  text-align: center;
+  font-size: 28rpx;
+  color: #666;
+  background-color: transparent;
+}
+
+.category-item.active {
+  font-weight: bold;
+  color: #00b386;
+  background-color: #ffffff;
+  border-left: 6rpx solid #00b386;
+}
+
+/* 右侧菜品滚动区 */
+.dish-scroll {
+  flex: 1;
+  padding: 0rpx;
+  height: calc(100vh - 370rpx);
+  background-color: #ffffff;
+}
+
+/* 菜品卡片 */
+.dish-card {
+  display: flex;
+  margin: 24rpx;
+  background-color: #fff;
+  border-radius: 16rpx;
+  border: 2rpx solid green;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+  padding: 20rpx;
+}
+
+.dish-img {
+  width: 160rpx;
+  height: 120rpx;
+  border-radius: 12rpx;
+  margin-right: 20rpx;
+}
+
+.dish-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.dish-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.dish-price-line {
+  display: flex;
+  align-items: baseline;
+}
+
+.dish-price {
+  font-size: 28rpx;
+  color: #e64545;
+  font-weight: bold;
+}
+
+.dish-original {
+  font-size: 24rpx;
+  color: #999;
+  text-decoration: line-through;
+}
+
+/* 结算部分*/
+.checkout-bar {
+  position: fixed;
+  bottom: 40rpx; /* 离底部一些距离 */
+  left: 0;
+  right: 0; /* 配合 margin 居中 */
+  width: 85%; /* 或 600rpx 等固定宽度 */
+  margin: 0 auto;
+  height: 100rpx;
+
+  background: linear-gradient(to right, #e0f6ed, #c2ebd4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24rpx;
+
+  z-index: 999;
+  border-radius: 50rpx;
+  box-shadow: 0 8rpx 18rpx rgba(0, 0, 0, 0.08);
+}
+
+
+/* 购物车图标 */
+.cart-icon-wrapper {
+  position: relative;
+  margin-left: 20rpx;
+}
+
+.cart-icon {
+  width: 64rpx;
+  height: 64rpx;
+}
+
+.badge {
+  position: absolute;
+  top: -8rpx;
+  right: -10rpx;
+  background-color: red;
+  color: white;
+  font-size: 20rpx;
+  padding: 2rpx 8rpx;
+  border-radius: 999rpx;
+}
+
+/* 总价样式 */
+.price-info {
+  flex: 1;
+  margin-left: 32rpx;
+}
+
+.total-price {
+  font-size: 56rpx;
+  font-weight: bold;
+  color: rgb(37, 37, 37);
+}
+
+/* 去结算按钮 */
+.checkout-btn {
+  background-color: #00b386; /* 主按钮绿色 */
+  color: white;
+  font-size: 30rpx;
+  font-weight: 600;
+  padding: 14rpx 36rpx;
+  border-radius: 999rpx;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 背景遮罩层 */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 997;
+}
+
+/* 弹出的已选商品面板 */
+.cart-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 700rpx; /* 你可以后续调整 */
+  background-color: #fff;
+  z-index: 998;
+  border-top-left-radius: 32rpx;
+  border-top-right-radius: 32rpx;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.1);
+}

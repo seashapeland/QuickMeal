@@ -1,0 +1,70 @@
+<!--pages/food/food.wxml-->
+<view class="food-page">
+
+  <!-- 顶部导航 -->
+  <view class="food-header">
+    <!-- 第一行：返回按钮 -->
+    <image class="back-icon" src="/icons/return.png" mode="aspectFit" bindtap="goBack" />
+  </view>
+  <view class="table-card">
+    <image class="table-icon" src="/icons/logo.png" mode="aspectFit" />
+    <view class="table-info">
+      <view class="table-circle-number">{{ tableNumber }}</view>
+      <text class="table-text">号桌</text>
+    </view>
+  </view>
+  <view class="food-select">
+    <view class="top-color"></view>
+    <view class="dish-container">
+      <!-- 左侧分类栏 -->
+      <scroll-view class="category-scroll" scroll-y="true" show-scrollbar="false">
+        <view
+          class="category-item {{ activeCategoryIndex === index ? 'active' : '' }}"
+          wx:for="{{ categories }}"
+          wx:key="index"
+          bindtap="onCategoryTap"
+          data-index="{{ index }}"
+        >
+          {{ item.name }}
+        </view>
+      </scroll-view>
+
+      <!-- 右侧菜品展示区 -->
+      <scroll-view class="dish-scroll" scroll-y="true" show-scrollbar="false">
+        <block wx:for="{{ categories[activeCategoryIndex].dishes }}" wx:key="index">
+          <view class="dish-card">
+            <image class="dish-img" src="{{ item.img }}" mode="aspectFill" />
+            <view class="dish-info">
+              <view class="dish-name">{{ item.name }}</view>
+              <view class="dish-price-line">
+                <text class="dish-price">¥{{ item.price }}</text>
+                <text wx:if="{{ item.originalPrice }}" class="dish-original">¥{{ item.originalPrice }}</text>
+              </view>
+            </view>
+          </view>
+        </block>
+      </scroll-view>
+    </view>
+  </view>
+
+  <view class="checkout-bar" catchtap="toggleCartPanel">
+    <view class="cart-icon-wrapper">
+      <image src="/icons/cart.png" class="cart-icon" />
+      <view class="badge" wx:if="{{ cartCount > 0 }}">{{ cartCount }}</view>
+    </view>
+
+    <view class="price-info">
+      <text class="total-price">¥{{ totalPrice }}</text>
+    </view>
+
+    <view class="checkout-btn" bindtap="goCheckout">去结算</view>
+  </view>
+
+  <!-- 遮罩层 -->
+  <view wx:if="{{ showCartPanel }}" class="overlay" catchtap="toggleCartPanel"></view>
+
+  <!-- 购物车弹出层 -->
+  <view wx:if="{{ showCartPanel }}" class="cart-panel">
+    <!-- 先只放一个白色占位 -->
+  </view>
+</view>

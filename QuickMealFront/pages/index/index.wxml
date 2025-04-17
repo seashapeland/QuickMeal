@@ -8,12 +8,15 @@
 
   <!-- 搜索 + 扫码 -->
   <view class="search-scan-row">
-    <view class="search-box">
-      <icon type="search" size="18" />
-      <input placeholder="搜索" />
+    <view class="search-box" bindtap="goToSearch">
+      <icon type="search" size="18" color="#999" />
+      <text class="placeholder">搜索</text>
     </view>
-    <view class="scan-icon">
-      <image src="/icons/scan.png" class="scan-img" />
+    <view class="scan-wrapper" bindtap="onScan">
+      <view class="scan-icon">
+        <image src="/icons/scan.png" class="scan-img" />
+      </view>
+      <text class="scan-text">扫码点餐</text>
     </view>
   </view>
 
@@ -42,7 +45,14 @@
       bindrefresherrestore="onRestore"
       bindrefresherabort="onAbort"
     >
-        <view class="dish-item" wx:for="{{ categories[activeCategoryIndex].dishes }}" wx:key="index">
+      <view class="dish-grid">
+        <view
+          class="dish-item"
+          wx:for="{{ categories[activeCategoryIndex].dishes }}"
+          wx:key="index"
+          bindtap="goToDishDetail"
+          data-index="{{ index }}"
+        >
           <image class="dish-img" src="{{ item.img }}" mode="aspectFill" />
           <view class="dish-info">
             <text class="dish-name">{{ item.name }}</text>
@@ -52,7 +62,9 @@
             </view>
           </view>
         </view>
-      </scroll-view>
+      </view>
+    </scroll-view>
+
 
   </view>
 

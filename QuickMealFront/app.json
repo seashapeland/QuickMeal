@@ -2,7 +2,13 @@
   "pages": [
     "pages/index/index",
     "pages/order/order",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "pages/search/search",
+    "pages/searchResult/searchResult",
+    "pages/dishDetail/dishDetail",
+    "pages/food/food",
+    "pages/checkout/checkout",
+    "pages/orderDetail/orderDetail"
   ],
   "window": {
     "navigationBarTextStyle": "black",

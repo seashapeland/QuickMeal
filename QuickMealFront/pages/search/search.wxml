@@ -1,0 +1,43 @@
+<view class="search-page">
+  <image class="bg-img" src="/images/bg.png" mode="widthFix" />
+  <!-- 顶部导航 -->
+  <view class="search-header">
+    <!-- 第一行：返回按钮 -->
+    <image class="back-icon" src="/icons/return.png" mode="aspectFit" bindtap="goBack" />
+
+    <!-- 第二行：搜索框 + 按钮 -->
+    <view class="search-box">
+      <icon type="search" size="18" color="#999" />
+      <input
+        class="search-input"
+        placeholder="请输入关键词"
+        confirm-type="search"
+        bindconfirm="onSearchConfirm"
+        bindinput="onInput"
+        value="{{keyword}}"
+      />
+      <text class="search-btn" bindtap="onSearchConfirm">搜索</text>
+    </view>
+  </view>
+
+  <!-- 历史搜索 -->
+  <view class="history-section">
+    <view class="section-header">
+      <text class="section-title">历史搜索</text>
+      <image class="delete-icon" src="/icons/delete.png" bindtap="clearHistory" />
+    </view>
+
+    <view class="history-tags">
+      <view
+        class="history-tag"
+        wx:for="{{historyList}}"
+        wx:key="index"
+        bindtap="onTagTap"
+        data-keyword="{{item}}"
+      >
+        {{ item }}
+      </view>
+    </view>
+  </view>
+
+</view>

@@ -41,6 +41,39 @@ Page({
     ]
   },
 
+  onLoad() {
+    this.loadDishes();
+  },
+
+  goToSearch() {
+    wx.navigateTo({
+      url: '/pages/search/search', // 你的搜索页面路径
+    })
+  },
+
+  onScan() {
+    wx.navigateTo({ url: '/pages/food/food'});
+    /*wx.scanCode({
+      onlyFromCamera: true, // 仅允许从相机扫码（更真实业务场景）
+      success(res) {
+        console.log('扫码结果:', res.result);
+  
+        // 你可以根据扫码结果跳转页面，比如：
+        // wx.navigateTo({ url: '/pages/orderPage/orderPage?table=' + res.result });
+  
+        wx.showToast({
+          title: '扫码成功',
+          icon: 'success'
+        });
+      },
+      fail(err) {
+        console.log('扫码失败', err);
+
+      }
+    });*/
+  },
+  
+
   onTabChange(e) {
     this.setData({
       activeCategoryIndex: e.currentTarget.dataset.index
@@ -76,5 +109,19 @@ Page({
   loadDishes() {
     // 假设你重新加载菜品分类数据
     // this.setData({ categories: newData })
+  },
+
+  goToDishDetail(e) {
+    const index = e.currentTarget.dataset.index;
+    const dish = this.data.categories[this.data.activeCategoryIndex].dishes[index];
+  
+    // 推荐使用 encodeURIComponent 将数据转成 JSON 字符串传参
+    const dishStr = encodeURIComponent(JSON.stringify(dish));
+    console.log('发送菜品信息：', dish);
+    wx.navigateTo({
+      url: `/pages/dishDetail/dishDetail?dish=${dishStr}`
+    });
   }
+  
+
 });

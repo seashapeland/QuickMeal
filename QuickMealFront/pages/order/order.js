@@ -1,66 +1,91 @@
 // pages/order/order.js
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    currentTab: 0,
+    tabs: ['全部', '待支付', '已完成', '退款'],
+    orders: [
+      { id: '001', time: '2024-04-16 14:22', table: '1号桌', status: '已完成', total: 56.00 },
+      { id: '002', time: '2024-04-17 10:12', table: '3号桌', status: '待支付', total: 88.00 },
+      { id: '003', time: '2024-04-18 18:09', table: '2号桌', status: '已完成', total: 42.00 },
+      { id: '004', time: '2024-04-18 18:09', table: '2号桌', status: '已完成', total: 42.00 },
+      { id: '005', time: '2024-04-18 18:09', table: '2号桌', status: '已完成', total: 42.00 },
+      { id: '006', time: '2024-04-18 18:09', table: '2号桌', status: '已完成', total: 42.00 },
+      { id: '007', time: '2024-04-18 18:09', table: '2号桌', status: '已完成', total: 42.00 },
+      { id: '008', time: '2024-04-18 18:09', table: '2号桌', status: '已完成', total: 42.00 },
+    ],
+    filteredOrders: [], // 显示的订单列表
+    isRefreshing: false
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
+  onLoad() {
+    this.updateFilteredOrders(); // 页面加载时初始化
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
   onShow() {
-
+    this.setData({
+      currentTab: 0
+    });
+    console.log("Tab" + this.data.currentTab);
+    this.updateFilteredOrders();
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
+  switchTab(e) {
+    const index = e.currentTarget.dataset.index;
+    this.setData({
+      currentTab: index
+    }, () => {
+      this.updateFilteredOrders(); // 切换 tab 后更新列表
+    });
   },
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
+  updateFilteredOrders() {
+    const statusMap = ['全部', '待支付', '已完成', '退款'];
+    const current = statusMap[this.data.currentTab];
 
+    if (current === '全部') {
+      this.setData({
+        filteredOrders: this.data.orders
+      });
+    } else {
+      const filtered = this.data.orders.filter(o => o.status === current);
+      this.setData({
+        filteredOrders: filtered
+      });
+    }
   },
 
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
+  // ✅ 下拉刷新触发时
+  onRefresh() {
+    console.log("触发下拉刷新");
 
+    this.setData({ isRefreshing: true });
+
+    // 模拟请求
+    setTimeout(() => {
+      this.updateFilteredOrders(); // 刷新数据
+      this.setData({ isRefreshing: false }); // 停止刷新
+    }, 1000);
   },
 
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
+  onPulling(e) {
+    // 可选：下拉过程中触发
+    // console.log('下拉中：', e.detail);
   },
 
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
+  onAbort() {
+    // 用户中断下拉
+    this.setData({ isRefreshing: false });
+  },
 
+  onRestore() {
+    // 可选：恢复原状
+  },
+
+
+  goToDetail(e) {
+    const id = e.currentTarget.dataset.id;
+    wx.navigateTo({
+      url: `/pages/orderDetail/orderDetail?id=${id}`
+    });
   }
-})
+});
