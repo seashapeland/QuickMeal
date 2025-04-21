@@ -1,0 +1,7 @@
+/* 强制清除默认边距并隐藏滚动 */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  
