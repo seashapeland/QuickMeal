@@ -5,6 +5,8 @@ import OrderManagement from '@/views/OrderManagement.vue'
 import FoodManagement from '@/views/FoodManagement.vue'
 import UserManagement from '@/views/UserManagement.vue'
 import DataStatistics from '@/views/DataStatistics.vue'
+import StoreManagement from '@/views/StoreManagement.vue'
+import SuperManagement from '@/views/SuperManagement.vue'
 
 const routes = [
   { path: '/', name: 'Login', component: Login },
@@ -12,11 +14,13 @@ const routes = [
     name: 'Dashboard', 
     component: Dashboard, 
     children: [ 
-    { path: '', redirect: 'order-management' },
+    { path: '', redirect: 'store-management'},
+    { path: '/store-management', name: 'StoreManagement', component: StoreManagement },
     { path: '/order-management', name: 'OrderManagement', component: OrderManagement },
     { path: '/food-management', name: 'FoodManagement', component: FoodManagement },
     { path: '/user-management', name: 'UserManagement', component: UserManagement },
     { path: '/data-statistics', name: 'DataStatistics', component: DataStatistics },
+    { path: '/super-management', name: 'SuperManagement', component: SuperManagement },
   ]},
 ]
 

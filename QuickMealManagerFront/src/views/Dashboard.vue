@@ -13,6 +13,12 @@
       <!-- Sidebar Menu -->
       <div class="sidebar">
         <ul>
+            <router-link to="/store-management" class="menu-link" exact-active-class="active">
+                <li class="menu-item">
+                    <img src="@/assets/store.png" alt="门店经营" class="menu-icon" />
+                    <p class="menu-text">门店经营</p>
+                </li>
+            </router-link>
             <router-link to="/order-management" class="menu-link" exact-active-class="active">
                 <li class="menu-item">
                     <img src="@/assets/dingdan.png" alt="订单管理" class="menu-icon" />
@@ -35,6 +41,12 @@
                 <li class="menu-item">
                     <img src="@/assets/data.png" alt="数据统计" class="menu-icon" />
                     <p class="menu-text">数据统计</p>
+                </li>
+            </router-link>
+            <router-link to="/super-management" class="menu-link" exact-active-class="active">
+                <li class="menu-item">
+                    <img src="@/assets/storeM.png" alt="门店管理" class="menu-icon" />
+                    <p class="menu-text">门店管理</p>
                 </li>
             </router-link>
         </ul>
