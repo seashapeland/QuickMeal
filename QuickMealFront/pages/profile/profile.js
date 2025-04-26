@@ -1,66 +1,75 @@
 // pages/profile/profile.js
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    user: {
+      name: '曲辰',
+      phone: '138****5678',
+      avatarUrl: '/images/avatar.jpg'
+    },
+    functions: [
+      { icon: '/images/order.png', name: '我的订单' },
+      { icon: '/images/favorite.png', name: '我的收藏' },
+      { icon: '/images/coupon.png', name: '优惠券' },
+      { icon: '/images/feedback.png', name: '投诉与建议' }
+    ],
+    services: [
+      { icon: '/images/account.png', name: '账号管理' },
+      { icon: '/images/question.png', name: '常见问题' },
+      { icon: '/images/privacy.png', name: '隐私政策' }
+    ]
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
+  onLoad: function () {
+    // 这里可以添加一些初始化数据
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+  // 跳转到“我的订单”
+  goToOrder: function () {
+    console.log("跳转到我的订单页面");
+    wx.switchTab({
+      url: '/pages/order/order',
+    });
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
+  // 跳转到“我的收藏”
+  goToFavorite: function () {
+    wx.navigateTo({
+      url: '/pages/favorite/favorite',  // 确保路径正确
+    });
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
+  // 跳转到“优惠券”
+  goToCoupon: function () {
+    wx.navigateTo({
+      url: '/pages/coupon/coupon',  // 确保路径正确
+    });
   },
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
+  // 跳转到“投诉与建议”
+  goToFeedback: function () {
+    wx.navigateTo({
+      url: '/pages/feedback/feedback',  // 确保路径正确
+    });
   },
 
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
+  // 跳转到“账号管理”
+  goToAccount: function () {
+    wx.navigateTo({
+      url: '/pages/account/account',  // 确保路径正确
+    });
   },
 
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
+  // 跳转到“常见问题”
+  goToQuestion: function () {
+    wx.navigateTo({
+      url: '/pages/question/question',  // 确保路径正确
+    });
   },
 
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  // 跳转到“隐私政策”
+  goToPrivacy: function () {
+    wx.navigateTo({
+      url: '/pages/privacy/privacy',  // 确保路径正确
+    });
   }
-})
+});

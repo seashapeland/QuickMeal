@@ -33,7 +33,7 @@
     width?: number
     /** 自定义高度（竖放时高，宽度自动）；可选 */
     height?: number
-    theme?: 'green' | 'blue' | 'yellow' | 'orange' | 'red' | 'black'
+    theme?: 'green' | 'blue' | 'yellow' | 'orange' | 'red' | 'black' | 'deepblue'
   }>()
   
   /* 颜色字典 */
@@ -43,9 +43,10 @@
         yellow: { bg:'#fff8cc', border:'#e6c200', seat:'#e6c200', text:'#795900' },
         orange: { bg:'#ffe6d3', border:'#ff944d', seat:'#ff944d', text:'#a34700' },
         red   : { bg:'#ffd8d8', border:'#ff4d4f', seat:'#ff4d4f', text:'#a8071a' },
-        black : { bg:'#d9d9d9', border:'#595959', seat:'#595959', text:'#141414' }
+        black : { bg:'#d9d9d9', border:'#595959', seat:'#595959', text:'#141414' },
+        deepblue: {bg: '#cce0ff', border: '#003366', seat: '#003366', text: '#001d3d'}
     }
-
+  
   /* ====== 计算属性 ====== */
   const seatCount = computed(() => props.size)
   const theme = computed(() => THEMES[props.theme ?? 'green'])
