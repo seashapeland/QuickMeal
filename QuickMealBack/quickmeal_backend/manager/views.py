@@ -49,20 +49,20 @@ class AdminLoginView(APIView):
         password = request.data.get('password')
 
         if not username or not password:
-            return Response({'detail': '用户名和密码不能为空'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': '用户名和密码不能为空'}, status=status.HTTP_200_OK)
 
         try:
             admin = AdminInfo.objects.get(username=username)
         except AdminInfo.DoesNotExist:
-            return Response({'detail': '账号不存在'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'detail': '账号不存在'}, status=status.HTTP_200_OK)
 
         password_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
 
         if admin.password_hash != password_hash:
-            return Response({'detail': '密码错误'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': '密码错误'}, status=status.HTTP_200_OK)
 
         if not admin.status:
-            return Response({'detail': '账户已被禁用'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'detail': '账户已被禁用'}, status=status.HTTP_200_OK)
 
         # 更新最后登录时间
         admin.last_login_time = timezone.now()
@@ -104,10 +104,10 @@ class CreateAdminView(APIView):
         password = request.data.get('password')
 
         if not username or not password:
-            return Response({'detail': '用户名和密码不能为空'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': '用户名和密码不能为空'}, status=status.HTTP_200_OK)
 
         if AdminInfo.objects.filter(username=username).exists():
-            return Response({'detail': '用户名已存在'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': '用户名已存在'}, status=status.HTTP_200_OK)
 
         password_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
 
@@ -145,3 +145,102 @@ class AdminListView(APIView):
             'message': '普通管理员列表获取成功',
             'data': serializer.data
         }, status=status.HTTP_200_OK)
+
+class DeleteAdminView(APIView):
+    """
+    删除普通管理员（只有超级管理员有权限）
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def delete(self, request):
+        payload = decode_token(request)
+        if not payload or payload.get('role') != 'super_admin':
+            return Response({'detail': '无权限操作，只有超级管理员可以删除'}, status=status.HTTP_403_FORBIDDEN)
+
+        username = request.data.get('username')
+        if not username:
+            return Response({'detail': '用户名不能为空'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            admin = AdminInfo.objects.get(username=username)
+        except AdminInfo.DoesNotExist:
+            return Response({'detail': '管理员不存在'}, status=status.HTTP_404_NOT_FOUND)
+
+        admin.delete()  # 删除管理员
+        return Response({'message': '管理员删除成功'}, status=status.HTTP_200_OK)
+    
+class DisableAdminView(APIView):
+    """
+    禁用普通管理员（只有超级管理员有权限）
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def patch(self, request):
+        payload = decode_token(request)
+        if not payload or payload.get('role') != 'super_admin':
+            return Response({'detail': '无权限操作，只有超级管理员可以禁用管理员'}, status=status.HTTP_403_FORBIDDEN)
+
+        username = request.data.get('username')
+        if not username:
+            return Response({'detail': '用户名不能为空'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            admin = AdminInfo.objects.get(username=username)
+        except AdminInfo.DoesNotExist:
+            return Response({'detail': '管理员不存在'}, status=status.HTTP_404_NOT_FOUND)
+
+        admin.status = False  # 禁用管理员
+        admin.save()
+        return Response({'message': '管理员已禁用'}, status=status.HTTP_200_OK)
+
+class RestoreAdminView(APIView):
+    """
+    恢复普通管理员（只有超级管理员有权限）
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def patch(self, request):
+        payload = decode_token(request)
+        if not payload or payload.get('role') != 'super_admin':
+            return Response({'detail': '无权限操作，只有超级管理员可以恢复管理员'}, status=status.HTTP_403_FORBIDDEN)
+
+        username = request.data.get('username')
+        if not username:
+            return Response({'detail': '用户名不能为空'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            admin = AdminInfo.objects.get(username=username)
+        except AdminInfo.DoesNotExist:
+            return Response({'detail': '管理员不存在'}, status=status.HTTP_404_NOT_FOUND)
+
+        admin.status = True  # 恢复管理员
+        admin.save()
+        return Response({'message': '管理员已恢复'}, status=status.HTTP_200_OK)
+
+class ChangePasswordView(APIView):
+    """
+    修改管理员密码（只有超级管理员有权限）
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def patch(self, request):
+        payload = decode_token(request)
+        if not payload or payload.get('role') != 'super_admin':
+            return Response({'detail': '无权限操作，只有超级管理员可以修改密码'}, status=status.HTTP_403_FORBIDDEN)
+
+        username = request.data.get('username')
+        new_password = request.data.get('new_password')
+
+        if not username or not new_password:
+            return Response({'detail': '新密码不能为空'}, status=status.HTTP_200_OK)
+
+        try:
+            admin = AdminInfo.objects.get(username=username)
+        except AdminInfo.DoesNotExist:
+            return Response({'detail': '管理员不存在'}, status=status.HTTP_404_NOT_FOUND)
+
+        password_hash = hashlib.sha256(new_password.encode('utf-8')).hexdigest()
+        admin.password_hash = password_hash
+        admin.save()
+
+        return Response({'message': '密码修改成功'}, status=status.HTTP_200_OK)

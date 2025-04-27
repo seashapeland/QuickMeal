@@ -39,7 +39,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders',
     'manager',
+    'dish',
+    
 ]
 
 #REST_FRAMEWORK = {
@@ -56,6 +59,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'corsheaders.middleware.CorsMiddleware', 
 ]
 
 ROOT_URLCONF = "quickmeal_backend.urls"
@@ -143,3 +147,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',  # 确保输出Json标准
     ),
 }
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173',  # 或你前端的端口
+]

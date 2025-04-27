@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const instance = axios.create({
-  baseURL: 'http://localhost:8000/api', // 改为你的后端地址
+  baseURL: 'http://localhost:8000/', // 改为你的后端地址
   timeout: 5000,
 })
 

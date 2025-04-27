@@ -27,7 +27,7 @@
 <script setup>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
-  import { mockLoginAdmin as loginAdmin } from '@/api/auth'
+  import { loginAdmin } from '@/api/auth'
   
   const username = ref('')
   const password = ref('')
@@ -35,15 +35,22 @@
   
   const handleLogin = async () => {
     try {
-      const res = await loginAdmin({ username: username.value, password: password.value })
-      if (res.token) {
-        localStorage.setItem('token', res.token)
-        router.push('/dashboard')
-      } else {
-        alert('登录失败：用户名或密码错误')
-      }
+        // 调用后端的登录接口
+        const res = await loginAdmin({ username: username.value, password: password.value })
+
+        // 如果后端返回token，保存到localStorage，并跳转到dashboard
+        if (res.token) {
+            localStorage.setItem('token', res.token)  // 保存token到localStorage
+            localStorage.setItem('username', res.username)
+            localStorage.setItem('role', res.role)
+            router.replace('/dashboard')  // 跳转到后台首页
+        } else {
+            // 登录失败，显示后端返回的错误信息
+            alert(`登录失败：${res.detail || '未知错误'}`)
+        }
     } catch (err) {
-      alert('登录出错')
+        // 捕获异常，显示异常信息
+        alert('登录出错')
     }
   }
 </script>

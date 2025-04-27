@@ -5,7 +5,7 @@
         <img class="logo" src="@/assets/logo.png" alt="Logo" />
         <h1>曲辰智慧点餐 · 管理后台</h1>
         <div class="user-info">
-          <span class="username">管理员</span>
+          <span class="username">{{ username }}</span>
           <button class="logout-btn" @click="logout">退出</button>
         </div>
       </div>
@@ -43,7 +43,7 @@
                     <p class="menu-text">数据统计</p>
                 </li>
             </router-link>
-            <router-link to="/super-management" class="menu-link" exact-active-class="active">
+            <router-link to="/super-management" class="menu-link" v-if="isSuperAdmin" exact-active-class="active">
                 <li class="menu-item">
                     <img src="@/assets/storeM.png" alt="门店管理" class="menu-icon" />
                     <p class="menu-text">门店管理</p>
@@ -60,13 +60,31 @@
 </template>
   
 <script setup>
-  import { ref } from 'vue'
-  import { useRouter } from 'vue-router'
+  import { ref, onMounted, computed } from 'vue'
 
-  const router = useRouter()
+  const username = ref('')
+  const role = ref('')  // 新增角色变量
+
+  // 在组件加载时获取用户名和角色
+  onMounted(() => {
+    const storedUsername = localStorage.getItem('username')
+    const storedRole = localStorage.getItem('role')  // 获取角色
+    if (storedUsername) {
+      username.value = storedUsername
+    } else {
+      username.value = '管理员'
+    }
+    if (storedRole) {
+      role.value = storedRole
+    }
+  })
+
+  const isSuperAdmin = computed(() => role.value === 'super_admin')  // 判断是否是超级管理员
   const logout = () => {
     localStorage.removeItem('token')  // 清除登录状态
-    window.location.href = '/'   // 跳转到登录页面
+    localStorage.removeItem('username')  // 清除用户名
+    localStorage.removeItem('role')  // 清除角色
+    window.location.href = '/'  // 跳转到登录页面
   }
 
     
