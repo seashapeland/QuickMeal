@@ -122,7 +122,7 @@
 </template>
 
 <script setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, watch } from 'vue';
   import { getAdminList, createAdminRequest, changePasswordRequest, disableAdmin, restoreAdmin, deleteAdmin } from '@/api/auth'
 
   const tabs = [
@@ -150,7 +150,11 @@
     }
   }
 
-
+  watch(activeTab, (newVal) => {
+    if (newVal === '管理员') {
+      fetchAdminList()
+    }
+  })
   onMounted(() => {
     fetchAdminList()  // 页面加载时获取管理员列表
   })
@@ -357,7 +361,7 @@
 }
 
 .admin-list {
-  max-height: 400px;
+  max-height: 520px;
   overflow-y: auto;
 }
 

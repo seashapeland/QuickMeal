@@ -72,7 +72,7 @@
   }
   
   .search-button:hover {
-    background-color: #4c9966;
+    opacity: 0.8;
   }
   </style>
   

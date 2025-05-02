@@ -21,3 +21,8 @@ def main():
 if __name__ == "__main__":
     main()
     # cd D:\Desktop\QuickMeal\QuickMealBack\quickmeal_backend
+    # conda activate meal
+    # python manage.py runserver
+
+    # python manage.py makemigrations dish
+    # python manage.py migrate
