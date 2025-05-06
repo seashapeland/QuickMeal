@@ -122,8 +122,8 @@ class DishListView(APIView):
                 "price": float(dish['price']),
                 "image": f"/media/{dish['image_url']}",  # 拼接图片路径
                 "status": "上架" if dish['is_available'] else "下架",
-                "createdAt": dish['created_at'][:10],  # 截取日期
-                "updatedAt": dish['updated_at'][:10]
+                "createdAt": dish['created_at'],  # 截取日期
+                "updatedAt": dish['updated_at']
             })
 
         return Response({
