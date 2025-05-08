@@ -248,7 +248,8 @@
   const tabs = [
     { key: 'overview', label: '菜品总览' },
     { key: 'publish', label: '创建菜品' },
-
+    { key: 'meal-overview', label: '套餐总览' },
+    { key: 'meal-publish', label: '创建套餐' }
   ]
 
   const activeTab = ref('overview')
