@@ -1,2 +1,22 @@
-<!--pages/login/login.wxml-->
-<text>pages/login/login.wxml</text>
+<view class="container">
+  <view class="top-content">
+    <image class="logo" src="/icons/logo..png" mode="aspectFit"></image>
+    <view class="form">
+      <view class="input-group">
+        <input class="input" placeholder="请输入账号" bindinput="onUsernameInput" />
+      </view>
+      <view class="input-group">
+        <input class="input" placeholder="请输入密码" password="true" bindinput="onPasswordInput" />
+      </view>
+      <button class="login-btn" bindtap="onLogin">登录 / 注册</button>
+      <text class="wechat-login" bindtap="onWechatLogin">微信登录</text>
+    </view>
+  </view>
+  <view class="agreement">
+    <checkbox checked="true" />
+    <text>登录即表示您已阅读并同意</text>
+    <text class="link" bindtap="goToAgreement">《用户协议》</text>
+    <text>和</text>
+    <text class="link" bindtap="goToPrivacy">《隐私政策》</text>
+  </view>
+</view>

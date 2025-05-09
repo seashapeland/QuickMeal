@@ -1,0 +1,21 @@
+<view class="page">
+  <!-- 顶部栏：返回图标 + 标题 -->
+  <view class="header">
+    <view class="back-button" bindtap="goBack">
+      <image src="/icons/back.png" class="back-icon" />
+    </view>
+    <view class="title">相关问题</view>
+  </view>
+
+  <!-- 内容区域 -->
+  <scroll-view class="content-wrapper" scroll-y="true">
+    <view class="container">
+      <block wx:for="{{faqList}}" wx:key="index">
+        <view class="faq-card">
+          <view class="faq-question">Q: {{item.question}}</view>
+          <view class="faq-answer">A: {{item.answer}}</view>
+        </view>
+      </block>
+    </view>
+  </scroll-view>
+</view>

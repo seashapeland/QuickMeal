@@ -1,4 +1,3 @@
-// pages/profile/profile.js
 Page({
   data: {
     user: {
@@ -27,7 +26,7 @@ Page({
   goToOrder: function () {
     console.log("跳转到我的订单页面");
     wx.switchTab({
-      url: '/pages/order/order',
+      url: '/pages/order/order',  // 确保路径正确
     });
   },
 

@@ -1,4 +1,3 @@
-<!--pages/profile/profile.wxml-->
 <view class="profile-container">
   <!-- 个人信息区域 -->
   <view class="user-info">
@@ -17,19 +16,19 @@
   <!-- 常用功能 -->
   <view class="function-list">
     <view class="function-item" bindtap="goToOrder">
-      <image class="icon" src="/images/order.png" />
+      <image class="icon" src="/icons/order..png" />
       <text>我的订单</text>
     </view>
     <view class="function-item" bindtap="goToFavorite">
-      <image class="icon" src="/images/favorite.png" />
+      <image class="icon" src="/icons/favorite.png" />
       <text>我的收藏</text>
     </view>
     <view class="function-item" bindtap="goToCoupon">
-      <image class="icon" src="/images/coupon.png" />
+      <image class="icon" src="/icons/coupon.png" />
       <text>优惠券</text>
     </view>
     <view class="function-item" bindtap="goToFeedback">
-      <image class="icon" src="/images/feedback.png" />
+      <image class="icon" src="/icons/feedback.png" />
       <text>投诉与建议</text>
     </view>
   </view>
@@ -42,15 +41,15 @@
   <!-- 其他服务 -->
   <view class="service-list">
     <view class="service-item" bindtap="goToAccount">
-      <image class="icon" src="/images/account.png" />
+      <image class="icon" src="/icons/account.png" />
       <text>账号管理</text>
     </view>
     <view class="service-item" bindtap="goToQuestion">
-      <image class="icon" src="/images/question.png" />
+      <image class="icon" src="/icons/question.png" />
       <text>常见问题</text>
     </view>
     <view class="service-item" bindtap="goToPrivacy">
-      <image class="icon" src="/images/privacy.png" />
+      <image class="icon" src="/icons/privacy.png" />
       <text>隐私政策</text>
     </view>
   </view>

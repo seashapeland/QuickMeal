@@ -1,0 +1,81 @@
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f8f8;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: 120rpx 20rpx 20rpx;
+  background-color: #ffffff;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 10;
+}
+
+.back-button {
+  position: absolute;
+  top: 115rpx;
+  left: 20rpx;
+  z-index: 999;
+}
+
+.back-icon {
+  width: 60rpx;
+  height: 60rpx;
+}
+
+.title {
+  width: 100%;
+  text-align: center;
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333333;
+}
+
+.content-wrapper {
+  flex: 1;
+  overflow: hidden;
+}
+
+.container {
+  padding: 30rpx 20rpx;
+}
+
+.faq-card {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.faq-question {
+  font-weight: bold;
+  font-size: 30rpx;
+  margin-bottom: 10rpx;
+  color: #333333;
+}
+
+.avatar-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.avatar-img {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+}
+
+.delete-account {
+  border: 2rpx dashed #e64340;
+}
+
+.delete-text {
+  color: #e64340;
+  text-align: center;
+}

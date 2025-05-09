@@ -1,4 +1,3 @@
-/* pages/profile/profile.wxss */
 /* 个人信息 */
 .profile-container {
   padding: 20px;
@@ -109,6 +108,9 @@
   background-color: transparent; /* 去掉背景色 */
 }
 
+.service-item:hover {
+  transform: translateY(-5px); /* 悬浮时轻微上升 */
+}
 
 .service-item .icon {
   width: 40px; /* 调整图标大小 */

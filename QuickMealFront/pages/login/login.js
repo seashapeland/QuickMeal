@@ -1,66 +1,46 @@
-// pages/login/login.js
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    username: '',
+    password: ''
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
+  onUsernameInput(e) {
+    this.setData({ username: e.detail.value });
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+  onPasswordInput(e) {
+    this.setData({ password: e.detail.value });
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
+  onLogin() {
+    const { username, password } = this.data;
+    if (!username || !password) {
+      wx.showToast({ title: '请输入账号和密码', icon: 'none' });
+      return;
+    }
+    wx.showToast({
+      title: '登录成功',
+      icon: 'success',
+      success: () => {
+        setTimeout(() => {
+          wx.switchTab({ url: '/pages/index/index' });
+        }, 1500);
+      }
+    });
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
+  goToAgreement() {
+    wx.navigateTo({
+      url: '/pages/agreement/agreement'
+    });
   },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
+  goToPrivacy() {
+    wx.navigateTo({
+      url: '/pages/privacy/privacy'
+    });
   },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  onWechatLogin(e) {
+    if (e.detail.userInfo) {
+      wx.showToast({ title: '微信登录成功', icon: 'success' });
+      wx.switchTab({ url: '/pages/index/index' });
+    } else {
+      wx.showToast({ title: '需要授权才能登录', icon: 'none' });
+    }
   }
-})
+});

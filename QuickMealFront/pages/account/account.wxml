@@ -1,0 +1,33 @@
+<view class="page">
+  <view class="header">
+    <view class="back-button" bindtap="onBack">
+      <image src="/icons/back.png" class="back-icon"></image>
+    </view>
+    <view class="title">账号管理</view>
+  </view>
+
+  <view class="content-wrapper">
+    <view class="container">
+
+      <view class="faq-card avatar-section" bindtap="onChangeAvatar">
+        <view class="faq-question">头像</view>
+        <image src="{{avatarUrl}}" class="avatar-img" mode="aspectFill"></image>
+      </view>
+
+      <view class="faq-card" bindtap="editName">
+        <view class="faq-question">昵称</view>
+        <text>{{name}}</text>
+      </view>
+
+      <view class="faq-card" bindtap="editPhone">
+        <view class="faq-question">手机号</view>
+        <text>{{phone}}</text>
+      </view>
+
+      <view class="faq-card delete-account" bindtap="onDeleteAccount">
+        <view class="faq-question delete-text">注销账号</view>
+      </view>
+
+    </view>
+  </view>
+</view>

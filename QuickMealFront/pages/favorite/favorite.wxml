@@ -1,0 +1,31 @@
+<view class="page">
+  <view class="header">
+    <view class="back-button" bindtap="goBack">
+      <image class="back-icon" src="/icons/back.png"></image>
+    </view>
+    <view class="title">我的收藏</view>
+  </view>
+
+  <scroll-view class="content-wrapper" scroll-y>
+    <view class="container">
+      <block wx:for="{{favorites}}" wx:key="id">
+        <view class="card-wrapper" 
+              catchtouchstart="handleTouchStart" 
+              catchtouchmove="handleTouchMove" 
+              catchtouchend="handleTouchEnd" 
+              data-id="{{item.id}}">
+          
+          <view class="favorite-card" style="transform: translateX({{item.offsetX}}rpx);">
+            <image class="card-image" src="{{item.image}}" mode="aspectFill"></image>
+            <view class="card-info">
+              <text class="card-title">{{item.name}}</text>
+              <text class="card-desc">{{item.desc}}</text>
+            </view>
+          </view>
+
+          <view class="delete-btn" bindtap="deleteItem" data-id="{{item.id}}">删除</view>
+        </view>
+      </block>
+    </view>
+  </scroll-view>
+</view>
