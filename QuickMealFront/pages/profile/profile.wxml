@@ -1,56 +1,75 @@
-<view class="profile-container">
-  <!-- 个人信息区域 -->
-  <view class="user-info">
-    <image class="avatar" src="/images/avatar.jpg" />
-    <view class="user-details">
-      <text class="username">曲辰</text>
-      <text class="phone">138****5678</text>
+<scroll-view 
+  scroll-y 
+  style="height: 100vh;" 
+  enhanced 
+  show-scrollbar="{{false}}"
+  bindscrolltoupper="upper"
+  bindscrolltolower="lower"
+>
+  <!-- 整体下移15rpx的容器 -->
+  <view class="content-container">
+    <!-- 用户信息（头像可点击） -->
+    <view class="user-section" style="margin-left: 5px;" bindtap="navigateToAccount">
+      <image class="avatar" src="/images/avatar.jpg"></image>
+      <view class="user-info">
+        <text class="username">曲辰</text>
+        <text class="phone">138****5678</text>
+      </view>
     </view>
-  </view>
 
-  <!-- 常用服务标题 -->
-  <view class="section-title">
-    <text>常用服务</text>
-  </view>
+    <!-- 功能列表 -->
+    <view class="section">
+      <view class="section-title">我的功能</view>
+      <view class="feature-list">
+        <navigator url="/pages/order/order"class="feature-item"
+        open-type="switchTab"hover-class="navigator-hover">
+          <image class="feature-icon my-function-icon" src="/icons/order..png"></image>
+          <text>我的订单</text>
+        </navigator>
+        <navigator url="/pages/favorite/favorite" class="feature-item">
+          <image class="feature-icon my-function-icon" src="/icons/favorite.png"></image>
+          <text>我的收藏</text>
+        </navigator>
+        <navigator url="/pages/coupon/coupon" class="feature-item">
+          <image class="feature-icon my-function-icon" src="/icons/coupon.png"></image>
+          <text>优惠券</text>
+        </navigator>
+        <navigator url="/pages/feedback/feedback" class="feature-item">
+          <image class="feature-icon my-function-icon" src="/icons/feedback.png"></image>
+          <text>投诉与建议</text>
+        </navigator>
+      </view>
+    </view>
 
-  <!-- 常用功能 -->
-  <view class="function-list">
-    <view class="function-item" bindtap="goToOrder">
-      <image class="icon" src="/icons/order..png" />
-      <text>我的订单</text>
+    <!-- 账号管理 -->
+    <view class="section">
+      <view class="section-title">其它功能</view>
+      <view class="feature-list">
+        <navigator url="/pages/question/question" class="feature-item">
+          <image class="feature-icon account-icon" src="/icons/question.png"></image>
+          <text>常见问题</text>
+        </navigator>
+        <navigator url="/pages/privacy/privacy" class="feature-item">
+          <image class="feature-icon account-icon" src="/icons/privacy.png"></image>
+          <text>隐私政策</text>
+        </navigator>
+      </view>
     </view>
-    <view class="function-item" bindtap="goToFavorite">
-      <image class="icon" src="/icons/favorite.png" />
-      <text>我的收藏</text>
-    </view>
-    <view class="function-item" bindtap="goToCoupon">
-      <image class="icon" src="/icons/coupon.png" />
-      <text>优惠券</text>
-    </view>
-    <view class="function-item" bindtap="goToFeedback">
-      <image class="icon" src="/icons/feedback.png" />
-      <text>投诉与建议</text>
-    </view>
-  </view>
 
-  <!-- 其他服务标题 -->
-  <view class="section-title">
-    <text>其他服务</text>
+    <!-- 推荐菜品 -->
+    <view class="section">
+      <view class="section-title">你可能还喜欢</view>
+      <view class="dishes-list">
+        <block wx:for="{{dishes}}" wx:key="id">
+          <navigator url="/pages/dishDetail/dishDetail?id={{item.id}}&name={{item.name}}&image={{item.image}}" class="dish-item">
+            <image class="dish-image" src="{{item.image}}"></image>
+            <text class="dish-name">{{item.name}}</text>
+          </navigator>
+        </block>
+      </view>
+    </view>
+    
+    <!-- 底部空白区域 -->
+    <view style="height: 50rpx;"></view>
   </view>
-
-  <!-- 其他服务 -->
-  <view class="service-list">
-    <view class="service-item" bindtap="goToAccount">
-      <image class="icon" src="/icons/account.png" />
-      <text>账号管理</text>
-    </view>
-    <view class="service-item" bindtap="goToQuestion">
-      <image class="icon" src="/icons/question.png" />
-      <text>常见问题</text>
-    </view>
-    <view class="service-item" bindtap="goToPrivacy">
-      <image class="icon" src="/icons/privacy.png" />
-      <text>隐私政策</text>
-    </view>
-  </view>
-</view>
+</scroll-view>

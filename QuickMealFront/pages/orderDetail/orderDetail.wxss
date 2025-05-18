@@ -1,1 +1,244 @@
 /* pages/orderDetail/orderDetail.wxss */
+.order-detail-page {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  padding-bottom: 40rpx;
+}
+
+/* 顶部导航 */
+.header {
+  font-size: 34rpx;
+  font-weight: bold;
+  text-align: center;
+  padding-top: 100rpx;
+  padding-bottom: 20rpx;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: #00b386;
+}
+
+.back-btn {
+  position: absolute;
+  left: 30rpx;
+  top: 100rpx;
+  width: 40rpx;
+  height: 40rpx;
+  z-index: 10;
+}
+
+.back-icon {
+  width: 100%;
+  height: 100%;
+  filter: brightness(0) invert(1);
+}
+
+/* 订单信息卡片 */
+.order-info-card {
+  background-color: white;
+  border-radius: 16rpx;
+  margin: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.order-status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.order-status {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.order-status.completed {
+  color: #00b386;
+}
+
+.order-status.pending {
+  color: #ff9500;
+}
+
+.order-id {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 20rpx;
+}
+
+.info-label {
+  width: 150rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.info-value {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+}
+
+/* 菜品列表卡片 */
+.dishes-card {
+  background-color: white;
+  border-radius: 16rpx;
+  margin: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.dish-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25rpx;
+}
+
+.dish-left {
+  flex: 1;
+}
+
+.dish-name {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.dish-right {
+  display: flex;
+  align-items: center;
+}
+
+.dish-quantity {
+  font-size: 26rpx;
+  color: #999;
+  margin-right: 30rpx;
+}
+
+.dish-price {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+  min-width: 100rpx;
+  text-align: right;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx dashed #ddd;
+}
+
+.total-label {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.total-amount {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #e64545;
+}
+
+/* 优化后的操作按钮 */
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin: 40rpx 20rpx 20rpx;
+  padding: 0 10rpx;
+}
+
+.action-buttons button {
+  flex: 0.48;
+  height: 100rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+  transition: all 0.3s;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 默认图标样式 */
+.btn-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 12rpx;
+}
+
+/* 支付按钮 */
+.pay-btn {
+  background: linear-gradient(135deg, #00b386, #00d4a0);
+  color: white;
+  border: none;
+}
+
+/* 支付按钮图标放大 */
+.pay-btn .btn-icon {
+  width: 60rpx;
+  height: 60rpx;
+  margin-right: 10rpx;
+}
+
+.pay-btn:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 联系按钮 */
+.contact-btn {
+  background: white;
+  color: #00b386;
+  border: 1rpx solid #00b386;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 联系按钮图标保持原大小 */
+.contact-btn .btn-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 12rpx;
+}
+
+.contact-btn:active {
+  background-color: #f8f8f8;
+}
+
+.contact-btn::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: rgba(0, 179, 134, 0.1);
+  transform: scale(0);
+  border-radius: 50%;
+  transition: transform 0.6s;
+}
+
+.contact-btn:active::after {
+  transform: scale(1);
+  opacity: 0;
+}

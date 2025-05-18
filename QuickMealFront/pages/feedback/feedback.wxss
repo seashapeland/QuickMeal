@@ -78,7 +78,7 @@
 
 .submit-btn {
   margin-top: 30rpx;
-  background: linear-gradient(to right, #3c9cff, #007aff);
+  background: linear-gradient(to right, #198b3b, #198b3b);
   color: #fff;
   text-align: center;
   padding: 24rpx 0;

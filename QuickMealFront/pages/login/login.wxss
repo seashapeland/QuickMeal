@@ -1,97 +1,179 @@
+/* 自定义导航栏 */
+.navbar {
+  display: flex;
+  align-items: center; /* 垂直居中对齐 */
+  justify-content: space-between; /* 水平两端对齐 */
+  height: 150rpx; /* 增加导航栏高度 */
+  padding: 0 30rpx;
+  position: relative;
+  background-color: #fff;
+  border-bottom: 1rpx solid #f1f1f1;
+}
+
+.navbar-home {
+  width: 44rpx;
+  height: 44rpx;
+  position: absolute; /* 绝对定位 */
+  left: 30rpx; /* 距离左侧30rpx */
+  bottom: 10rpx; /* 距离底部10rpx */
+}
+
+.navbar-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  position: absolute; /* 绝对定位 */
+  left: 50%; /* 水平居中 */
+  transform: translateX(-50%); /* 调整水平居中 */
+  bottom: 10rpx; /* 距离底部10rpx */
+}
+
+/* Logo样式 */
+.logo {
+  width: 150rpx; /* 增大Logo的宽度 */
+  height: 150rpx; /* 增大Logo的高度 */
+  display: block;
+  margin: 120rpx auto 20rpx; /* 增加上边距，使Logo下移 */
+  border-radius: 16rpx;
+}
+
+/* 主容器 */
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  padding: 20px;
-  background-color: #ffffff;
-  margin: 0;
-}
-
-.top-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  margin-top: 10vh;
+  padding: 0 40rpx 40rpx;
+  background-color: #fff;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
-.logo {
-  width: 140px;
-  height: 140px;
-  margin-bottom: 40px;
+.header {
+  text-align: center;
+  margin-bottom: 60rpx;
 }
 
-.form {
+.subtitle {
+  font-size: 48rpx; /* 增大字体大小 */
+  font-weight: bold;
+  color: #333;
+  margin-top: 20rpx;
+}
+
+.slogan {
+  display: block;
+  font-size: 28rpx;
+  color: #999;
+  margin-top: 10rpx;
+}
+
+.form-container {
   width: 100%;
-  max-width: 300px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 auto;
-  margin-left: 10px;
 }
 
 .input-group {
-  width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 40rpx;
 }
 
-.input {
+.input-group input {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 24px;
-  font-size: 15px;
-  background-color: #f9f9f9;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
-  transition: all 0.2s ease;
+  height: 90rpx;
+  border-bottom: 1rpx solid #eee;
+  font-size: 32rpx;
+  padding: 10rpx 0;
 }
+
+.password-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.forgot-password {
+  color: #07C160;
+}
+
 .login-btn {
   width: 100%;
-  padding: 13px;
-  font-size: 16px;
-  color: #fff;
-  font-weight: bold;
-  background: linear-gradient(to right, #3b7e57, #5fc69b);
-  border: none;
-  border-radius: 26px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  margin-top: 20px;
-  transition: background 0.3s;
-  align-self: center;
-  transform: translateX(17px);
-}
-.wechat-login {
-  font-size: 14px;
-  color: #1AAD19;
-  text-decoration: underline;
-  margin-top: 15px;
-  cursor: pointer;
-  align-self: center;
-  transform: translateX(16px);
-}
-.agreement {
-  width: 100%;
-  font-size: 12px;
-  color: #666;
-  text-align: center;
-  line-height: 1.6;
+  height: 90rpx;
+  background-color: #07C160;
+  color: white;
+  font-size: 32rpx;
+  border-radius: 45rpx;
+  margin-top: 20rpx;
   display: flex;
-  flex-wrap: nowrap;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+}
+
+.register-link {
+  display: flex;
+  justify-content: center;
+  margin-top: 30rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.register-text {
+  color: #07C160;
+  margin-left: 10rpx;
+}
+
+.divider {
+  position: relative;
+  margin: 60rpx 0;
+  text-align: center;
+}
+
+.divider::before {
+  content: "";
   position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  white-space: nowrap;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1rpx;
+  background-color: #eee;
+  z-index: 1;
 }
-.agreement checkbox {
-  margin-right: 5px;
+
+.divider-text {
+  position: relative;
+  display: inline-block;
+  padding: 0 20rpx;
+  background-color: #fff;
+  z-index: 2;
+  color: #999;
+  font-size: 28rpx;
 }
-.link {
-  color: #3b7e57;
-  text-decoration: underline;
-  margin: 0 2px;
+
+.other-login {
+  display: flex;
+  justify-content: center;
+  margin-top: 40rpx; /* 调整距离顶部的距离 */
+}
+
+.wechat-icon {
+  width: 80rpx; /* 放大图标宽度 */
+  height: 80rpx; /* 放大图标高度 */
+}
+
+.agreement {
+  position: fixed;
+  bottom: 40rpx;
+  font-size: 24rpx;
+  color: #999;
+  text-align: center;
+  width: 100%;
+  padding: 0 40rpx;
+  box-sizing: border-box;
+}
+
+.agreement-checkbox {
+  margin-right: 10rpx;
+}
+
+.agreement-link {
+  color: #07C160;
 }

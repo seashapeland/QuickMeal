@@ -1,74 +1,43 @@
 Page({
   data: {
-    user: {
-      name: '曲辰',
-      phone: '138****5678',
-      avatarUrl: '/images/avatar.jpg'
-    },
-    functions: [
-      { icon: '/images/order.png', name: '我的订单' },
-      { icon: '/images/favorite.png', name: '我的收藏' },
-      { icon: '/images/coupon.png', name: '优惠券' },
-      { icon: '/images/feedback.png', name: '投诉与建议' }
-    ],
-    services: [
-      { icon: '/images/account.png', name: '账号管理' },
-      { icon: '/images/question.png', name: '常见问题' },
-      { icon: '/images/privacy.png', name: '隐私政策' }
+    dishes: [
+      { id: 1, name: "红烧肉", image: "/images/food1.jpg" },
+      { id: 2, name: "清蒸鱼", image: "/images/food1.jpg" },
+      { id: 3, name: "宫保鸡丁", image: "/images/food1.jpg" },
+      { id: 4, name: "麻婆豆腐", image: "/images/food1.jpg" },
+      { id: 5, name: "糖醋排骨", image: "/images/dishes/dish5.jpg" },
+      { id: 6, name: "水煮牛肉", image: "/images/dishes/dish6.jpg" },
+      { id: 7, name: "鱼香肉丝", image: "/images/dishes/dish7.jpg" },
+      { id: 8, name: "回锅肉", image: "/images/dishes/dish8.jpg" },
+      { id: 9, name: "蒜蓉粉丝虾", image: "/images/dishes/dish9.jpg" },
+      { id: 10, name: "东坡肉", image: "/images/dishes/dish10.jpg" },
+      { id: 11, name: "辣子鸡", image: "/images/dishes/dish11.jpg" },
+      { id: 12, name: "番茄炒蛋", image: "/images/dishes/dish12.jpg" }
     ]
   },
 
-  onLoad: function () {
-    // 这里可以添加一些初始化数据
-  },
-
-  // 跳转到“我的订单”
-  goToOrder: function () {
-    console.log("跳转到我的订单页面");
-    wx.switchTab({
-      url: '/pages/order/order',  // 确保路径正确
+  // 滑动到顶部触发
+  upper: function(e) {
+    console.log("滑动到顶部");
+    wx.showToast({
+      title: '已到顶部',
+      icon: 'none'
     });
   },
 
-  // 跳转到“我的收藏”
-  goToFavorite: function () {
-    wx.navigateTo({
-      url: '/pages/favorite/favorite',  // 确保路径正确
+  // 滑动到底部触发
+  lower: function(e) {
+    console.log("滑动到底部");
+    wx.showToast({
+      title: '已到底部',
+      icon: 'none'
     });
   },
 
-  // 跳转到“优惠券”
-  goToCoupon: function () {
+  // 点击头像跳转账号管理
+  navigateToAccount: function() {
     wx.navigateTo({
-      url: '/pages/coupon/coupon',  // 确保路径正确
-    });
-  },
-
-  // 跳转到“投诉与建议”
-  goToFeedback: function () {
-    wx.navigateTo({
-      url: '/pages/feedback/feedback',  // 确保路径正确
-    });
-  },
-
-  // 跳转到“账号管理”
-  goToAccount: function () {
-    wx.navigateTo({
-      url: '/pages/account/account',  // 确保路径正确
-    });
-  },
-
-  // 跳转到“常见问题”
-  goToQuestion: function () {
-    wx.navigateTo({
-      url: '/pages/question/question',  // 确保路径正确
-    });
-  },
-
-  // 跳转到“隐私政策”
-  goToPrivacy: function () {
-    wx.navigateTo({
-      url: '/pages/privacy/privacy',  // 确保路径正确
+      url: '/pages/account/account'
     });
   }
 });
