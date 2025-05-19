@@ -1,2 +1,57 @@
-<!--pages/login/login.wxml-->
-<text>pages/login/login.wxml</text>
+<!-- 自定义导航栏 -->
+<view class="navbar">
+  <image src="/icons/home_active.png" class="navbar-home" bindtap="goToHome"></image>
+  <view class="navbar-title">登录/注册</view>
+</view>
+
+<!-- Logo -->
+<image src="/icons/logo.png" class="logo"></image>
+
+<view class="container">
+  <view class="header">
+    <!-- 删除了原来的 title 登录/注册 -->
+    <text class="subtitle">曲辰智慧点餐</text>
+    <text class="slogan">QUCHEN ZHIHUI DIANCAN</text>
+  </view>
+
+  <view class="form-container">
+    <view class="input-group">
+      <input type="text" placeholder="用户名/手机号/邮箱" bindinput="onInputUsername" />
+    </view>
+    
+    <view class="input-group">
+      <input type="password" placeholder="请输入密码" password="{{!showPassword}}" bindinput="onInputPassword" />
+      <view class="password-actions">
+        <text bindtap="togglePassword">{{showPassword ? '隐藏' : '显示'}}</text>
+        <text class="forgot-password" bindtap="onForgotPassword">忘记密码？</text>
+      </view>
+    </view>
+
+    <button class="login-btn" bindtap="onLogin">登录</button>
+
+    <view class="register-link">
+      <text>还没有账号？</text>
+      <text class="register-text" bindtap="onRegister">立即注册</text>
+    </view>
+
+    <view class="divider">
+      <text class="divider-text">其他登录方式</text>
+    </view>
+
+    <view class="other-login">
+      <image src="/icons/weixin.png" class="wechat-icon" bindtap="onWechatLogin"></image>
+    </view>
+  </view>
+
+  <view class="agreement">
+    <checkbox 
+      class="agreement-checkbox" 
+      checked="{{isAgreed}}" 
+      bindchange="onAgreeChange" 
+    />
+    <text>登录即表示您已阅读并同意</text>
+    <text class="agreement-link" bindtap="onUserAgreement">《用户协议》</text>
+    <text>和</text>
+    <text class="agreement-link" bindtap="onPrivacyPolicy">《隐私政策》</text>
+  </view>
+</view>

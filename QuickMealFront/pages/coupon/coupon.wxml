@@ -1,0 +1,42 @@
+<view class="page">
+  <view class="header">
+    <view class="back-button" bindtap="goBack">
+      <image class="back-icon" src="/icons/back.png" />
+    </view>
+    <view class="title">优惠券</view>
+  </view>
+
+  <view class="filter-bar">
+    <text wx:for="{{filterOptions}}" wx:key="value"
+          class="filter-option {{selectedFilter === item.value ? 'active' : ''}}"
+          data-value="{{item.value}}" bindtap="changeFilter">
+      {{item.label}}
+    </text>
+  </view>
+
+  <scroll-view scroll-y class="content-wrapper">
+    <view class="container">
+      <view wx:for="{{filteredCoupons}}" wx:key="id" class="coupon-box {{item.expired ? 'expired' : ''}}">
+        <view class="left-part">
+          <text class="amount">￥{{item.value}}</text>
+          <text class="condition">{{item.limit}}</text>
+        </view>
+        <view class="right-part">
+          <view class="title-line">
+            <text class="coupon-title">{{item.title}}</text>
+            <text class="tag" wx:if="{{item.expired}}">已过期</text>
+          </view>
+          <view class="desc">{{item.description}}</view>
+          <view class="expiry">有效期：{{item.expiry}}</view>
+          <view class="btns">
+            <button class="btn receive" bindtap="claimCoupon" data-id="{{item.id}}">领取</button>
+            <button class="btn use {{item.expired ? 'disabled' : ''}}"
+                    bindtap="useCoupon"
+                    data-id="{{item.id}}"
+                    disabled="{{item.expired}}">使用</button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view>

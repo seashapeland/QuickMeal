@@ -1,0 +1,45 @@
+<view class="page">
+  <!-- 白色导航栏 -->
+  <view class="header">
+    <view class="back-button" bindtap="navigateBack">
+      <image class="back-icon" src="/icons/back.png"></image>
+    </view>
+    <view class="title">我的收藏</view>
+  </view>
+
+  <!-- 内容区域 -->
+  <view class="content-wrapper">
+    <view class="container">
+      <!-- 可滑动删除的收藏列表 -->
+      <movable-area class="movable-area" style="height: {{itemHeight}}rpx" wx:for="{{favorites}}" wx:key="id">
+        <movable-view 
+          class="movable-view" 
+          direction="horizontal" 
+          damping="50" 
+          friction="20"
+          x="{{item.x}}"
+          animation="true"
+          bindchange="onChange"
+          data-index="{{index}}"
+        >
+          <view class="favorite-card">
+            <image class="card-image" src="{{item.image}}"></image>
+            <view class="card-info">
+              <text class="card-title">{{item.name}}</text>
+              <text class="card-desc">收藏时间: {{item.time}}</text>
+            </view>
+          </view>
+          <view class="delete-btn" bindtap="confirmDelete" data-id="{{item.id}}">
+            <image src="/icons/delete.png" class="delete-icon"></image>
+          </view>
+        </movable-view>
+      </movable-area>
+
+      <!-- 空状态提示 -->
+      <view wx:if="{{favorites.length === 0}}" class="empty-tips">
+        <image src="/icons/empty-favorite.png" class="empty-icon"></image>
+        <text class="empty-text">暂无收藏商品</text>
+      </view>
+    </view>
+  </view>
+</view>

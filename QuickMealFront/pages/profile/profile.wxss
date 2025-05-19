@@ -1,122 +1,100 @@
-/* pages/profile/profile.wxss */
-/* 个人信息 */
-.profile-container {
-  padding: 20px;
-  background-color: #fff; /* 白色背景 */
+/* 新增整体下移样式 */
+.content-container {
+  padding-top: 45rpx;
 }
 
-.user-info {
+.container {
+  background-color: white;
+  padding: 20rpx;
+}
+
+.user-section {
   display: flex;
   align-items: center;
-  margin-top: 30px; /* 增加顶部间距 */
-  margin-bottom: 20px; /* 为下方的内容留出空间 */
+  padding: 30rpx 0;
 }
 
 .avatar {
-  width: 60px; /* 缩小头像尺寸 */
-  height: 60px;
+  width: 115rpx;
+  height: 115rpx;
   border-radius: 50%;
-  margin-right: 15px; /* 缩小头像与文字之间的间距 */
-  border: 4px solid #fff;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1); /* 更精致的阴影 */
+  margin-right: 30rpx;
 }
 
-.user-details {
+.user-info {
   display: flex;
   flex-direction: column;
 }
 
 .username {
-  font-size: 18px; /* 缩小用户名的字体大小 */
+  font-size: 36rpx;
   font-weight: bold;
-  color: #333;
-  letter-spacing: 0.5px; /* 字母间距增加，提升视觉效果 */
+  margin-bottom: 10rpx;
 }
 
 .phone {
-  font-size: 14px; /* 缩小电话字体大小 */
-  color: #777;
-  margin-top: 5px;
+  font-size: 28rpx;
+  color: #666;
 }
 
-/* 常用功能标题 */
+.section {
+  margin-bottom: 40rpx;
+}
+
 .section-title {
-  font-size: 18px;
+  font-size: 32rpx;
   font-weight: bold;
-  color: #333;
-  margin-bottom: 12px;
-  padding-left: 5px;
-  border-bottom: none; /* 去掉下划线 */
+  margin-bottom: 20rpx;
+  padding-left: 10rpx;
 }
 
-/* 常用功能 */
-.function-list {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 每行显示两个 */
-  gap: 12px; /* 进一步缩小间距 */
-  margin-bottom: 30px;
-}
-
-/* 我的订单、我的收藏、优惠券、投诉与建议保持边框 */
-.function-item {
-  text-align: center;
-  padding: 10px; /* 缩小卡片内间距 */
-  border-radius: 10px; /* 缩小圆角 */
-  border: 1px solid rgba(0, 0, 0, 0.1); /* 淡化边框颜色 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 更轻的阴影效果 */
+.feature-list {
   display: flex;
-  flex-direction: column; /* 图标位于文字上方 */
-  justify-content: center;
-  align-items: center;
-  background-color: transparent; /* 去掉背景色 */
-  transition: transform 0.3s ease-in-out; /* 平滑的悬浮效果 */
+  flex-wrap: wrap;
 }
 
-.function-item:hover {
-  transform: translateY(-4px); /* 悬浮时轻微上升 */
-}
-
-.icon {
-  width: 50px; /* 增大图标尺寸 */
-  height: 50px;
-  margin-bottom: 6px; /* 缩小图标和文字之间的间距 */
-}
-
-.text {
-  font-size: 12px; /* 缩小文字字体大小 */
-  color: #333;
-}
-
-/* 其他服务 */
-.service-list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 每行显示三个 */
-  gap: 15px; /* 适当调整间距 */
-}
-
-.service-item {
-  text-align: center;
-  padding: 12px; /* 缩小卡片内间距 */
-  border-radius: 12px;
-  border: none; /* 去掉边框 */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05); /* 更柔和的阴影 */
+.feature-item {
+  width: 25%;
   display: flex;
-  flex-direction: column; /* 图标位于文字上方 */
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  transition: transform 0.3s ease-in-out;
-  font-size: 14px;
-  background-color: transparent; /* 去掉背景色 */
+  margin-bottom: 30rpx;
 }
 
-
-.service-item .icon {
-  width: 40px; /* 调整图标大小 */
-  height: 40px;
-  margin-bottom: 10px;
+/* 我的功能部分的图标 */
+.my-function-icon {
+  width: 90rpx; /* 统一图标宽度 */
+  height: 90rpx; /* 统一图标高度 */
+  margin-bottom: 10rpx;
 }
 
-.service-item .text {
-  font-size: 14px;
-  color: #333;
+/* 账号管理部分的图标 */
+.account-icon {
+  width: 70rpx; /* 账号管理图标宽度 */
+  height: 70rpx; /* 账号管理图标高度 */
+  margin-bottom: 10rpx;
+}
+
+.dishes-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.dish-item {
+  width: 48%;
+  margin-bottom: 20rpx;
+}
+
+.dish-image {
+  width: 100%;
+  height: 295rpx;
+  border-radius: 10rpx;
+}
+
+.dish-name {
+  display: block;
+  text-align: center;
+  font-size: 28rpx;
+  margin-top: 10rpx;
 }

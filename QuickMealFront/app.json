@@ -9,7 +9,16 @@
     "pages/food/food",
     "pages/checkout/checkout",
     "pages/orderDetail/orderDetail",
-    "pages/login/login"
+    "pages/favorite/favorite",
+    "pages/coupon/coupon",
+    "pages/feedback/feedback",
+    "pages/account/account",
+    "pages/question/question",
+    "pages/login/login",
+    "pages/agreement/agreement",
+    "pages/forgot/forgot",
+    "pages/register/register",
+    "pages/privacy/privacy"
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -47,7 +56,6 @@
     "skyline": {
       "defaultDisplayBlock": true,
       "defaultContentBox": true,
-      "tagNameStyleIsolation": "legacy",
       "disableABTest": true,
       "sdkVersionBegin": "3.0.0",
       "sdkVersionEnd": "15.255.255"

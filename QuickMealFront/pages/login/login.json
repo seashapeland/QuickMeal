@@ -1,3 +1,6 @@
 {
-  "usingComponents": {}
+  "navigationBarTitleText": "登录/注册",
+  "usingComponents": {},
+  "navigationStyle": "custom",
+  "backgroundColor": "#ffffff"
 }

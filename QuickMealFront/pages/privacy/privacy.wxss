@@ -1,0 +1,70 @@
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f8f8;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: 120rpx 20rpx 20rpx;  /* 顶部空间更大 */
+  background-color: #ffffff;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 10;
+}
+
+
+
+.back-button {
+  position: absolute;
+  top: 115rpx;  /* 原来是 40rpx，现在往下挪 */
+  left: 20rpx;
+  z-index: 999;
+}
+
+
+.back-icon {
+  width: 60rpx;
+  height: 60rpx;
+}
+
+.title {
+  width: 100%;
+  text-align: center;
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333333;
+}
+
+.content-wrapper {
+  flex: 1;
+  overflow: hidden;
+}
+
+.container {
+  padding: 30rpx 20rpx;
+}
+
+.faq-card {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.faq-question {
+  font-weight: bold;
+  font-size: 30rpx;
+  margin-bottom: 10rpx;
+  color: #333333;
+}
+
+.faq-answer {
+  font-size: 28rpx;
+  color: #666666;
+  line-height: 1.6;
+}
+
