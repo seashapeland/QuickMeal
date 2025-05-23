@@ -266,7 +266,7 @@
           <div class="dish-list-scroll">
             <div class="dish-card" v-for="dish in newPackage.items" :key="dish.id">
               <!-- 菜品图片 -->
-              <img :src="dish.image" alt="菜品图片" class="dish-image" />
+              <img :src="`http://localhost:8000${dish.image}?v=${Date.now()}`" class="dish-image" />
 
               <!-- 菜品信息 -->
               <div class="dish-info">
@@ -285,6 +285,11 @@
               <button class="remove-btn" @click="removeDishFromPackage(dish.id)">×</button>
             </div>
           </div>
+          <!-- 套餐菜品总价提示 -->
+          <div class="dish-total-price">
+            当前所选菜品总价参考：<span>¥{{ totalItemsPrice }}</span>
+          </div>
+
 
           <div class="form-actions">
             <button class="confirm-btn" @click="createPackage">创建</button>
@@ -489,7 +494,7 @@
         <Dropdown
           label="菜品种类"
           :options="filterCategoryOptions"
-          v-model="selectedCategory"
+          v-model="selectedCategoryForAdd"
           id="categoryDropdown"
           width="150px"
         />
@@ -498,7 +503,7 @@
         <div class="selectable-dish-list">
           <div
             class="selectable-dish-card"
-            v-for="dish in foodList"
+            v-for="dish in addableDishList"
             :key="dish.id"
           >
             <img :src="`http://localhost:8000${dish.image}?v=${Date.now()}`" class="selectable-dish-image" />
@@ -508,7 +513,7 @@
             </div>
             <div class="dish-action-area">
               <button
-                v-if="!dish.added"
+                v-if="!addedDishIds.includes(dish.id)"
                 class="add-btn"
                 @click="addDishToPackage(dish)"
               >
@@ -521,7 +526,6 @@
 
         <!-- 底部按钮 -->
         <div class="modal-actions">
-          <button class="confirm-btn" @click="closeAddDishModal">确认</button>
           <button class="cancel-btn" @click="closeAddDishModal">取消</button>
         </div>
       </div>
@@ -530,10 +534,11 @@
 </template>
 
 <script setup>
-  import { ref, watch, onMounted, nextTick } from 'vue'
+  import { ref, watch, onMounted, nextTick, computed } from 'vue'
   import Dropdown from '@/components/Dropdown.vue'
   import SearchBox from '@/components/SearchBox.vue'
   import { createDishRequest, getDishCategories, getDishList, updateDishStatus, updateDishPrice, getDishPriceHistory, updateDishInfo } from '@/api/dish'
+  import { createPackageRequest } from '@/api/package'
   import * as echarts from 'echarts'
 
   const tabs = [
@@ -553,6 +558,18 @@
       keyword.value = ''
       loadCategoryOptions()
       fetchDishList()
+    } else if (newVal === 'publish') {
+      clearForm()
+      loadCategoryOptions()
+    } else if (newVal === 'package-overview') {
+      selectedPackageStatus.value = 'all'
+      selectedPackageSort.value = 'default'
+      packageSearchKeyword.value = ''
+      loadCategoryOptions()
+    } else if (newVal === 'package-publish') {
+      selectedCategoryForAdd.value = 'all'
+      loadCategoryOptions()
+      clearPackageForm()
     }
   })
 
@@ -972,29 +989,7 @@
     status: '上架',
     image: null,
     imagePreview: '',
-    items: [
-      {
-        id: 1,
-        name: '糖',
-        price: 28.0,
-        image: 'https://via.placeholder.com/60',
-        quantity: 1
-      },
-      {
-        id: 2,
-        name: '醋',
-        price: 28.0,
-        image: 'https://via.placeholder.com/60',
-        quantity: 1
-      },
-      {
-        id: 3,
-        name: '里',
-        price: 28.0,
-        image: 'https://via.placeholder.com/60',
-        quantity: 1
-      }
-    ] // 已添加的菜品列表
+    items: [] // 已添加的菜品列表
   });
 
   function uploadDishImage() {
@@ -1066,10 +1061,37 @@
 
   // 控制弹窗显示
   const showAddDishModal = ref(false);
+  const addableDishList = ref([])  // 弹窗中展示的菜品列表（只显示上架菜品）
 
+  const selectedCategoryForAdd = ref('all')  // 弹窗用的下拉筛选分类
+
+  watch([selectedCategoryForAdd], () => {
+    fetchAddableDishes()
+  })
+
+  async function fetchAddableDishes() {
+    try {
+      const res = await getDishList({
+        category: selectedCategoryForAdd.value,
+        status: 'on-shelf',  // ✅ 只取上架菜品
+        sort: 'default',
+        keyword: ''
+      })
+      addableDishList.value = res.data
+    } catch (err) {
+      console.error('菜品列表获取失败:', err)
+    }
+    
+  }
+
+
+  const addedDishIds = computed(() =>
+    newPackage.value.items.map(item => item.id)
+  )
   // 打开/关闭弹窗
   function openAddDishModal() {
     showAddDishModal.value = true;
+    fetchAddableDishes()
   }
 
   function closeAddDishModal() {
@@ -1078,11 +1100,16 @@
 
   // 添加到套餐中的逻辑
   function addDishToPackage(dish) {
-    // 设置该菜品为“已添加”
-    dish.added = true;
-
-    // 可选：加入套餐数据（可以忽略不做）
-    // newPackage.value.items.push({ ...dish, quantity: 1 });
+    const exists = newPackage.value.items.some(item => item.id === dish.id)
+    if (!exists) {
+      newPackage.value.items.push({
+        id: dish.id,
+        name: dish.name,
+        price: dish.price,
+        image: dish.image,
+        quantity: 1
+      })
+    }
   }
 
   // 增加数量
@@ -1102,6 +1129,42 @@
     newPackage.value.items = newPackage.value.items.filter(d => d.id !== dishId);
   }
 
+  const totalItemsPrice = computed(() => {
+    return newPackage.value.items.reduce((sum, dish) => {
+      return sum + (dish.price * dish.quantity)
+    }, 0).toFixed(2)
+  })
+
+  // 创建套餐的函数
+  const createPackage = async () => {
+    // 表单验证
+    if (!newPackage.value.name || !newPackage.value.price || !newPackage.value.items.length || !newPackage.value.image) {
+      alert('请填写完整信息并选择至少一个菜品')
+      return
+    }
+
+    try {
+      await createPackageRequest(newPackage.value)
+      alert('套餐创建成功')
+      clearPackageForm()
+      // 可以选择性刷新套餐列表等
+    } catch (err) {
+      alert('套餐创建失败：' + (err.response?.data?.detail || '未知错误'))
+    }
+  }
+
+  // 清空表单的函数
+  const clearPackageForm = () => {
+    newPackage.value = {
+      name: '',
+      description: '',
+      price: '',
+      status: '上架',
+      image: null,
+      imagePreview: '',
+      items: [] // 已添加的菜品列表
+    };
+  };
 
 </script>
 
@@ -1639,6 +1702,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.create-dish-form .dish-total-price {
+  margin-top: 18px;
+  margin-bottom: 18px;
+  margin-right: 16px;
+  text-align: right;
+  font-size: 16px;
+  color: #555;
+  font-weight: bold;
+}
+
+.create-dish-form .dish-total-price span {
+  color: #f56c6c;
+  font-weight: bold;
+  margin-left: 4px;
 }
 
 .create-dish-form .remove-btn:hover, 

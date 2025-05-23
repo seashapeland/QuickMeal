@@ -24,5 +24,5 @@ if __name__ == "__main__":
     # conda activate meal
     # python manage.py runserver
 
-    # python manage.py makemigrations dish
+    # python manage.py makemigrations package
     # python manage.py migrate
