@@ -3,7 +3,7 @@
   background-color: #f8f8f8;
   min-height: 100vh;
   font-family: sans-serif;
-  background-color: #00b386; /* 主色调绿色 */
+  background-color: #a6db9f; /* 主色调绿色 */
 }
 
 /* 绿色顶部栏 */
@@ -44,7 +44,7 @@
 
 /* 激活状态 */
 .tab-text.active {
-  color: #00b386;
+  color: #a6db9f;
   font-weight: 600;
 }
 
@@ -52,7 +52,7 @@
 .tab-indicator {
   width: 40rpx;
   height: 8rpx;
-  background-color: #00b386;
+  background-color: #a6db9f;
   border-radius: 10rpx;
   margin-top: 8rpx;
 }

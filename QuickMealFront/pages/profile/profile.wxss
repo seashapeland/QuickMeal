@@ -1,17 +1,15 @@
 /* 新增整体下移样式 */
 .content-container {
-  padding-top: 45rpx;
+  height: 100vh;
+  background-color: rgb(245, 245, 245);
 }
 
-.container {
-  background-color: white;
-  padding: 20rpx;
-}
 
 .user-section {
   display: flex;
   align-items: center;
-  padding: 30rpx 0;
+  padding-top: 125rpx;
+  padding-bottom: 30rpx;
 }
 
 .avatar {
@@ -19,6 +17,7 @@
   height: 115rpx;
   border-radius: 50%;
   margin-right: 30rpx;
+  margin-left: 30rpx;
 }
 
 .user-info {
@@ -38,14 +37,17 @@
 }
 
 .section {
-  margin-bottom: 40rpx;
+  margin: 30rpx;
+  background-color: white;
+  border-radius: 20rpx;
 }
 
 .section-title {
-  font-size: 32rpx;
+  font-size: 28rpx;
   font-weight: bold;
   margin-bottom: 20rpx;
-  padding-left: 10rpx;
+  padding-top: 40rpx;
+  padding-left: 30rpx;
 }
 
 .feature-list {
@@ -56,6 +58,7 @@
 .feature-item {
   width: 25%;
   display: flex;
+  font-size: 25rpx;
   flex-direction: column;
   align-items: center;
   margin-bottom: 30rpx;

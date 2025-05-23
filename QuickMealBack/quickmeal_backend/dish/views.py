@@ -39,7 +39,7 @@ class CreateDishView(APIView):
 
         # 3. 保存图片（命名为 菜品名.jpg）
         filename = f"{name}.jpg"
-        image_path = os.path.join(settings.MEDIA_ROOT, 'images', filename)
+        image_path = os.path.join(settings.MEDIA_ROOT, 'dishes', filename)
 
         # 若 images 文件夹不存在则创建
         os.makedirs(os.path.dirname(image_path), exist_ok=True)
@@ -50,7 +50,7 @@ class CreateDishView(APIView):
                 f.write(chunk)
 
         # 设置 image_url（只传路径字符串，不是文件）
-        data['image_url'] = f'images/{filename}'
+        data['image_url'] = f'dishes/{filename}'
 
         # 4. 反序列化并保存
         serializer = DishSerializer(data=data)

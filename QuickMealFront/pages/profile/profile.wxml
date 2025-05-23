@@ -1,15 +1,15 @@
 <scroll-view 
-  scroll-y 
+  class="content-container"
+  scroll-y="{{true}}" 
   style="height: 100vh;" 
-  enhanced 
+  enhanced="{{true}}"
+  bounces="{{false}}"
   show-scrollbar="{{false}}"
-  bindscrolltoupper="upper"
-  bindscrolltolower="lower"
+  
 >
   <!-- 整体下移15rpx的容器 -->
-  <view class="content-container">
     <!-- 用户信息（头像可点击） -->
-    <view class="user-section" style="margin-left: 5px;" bindtap="navigateToAccount">
+    <view class="user-section" bindtap="navigateToAccount">
       <image class="avatar" src="/images/avatar.jpg"></image>
       <view class="user-info">
         <text class="username">曲辰</text>
@@ -55,21 +55,4 @@
         </navigator>
       </view>
     </view>
-
-    <!-- 推荐菜品 -->
-    <view class="section">
-      <view class="section-title">你可能还喜欢</view>
-      <view class="dishes-list">
-        <block wx:for="{{dishes}}" wx:key="id">
-          <navigator url="/pages/dishDetail/dishDetail?id={{item.id}}&name={{item.name}}&image={{item.image}}" class="dish-item">
-            <image class="dish-image" src="{{item.image}}"></image>
-            <text class="dish-name">{{item.name}}</text>
-          </navigator>
-        </block>
-      </view>
-    </view>
-    
-    <!-- 底部空白区域 -->
-    <view style="height: 50rpx;"></view>
-  </view>
 </scroll-view>

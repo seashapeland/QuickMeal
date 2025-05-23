@@ -138,11 +138,8 @@
           <div class="form-group">
             <label for="dish-image">菜品图片</label>
             
-            <!-- 上传按钮 -->
-            <button class="upload-btn" @click="uploadImage">上传图片</button>
-
-            <!-- 图片选择框 -->
-            <input type="file" id="dish-image" ref="imageInput" @change="handleImageChange_creat" style="display: none" />
+            <button class="upload-btn" @click="uploadDishImage">上传图片</button>
+            <input type="file" id="dish-image" @change="handleDishImageChange" style="display: none" />
             
             <!-- 显示图片预览 -->
             <div class="image-preview">
@@ -154,6 +151,144 @@
           <div class="form-actions">
             <button class="confirm-btn" @click="createDish">创建</button>
             <button class="cancel-btn" @click="clearForm">清空</button>
+          </div>
+        </div>
+      </div>
+      <!-- 套餐总览展示区域 -->
+      <div v-if="activeTab === 'package-overview'">
+        <div class="filters">
+          <!-- 套餐状态 -->
+          <Dropdown
+            label="套餐状态"
+            :options="statusOptions"
+            v-model="selectedPackageStatus"
+            id="statusDropdown"
+            width="120px"
+          />
+
+          <!-- 排序方式 -->
+          <Dropdown
+            label="排序方式"
+            :options="sortOptions"
+            v-model="selectedPackageSort"
+            id="sortDropdown"
+            width="140px"
+          />
+
+          <!-- 搜索 -->
+          <SearchBox
+            v-model="packageSearchKeyword"
+            placeholder="搜索套餐"
+            @search="handlePackageSearch"
+          />
+        </div>
+
+        <!-- 套餐总览列表 -->
+        <div class="food-list-scroll">
+          <div class="food-item-card" v-for="item in packageList" :key="item.id">
+            <img :src="`http://localhost:8000${item.image}?v=${Date.now()}`" alt="套餐图" class="food-img" />
+
+            <div class="food-info">
+              <h3 class="food-name">{{ item.name }}</h3>
+              <p class="food-description">{{ item.description }}</p>
+              <p class="food-sub-items">
+                {{ item.items.map(d => `${d.name}×${d.quantity}`).join('，') }}
+              </p>
+
+              <p class="food-price">¥{{ Number(item.price).toFixed(2) }}</p>
+              <p class="food-status">
+                状态：<span :class="item.status === '上架' ? 'on' : 'off'">{{ item.status }}</span>
+              </p>
+              <p class="food-meta">创建时间：{{ item.createdAt }}</p>
+              <p class="food-meta">更新时间：{{ item.updatedAt }}</p>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div class="food-actions">
+              <button class="action-btn" @click="viewPackageReviews(item)">查看评价</button>
+              <button class="action-btn" @click="openPackagePriceModal(item)">修改价格</button>
+              <button class="action-btn" @click="openPackageHistoryPriceModal(item)">历史价格</button>
+              <button class="action-btn" :class="item.status === '上架' ? 'off' : 'on'" @click="openPackageStatusModal(item)">
+                {{ item.status === '上架' ? '下架' : '上架' }}
+              </button>
+              <button class="action-btn" @click="openPackageEditModal(item)">信息编辑</button>
+              <button class="action-btn" @click="openPackageFoodEditModal(item)">菜品编辑</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="activeTab === 'package-publish'">
+          <!-- 创建套餐表单 -->
+        <div class="create-dish-form">
+          <div class="form-group">
+            <label for="package-name">套餐名</label>
+            <input type="text" id="package-name" v-model="newPackage.name" placeholder="请输入套餐名" />
+          </div>
+
+          <div class="form-group">
+            <label for="package-description">套餐描述</label>
+            <textarea id="package-description" v-model="newPackage.description" placeholder="请输入套餐描述"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="package-price">套餐价格</label>
+            <input type="number" id="package-price" v-model="newPackage.price" placeholder="请输入套餐价格" />
+          </div>
+
+          <div class="form-group">
+            <label>套餐状态</label>
+            <div>
+              <label>
+                <input type="radio" v-model="newPackage.status" value="上架" /> 上架
+              </label>
+              <label>
+                <input type="radio" v-model="newPackage.status" value="下架" /> 下架
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="package-image">套餐图片</label>
+            <button class="upload-btn" @click="uploadPackageImage">上传图片</button>
+            <input type="file" id="package-image" @change="handlePackageImageChange" style="display: none" />
+            <div class="image-preview">
+              <img :src="newPackage.imagePreview" alt="图片预览" class="image-preview-img"  v-if="newPackage.imagePreview"/>
+            </div>
+          </div>
+
+          <!-- 添加菜品 -->
+          <div class="form-group">
+            <label>套餐菜品</label>
+            <button class="upload-btn" @click="openAddDishModal">添加菜品</button>
+          </div>
+
+          <!-- 套餐包含的菜品展示区域 -->
+          <div class="dish-list-scroll">
+            <div class="dish-card" v-for="dish in newPackage.items" :key="dish.id">
+              <!-- 菜品图片 -->
+              <img :src="dish.image" alt="菜品图片" class="dish-image" />
+
+              <!-- 菜品信息 -->
+              <div class="dish-info">
+                <p class="dish-name">{{ dish.name }}</p>
+                <p class="dish-price">¥{{ dish.price }}</p>
+              </div>
+
+              <!-- 数量控制器 -->
+              <div class="quantity-control">
+                <button class="qty-btn minus" @click="decreaseQuantity(dish.id)">−</button>
+                <span class="qty-value">{{ dish.quantity }}</span>
+                <button class="qty-btn plus" @click="increaseQuantity(dish.id)">＋</button>
+              </div>
+
+              <!-- 删除按钮 -->
+              <button class="remove-btn" @click="removeDishFromPackage(dish.id)">×</button>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="confirm-btn" @click="createPackage">创建</button>
+            <button class="cancel-btn" @click="clearPackageForm">清空</button>
           </div>
         </div>
       </div>
@@ -235,6 +370,162 @@
       </div>
     </div>
 
+
+    <!-- 套餐相关弹窗 -->
+    <!-- 查看评价 -->
+    <div v-if="showPackageReviewModal" class="modal-overlay">
+      <div class="modal-box">
+        <h3>套餐评价</h3>
+        <p>这里显示 {{ currentPackage.name }} 的评价内容（占位）</p>
+        <div class="modal-actions">
+          <button class="cancel-btn" @click="showPackageReviewModal = false">关闭</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 修改价格 -->
+    <div v-if="showPackagePriceModal" class="modal-overlay">
+      <div class="modal-box">
+        <h3>修改套餐价格</h3>
+        <input v-model="packageUpdatedPrice" type="number" class="price-input" />
+        <div class="modal-actions">
+          <button class="confirm-btn" @click="showPackagePriceModal = false">确认</button>
+          <button class="cancel-btn" @click="showPackagePriceModal = false">取消</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 历史价格 -->
+    <div v-if="showPackageHistoryModal" class="modal-overlay">
+      <div class="modal-box">
+        <h3>历史价格记录</h3>
+        <p>显示 {{ currentPackage.name }} 的历史价格（占位）</p>
+        <div class="modal-actions">
+          <button class="cancel-btn" @click="showPackageHistoryModal = false">关闭</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 上架/下架确认 -->
+    <div v-if="showPackageStatusModal" class="modal-overlay">
+      <div class="modal-box">
+        <h3>确认{{ packageStatusAction }}？</h3>
+        <div class="modal-actions">
+          <button class="confirm-btn" @click="showPackageStatusModal = false">确认</button>
+          <button class="cancel-btn" @click="showPackageStatusModal = false">取消</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 信息编辑 -->
+    <div v-if="showPackageInfoModal" class="edit-modal-mask">
+      <div class="modal-box">
+        <h3>编辑套餐</h3>
+        <div class="form-group">
+          <label>菜品名</label>
+          <input v-model="editingPackage.name" type="text" placeholder="输入套餐名" />
+        </div>
+        <div class="form-group">
+          <label>描述</label>
+          <input v-model="editingPackage.description" type="text" placeholder="输入套餐描述" />
+        </div>
+        <div class="form-group">
+          <label>图片</label>
+          <input type="file" @change="handleEditingPackageImageChange" />
+        </div>
+        <div class="modal-actions">
+          <button class="confirm-btn" @click="showPackageInfoModal = false">更新</button>
+          <button class="cancel-btn" @click="showPackageInfoModal = false">取消</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 菜品编辑 -->
+    <div v-if="showPackageFoodModal" class="modal-overlay">
+      <div class="modal-box"  style="width: 600px;">
+        <h3>编辑套餐菜品</h3>
+        <!-- 添加菜品 -->
+        <div class="form-group">
+          <button class="upload-btn" style="margin-bottom: 10px;" @click="openAddDishModal">添加菜品</button>
+        </div>
+
+        <!-- 套餐包含的菜品展示区域 -->
+        <div class="dish-list-scroll" style="height: 320px;">
+          <div class="dish-card" v-for="dish in editingPackageFood.items" :key="dish.id">
+            <!-- 菜品图片 -->
+            <img :src="dish.image" alt="菜品图片" class="dish-image" />
+
+            <!-- 菜品信息 -->
+            <div class="dish-info">
+              <p class="dish-name">{{ dish.name }}</p>
+              <p class="dish-price">¥{{ dish.price }}</p>
+            </div>
+
+            <!-- 数量控制器 -->
+            <div class="quantity-control">
+              <button class="qty-btn minus" @click="decreaseQuantity_e(dish.id)">−</button>
+              <span class="qty-value">{{ dish.quantity }}</span>
+              <button class="qty-btn plus" @click="increaseQuantity_e(dish.id)">＋</button>
+            </div>
+
+            <!-- 删除按钮 -->
+            <button class="remove-btn" @click="removeDishFromPackage_e(dish.id)">×</button>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="confirm-btn" @click="showPackageFoodModal = false">保存</button>
+          <button class="cancel-btn" @click="showPackageFoodModal = false">取消</button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- 添加菜品弹窗（结构占位） -->
+    <div v-if="showAddDishModal" class="modal-overlay">
+      <div class="modal-box large">
+        <h3>添加菜品到套餐</h3>
+
+        <!-- 下拉选择菜品种类 -->
+        <Dropdown
+          label="菜品种类"
+          :options="filterCategoryOptions"
+          v-model="selectedCategory"
+          id="categoryDropdown"
+          width="150px"
+        />
+
+        <!-- 菜品列表滚动区域 -->
+        <div class="selectable-dish-list">
+          <div
+            class="selectable-dish-card"
+            v-for="dish in foodList"
+            :key="dish.id"
+          >
+            <img :src="`http://localhost:8000${dish.image}?v=${Date.now()}`" class="selectable-dish-image" />
+            <div class="selectable-dish-info">
+              <p class="dish-name">{{ dish.name }}</p>
+              <p class="dish-price">¥{{ dish.price }}</p>
+            </div>
+            <div class="dish-action-area">
+              <button
+                v-if="!dish.added"
+                class="add-btn"
+                @click="addDishToPackage(dish)"
+              >
+                添加
+              </button>
+              <span v-else class="added-text">已添加</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 底部按钮 -->
+        <div class="modal-actions">
+          <button class="confirm-btn" @click="closeAddDishModal">确认</button>
+          <button class="cancel-btn" @click="closeAddDishModal">取消</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -248,8 +539,8 @@
   const tabs = [
     { key: 'overview', label: '菜品总览' },
     { key: 'publish', label: '创建菜品' },
-    { key: 'meal-overview', label: '套餐总览' },
-    { key: 'meal-publish', label: '创建套餐' }
+    { key: 'package-overview', label: '套餐总览' },
+    { key: 'package-publish', label: '创建套餐' }
   ]
 
   const activeTab = ref('overview')
@@ -303,6 +594,7 @@
     { label: '下架', value: 'off-shelf' }
   ]
   const selectedStatus = ref('all')
+  const selectedPackageStatus = ref('all')
 
   const sortOptions = [
     { label: '默认排序', value: 'default' },
@@ -312,9 +604,60 @@
     { label: '更新时间', value: 'update-time' },
   ]
   const selectedSort = ref('default')
+  const selectedPackageSort = ref('default')
 
   const keyword = ref('')
+  const packageSearchKeyword = ref('')
   const foodList = ref([])
+  const packageList = ref([
+    {
+      id: 1,
+      name: '家庭套餐',
+      description: '适合三口之家，包含三道热菜和一道甜品。',
+      price: 88.0,
+      status: '上架',
+      image: '/media/images/family_package.jpg',
+      createdAt: '2024-12-01 10:30:00',
+      updatedAt: '2025-05-25 09:10:00',
+      items: [
+        { id: 1, name: '米饭', price: 5.0, image: 'https://via.placeholder.com/60', quantity: 3 },
+        { id: 2, name: '宫保鸡丁', price: 28.0, image: 'https://via.placeholder.com/60', quantity: 1 },
+        { id: 3, name: '糖醋排骨', price: 30.0, image: 'https://via.placeholder.com/60', quantity: 1 }
+      ]
+    },
+    {
+      id: 2,
+      name: '情侣套餐',
+      description: '二人份套餐，适合约会或好友聚餐。',
+      price: 66.0,
+      status: '下架',
+      image: '/media/images/couple_package.jpg',
+      createdAt: '2025-01-10 15:20:00',
+      updatedAt: '2025-04-28 17:45:00',
+      items: [
+        { id: 4, name: '意面', price: 22.0, image: 'https://via.placeholder.com/60', quantity: 2 },
+        { id: 5, name: '红酒牛排', price: 40.0, image: 'https://via.placeholder.com/60', quantity: 2 }
+      ]
+    },
+    {
+      id: 3,
+      name: '商务套餐',
+      description: '快速便捷，适合上班族午餐，营养均衡。',
+      price: 45.5,
+      status: '上架',
+      image: '/media/images/business_package.jpg',
+      createdAt: '2025-03-05 12:00:00',
+      updatedAt: '2025-05-01 08:10:00',
+      items: [
+        { id: 6, name: '炒面', price: 18.0, image: 'https://via.placeholder.com/60', quantity: 1 },
+        { id: 7, name: '蔬菜沙拉', price: 12.0, image: 'https://via.placeholder.com/60', quantity: 1 },
+        { id: 8, name: '鸡蛋汤', price: 10.0, image: 'https://via.placeholder.com/60', quantity: 1 }
+      ]
+    }
+  ])
+
+
+
 
   const fetchDishList = async () => {
     try {
@@ -520,6 +863,96 @@
     }
   }
 
+  const showPackageReviewModal = ref(false)
+  const showPackagePriceModal = ref(false)
+  const showPackageHistoryModal = ref(false)
+  const showPackageStatusModal = ref(false)
+  const showPackageInfoModal = ref(false)
+  const showPackageFoodModal = ref(false)
+
+  const currentPackage = ref(null)
+  const packageUpdatedPrice = ref('')
+  const packageStatusAction = ref('')
+
+  function viewPackageReviews(pkg) {
+    currentPackage.value = pkg
+    showPackageReviewModal.value = true
+  }
+
+  function openPackagePriceModal(pkg) {
+    currentPackage.value = pkg
+    packageUpdatedPrice.value = pkg.price
+    showPackagePriceModal.value = true
+  }
+
+  function openPackageHistoryPriceModal(pkg) {
+    currentPackage.value = pkg
+    showPackageHistoryModal.value = true
+  }
+
+  function openPackageStatusModal(pkg) {
+    currentPackage.value = pkg
+    packageStatusAction.value = pkg.status === '上架' ? '下架' : '上架'
+    showPackageStatusModal.value = true
+  }
+
+  const editingPackage = ref({
+    package_id: null,
+    name: '',
+    description: '',
+    image: null
+  })
+
+  const editingPackageFood = ref({
+    items: []
+  })
+
+
+  function openPackageEditModal(pkg) {
+    editingPackage.value = {
+      package_id: pkg.id,              // 关键字段
+      name: pkg.name,
+      description: pkg.description,
+      image: null                    // 初始为 null，除非上传新图
+    }
+    showPackageInfoModal.value = true
+  }
+
+  function handleEditingPackageImageChange(event) {
+    const file = event.target.files[0]
+    if (file) {
+      editingPackage.value.image = file
+      console.log('上传的文件:', file)
+    }
+  }
+
+  function openPackageFoodEditModal(pkg) {
+    editingPackageFood.value = {
+      items: pkg.items
+    }
+    showPackageFoodModal.value = true
+  }
+
+  // 增加数量
+  function increaseQuantity_e(dishId) {
+    const dish = editingPackageFood.value.items.find(d => d.id === dishId);
+    if (dish) dish.quantity++;
+  }
+
+  // 减少数量（最小为 1）
+  function decreaseQuantity_e(dishId) {
+    const dish = editingPackageFood.value.items.find(d => d.id === dishId);
+    if (dish && dish.quantity > 1) dish.quantity--;
+  }
+
+  // 移除该菜品
+  function removeDishFromPackage_e(dishId) {
+    editingPackageFood.value.items = editingPackageFood.value.items.filter(d => d.id !== dishId);
+  }
+
+
+
+
   // 创建菜品的表单数据
   const newDish = ref({
     name: '',
@@ -531,24 +964,66 @@
     imagePreview: '',
   })
 
-  // 点击上传图片框
-  function uploadImage() {
-    const imageInput = document.getElementById('dish-image');
-    imageInput.click();
+  // 创建套餐的表单数据
+  const newPackage = ref({
+    name: '',
+    description: '',
+    price: '',
+    status: '上架',
+    image: null,
+    imagePreview: '',
+    items: [
+      {
+        id: 1,
+        name: '糖',
+        price: 28.0,
+        image: 'https://via.placeholder.com/60',
+        quantity: 1
+      },
+      {
+        id: 2,
+        name: '醋',
+        price: 28.0,
+        image: 'https://via.placeholder.com/60',
+        quantity: 1
+      },
+      {
+        id: 3,
+        name: '里',
+        price: 28.0,
+        image: 'https://via.placeholder.com/60',
+        quantity: 1
+      }
+    ] // 已添加的菜品列表
+  });
+
+  function uploadDishImage() {
+    document.getElementById('dish-image')?.click();
   }
 
-  // 处理图片上传并显示预览
-  function handleImageChange_creat(event) {
+  function uploadPackageImage() {
+    document.getElementById('package-image')?.click();
+  }
+
+  function handleDishImageChange(event) {
     const file = event.target.files[0];
     if (file) {
-      // 显示文件名
       newDish.value.image = file;
-
-      // 使用 FileReader API 读取图片文件并显示预览
       const reader = new FileReader();
-      reader.onload = function(e) {
-        // 将图片预览 URL 赋值给 imagePreview
+      reader.onload = e => {
         newDish.value.imagePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function handlePackageImageChange(event) {
+    const file = event.target.files[0];
+    if (file) {
+      newPackage.value.image = file;
+      const reader = new FileReader();
+      reader.onload = e => {
+        newPackage.value.imagePreview = e.target.result;
       };
       reader.readAsDataURL(file);
     }
@@ -585,7 +1060,49 @@
       image: null,
       imagePreview: '',
     };
+  
+  
   }
+
+  // 控制弹窗显示
+  const showAddDishModal = ref(false);
+
+  // 打开/关闭弹窗
+  function openAddDishModal() {
+    showAddDishModal.value = true;
+  }
+
+  function closeAddDishModal() {
+    showAddDishModal.value = false;
+  }
+
+  // 添加到套餐中的逻辑
+  function addDishToPackage(dish) {
+    // 设置该菜品为“已添加”
+    dish.added = true;
+
+    // 可选：加入套餐数据（可以忽略不做）
+    // newPackage.value.items.push({ ...dish, quantity: 1 });
+  }
+
+  // 增加数量
+  function increaseQuantity(dishId) {
+    const dish = newPackage.value.items.find(d => d.id === dishId);
+    if (dish) dish.quantity++;
+  }
+
+  // 减少数量（最小为 1）
+  function decreaseQuantity(dishId) {
+    const dish = newPackage.value.items.find(d => d.id === dishId);
+    if (dish && dish.quantity > 1) dish.quantity--;
+  }
+
+  // 移除该菜品
+  function removeDishFromPackage(dishId) {
+    newPackage.value.items = newPackage.value.items.filter(d => d.id !== dishId);
+  }
+
+
 </script>
 
 <style scoped>
@@ -682,6 +1199,12 @@
   font-size: 12px;
 }
 
+.food-sub-items {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+
 .food-price {
   margin: 4px 0;
   color: #f56c6c;
@@ -759,6 +1282,10 @@
   color: white;
 }
 
+.action-btn:nth-child(6) {
+  background-color: #65ac7b; /* 原来 .edit-btn 样式 */
+  color: white;
+}
 
 
 
@@ -918,7 +1445,8 @@
 
 
 /* 上传按钮样式 */
-.create-dish-form .upload-btn {
+.create-dish-form .upload-btn, 
+.modal-box .upload-btn {
   padding: 6px 12px;
   font-size: 12px;
   border: none;
@@ -928,7 +1456,8 @@
   cursor: pointer;
 }
 
-.create-dish-form .upload-btn:hover {
+.create-dish-form .upload-btn:hover, 
+.modal-box .upload-btn:hover {
   background-color: #4c9966;
 }
 
@@ -991,4 +1520,209 @@
 .create-dish-form .form-group input[type="radio"] {
   margin-right: 8px;
 }
+
+.create-dish-form .dish-list-scroll, 
+.modal-box .dish-list-scroll {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  padding: 18px;
+  border-radius: 6px;
+  margin-bottom: 18px;
+  background-color: #f9f9f9;
+}
+
+.create-dish-form .dish-card, 
+.modal-box .dish-card {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+}
+
+.create-dish-form .dish-image, 
+.modal-box .dish-image {
+  width: 70px;
+  height: 70px;
+  border-radius: 4px;
+  object-fit: cover;
+  margin-right: 12px;
+}
+
+.create-dish-form .dish-info, 
+.modal-box .dish-info {
+  flex-grow: 1;
+}
+
+.create-dish-form .dish-name, 
+.modal-box .dish-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: #333;
+}
+
+.create-dish-form .dish-price, 
+.modal-box .dish-price {
+  font-size: 15px;
+  font-weight: 600;
+  color: #f56c6c;
+  margin: 4px 0 0;
+}
+
+.create-dish-form .quantity-control, 
+.modal-box .quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 12px;
+  margin-right: 24px;
+}
+
+.create-dish-form .qty-btn, 
+.modal-box .qty-btn {
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  line-height: 20px;
+  text-align: center;
+  border: 1px solid #65ac7b;
+  color: #65ac7b;
+  background-color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+}
+
+.create-dish-form .qty-btn:hover, 
+.modal-box .qty-btn:hover {
+  background-color: #65ac7b;
+  color: #fff;
+}
+
+.create-dish-form .qty-btn.plus, 
+.modal-box .qty-btn.plus {
+  background-color: #65ac7b;
+  color: #fff;
+}
+
+.create-dish-form .qty-btn.plus:hover, 
+.modal-box .qty-btn.plus:hover {
+  background-color: #fff;
+  color: #65ac7b;
+}
+
+.create-dish-form .qty-value, 
+.modal-box .qty-value {
+  width: 20px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.create-dish-form .remove-btn, 
+.modal-box .remove-btn {
+  margin-left: 12px;
+  margin-right: 12px;
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-dish-form .remove-btn:hover, 
+.modal-box .remove-btn:hover {
+  opacity: 0.8;
+}
+
+.modal-box.large {
+  width: 500px;
+  height: 480px;
+  overflow-y: auto;
+}
+
+.selectable-dish-list {
+  margin-top: 12px;
+  margin-bottom: 12px;
+  height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+}
+
+.selectable-dish-list .selectable-dish-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+}
+
+.selectable-dish-list .selectable-dish-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 4px;
+  object-fit: cover;
+  margin-right: 12px;
+}
+
+.selectable-dish-list .selectable-dish-info {
+  flex-grow: 1;
+}
+
+.selectable-dish-list .selectable-dish-info .dish-name {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.selectable-dish-list .selectable-dish-info .dish-price {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f56c6c;
+  margin: 4px 0 0;
+}
+
+.selectable-dish-list .dish-action-area {
+  width: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.selectable-dish-list .added-text {
+  color: #888;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.selectable-dish-list .add-btn {
+  background-color: #65ac7b;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.selectable-dish-list .add-btn:hover {
+  background-color: #4c9966;
+}
+
+
 </style>
