@@ -22,7 +22,10 @@ if __name__ == "__main__":
     main()
     # cd D:\Desktop\QuickMeal\QuickMealBack\quickmeal_backend
     # conda activate meal
-    # python manage.py runserver
+    # python manage.py runserver 0.0.0.0:8000
 
     # python manage.py makemigrations package
     # python manage.py migrate
+
+    # python manage.py startapp package
+

@@ -394,7 +394,7 @@
         <h3>修改套餐价格</h3>
         <input v-model="packageUpdatedPrice" type="number" class="price-input" />
         <div class="modal-actions">
-          <button class="confirm-btn" @click="showPackagePriceModal = false">确认</button>
+          <button class="confirm-btn" @click="confirmUpdatePackagePrice">确认</button>
           <button class="cancel-btn" @click="showPackagePriceModal = false">取消</button>
         </div>
       </div>
@@ -402,11 +402,14 @@
 
     <!-- 历史价格 -->
     <div v-if="showPackageHistoryModal" class="modal-overlay">
-      <div class="modal-box">
-        <h3>历史价格记录</h3>
-        <p>显示 {{ currentPackage.name }} 的历史价格（占位）</p>
+      <div class="modal-box large-modal">
+        <h3>{{ currentPackage.name }} 的历史价格</h3>
+
+        <!-- 图表区域 -->
+        <div id="package-price-chart" style="width: 100%; height: 300px;"></div>
+
         <div class="modal-actions">
-          <button class="cancel-btn" @click="showPackageHistoryModal = false">关闭</button>
+          <button class="cancel-btn" @click="closePackageHistoryModal">关闭</button>
         </div>
       </div>
     </div>
@@ -416,7 +419,7 @@
       <div class="modal-box">
         <h3>确认{{ packageStatusAction }}？</h3>
         <div class="modal-actions">
-          <button class="confirm-btn" @click="showPackageStatusModal = false">确认</button>
+          <button class="confirm-btn" @click="confirmPackageStatusChange">确认</button>
           <button class="cancel-btn" @click="showPackageStatusModal = false">取消</button>
         </div>
       </div>
@@ -439,7 +442,7 @@
           <input type="file" @change="handleEditingPackageImageChange" />
         </div>
         <div class="modal-actions">
-          <button class="confirm-btn" @click="showPackageInfoModal = false">更新</button>
+          <button class="confirm-btn" @click="updatePackageInfo">更新</button>
           <button class="cancel-btn" @click="showPackageInfoModal = false">取消</button>
         </div>
       </div>
@@ -458,7 +461,7 @@
         <div class="dish-list-scroll" style="height: 320px;">
           <div class="dish-card" v-for="dish in editingPackageFood.items" :key="dish.id">
             <!-- 菜品图片 -->
-            <img :src="dish.image" alt="菜品图片" class="dish-image" />
+            <img :src="`http://localhost:8000${dish.image}?v=${Date.now()}`" alt="菜品图片" class="dish-image" />
 
             <!-- 菜品信息 -->
             <div class="dish-info">
@@ -477,9 +480,13 @@
             <button class="remove-btn" @click="removeDishFromPackage_e(dish.id)">×</button>
           </div>
         </div>
+        <!-- 套餐菜品总价提示 -->
+        <div class="dish-total-price">
+          当前所选菜品总价参考：<span>¥{{ totalItemsPrice_e }}</span>
+        </div>
         <div class="modal-actions">
-          <button class="confirm-btn" @click="showPackageFoodModal = false">保存</button>
-          <button class="cancel-btn" @click="showPackageFoodModal = false">取消</button>
+          <button class="confirm-btn" @click="handleConfirm">保存</button>
+          <button class="cancel-btn" @click="handleCancel">取消</button>
         </div>
       </div>
     </div>
@@ -503,7 +510,7 @@
         <div class="selectable-dish-list">
           <div
             class="selectable-dish-card"
-            v-for="dish in addableDishList"
+            v-for="dish in (showPackageFoodModal ? addableDishList_edit : addableDishList)"
             :key="dish.id"
           >
             <img :src="`http://localhost:8000${dish.image}?v=${Date.now()}`" class="selectable-dish-image" />
@@ -513,9 +520,9 @@
             </div>
             <div class="dish-action-area">
               <button
-                v-if="!addedDishIds.includes(dish.id)"
+                v-if="showPackageFoodModal ? !addedDishIds_edit.includes(dish.id) : !addedDishIds.includes(dish.id)"
+                @click="showPackageFoodModal ? addDishToEditingPackage(dish) : addDishToPackage(dish)"
                 class="add-btn"
-                @click="addDishToPackage(dish)"
               >
                 添加
               </button>
@@ -538,7 +545,7 @@
   import Dropdown from '@/components/Dropdown.vue'
   import SearchBox from '@/components/SearchBox.vue'
   import { createDishRequest, getDishCategories, getDishList, updateDishStatus, updateDishPrice, getDishPriceHistory, updateDishInfo } from '@/api/dish'
-  import { createPackageRequest } from '@/api/package'
+  import { createPackageRequest, getPackageList, updatePackageItems, updatePackageInfoRequest, updatePackageStatus, updatePackagePrice, getPackagePriceHistory  } from '@/api/package'
   import * as echarts from 'echarts'
 
   const tabs = [
@@ -566,6 +573,8 @@
       selectedPackageSort.value = 'default'
       packageSearchKeyword.value = ''
       loadCategoryOptions()
+      fetchPackageList()
+      selectedCategoryForAdd.value = 'all'
     } else if (newVal === 'package-publish') {
       selectedCategoryForAdd.value = 'all'
       loadCategoryOptions()
@@ -626,52 +635,7 @@
   const keyword = ref('')
   const packageSearchKeyword = ref('')
   const foodList = ref([])
-  const packageList = ref([
-    {
-      id: 1,
-      name: '家庭套餐',
-      description: '适合三口之家，包含三道热菜和一道甜品。',
-      price: 88.0,
-      status: '上架',
-      image: '/media/images/family_package.jpg',
-      createdAt: '2024-12-01 10:30:00',
-      updatedAt: '2025-05-25 09:10:00',
-      items: [
-        { id: 1, name: '米饭', price: 5.0, image: 'https://via.placeholder.com/60', quantity: 3 },
-        { id: 2, name: '宫保鸡丁', price: 28.0, image: 'https://via.placeholder.com/60', quantity: 1 },
-        { id: 3, name: '糖醋排骨', price: 30.0, image: 'https://via.placeholder.com/60', quantity: 1 }
-      ]
-    },
-    {
-      id: 2,
-      name: '情侣套餐',
-      description: '二人份套餐，适合约会或好友聚餐。',
-      price: 66.0,
-      status: '下架',
-      image: '/media/images/couple_package.jpg',
-      createdAt: '2025-01-10 15:20:00',
-      updatedAt: '2025-04-28 17:45:00',
-      items: [
-        { id: 4, name: '意面', price: 22.0, image: 'https://via.placeholder.com/60', quantity: 2 },
-        { id: 5, name: '红酒牛排', price: 40.0, image: 'https://via.placeholder.com/60', quantity: 2 }
-      ]
-    },
-    {
-      id: 3,
-      name: '商务套餐',
-      description: '快速便捷，适合上班族午餐，营养均衡。',
-      price: 45.5,
-      status: '上架',
-      image: '/media/images/business_package.jpg',
-      createdAt: '2025-03-05 12:00:00',
-      updatedAt: '2025-05-01 08:10:00',
-      items: [
-        { id: 6, name: '炒面', price: 18.0, image: 'https://via.placeholder.com/60', quantity: 1 },
-        { id: 7, name: '蔬菜沙拉', price: 12.0, image: 'https://via.placeholder.com/60', quantity: 1 },
-        { id: 8, name: '鸡蛋汤', price: 10.0, image: 'https://via.placeholder.com/60', quantity: 1 }
-      ]
-    }
-  ])
+  const packageList = ref([])
 
 
 
@@ -691,8 +655,25 @@
     }
   }
 
+  const fetchPackageList = async () => {
+    try {
+      const res = await getPackageList({
+        status: selectedPackageStatus.value,
+        sort: selectedPackageSort.value,
+        keyword: packageSearchKeyword.value
+      })
+      packageList.value = res.data
+    } catch (err) {
+      console.error('套餐列表获取失败', err)
+    }
+  }
+
   watch([selectedCategory, selectedStatus, selectedSort], () => {
     fetchDishList()
+  })
+
+  watch([selectedPackageStatus, selectedPackageSort], () => {
+    fetchPackageList()
   })
 
   const handleSearch = () => {
@@ -902,16 +883,112 @@
     showPackagePriceModal.value = true
   }
 
+  const confirmUpdatePackagePrice = () => {
+    updatePackagePrice({
+      package_id: currentPackage.value.id,
+      new_price: packageUpdatedPrice.value
+    })
+      .then(() => {
+        alert('套餐价格修改成功')
+        showPackagePriceModal.value = false
+        fetchPackageList()
+      })
+      .catch(err => {
+        alert('修改失败：' + (err.response?.data?.detail || '未知错误'))
+      })
+  }
+
+  let packageChartInstance = null
+
   function openPackageHistoryPriceModal(pkg) {
     currentPackage.value = pkg
     showPackageHistoryModal.value = true
+
+    // 先清空图表占位
+    nextTick(() => {
+      renderPackagePriceChart([])
+    })
+
+    // 调接口加载数据
+    getPackagePriceHistory(pkg.id)
+      .then(res => {
+        renderPackagePriceChart(res.data)
+      })
+      .catch(() => {
+        alert('获取历史价格失败')
+      })
   }
+
+  function closePackageHistoryModal() {
+    showPackageHistoryModal.value = false
+    if (packageChartInstance) {
+      packageChartInstance.dispose()
+      packageChartInstance = null
+    }
+  }
+
+  function renderPackagePriceChart(data) {
+    const dom = document.getElementById('package-price-chart')
+    if (!dom) return
+
+    if (packageChartInstance) {
+      packageChartInstance.dispose()
+    }
+    packageChartInstance = echarts.init(dom)
+
+    const option = {
+      title: {
+        text: '套餐价格变化趋势',
+        left: 'center'
+      },
+      tooltip: {
+        trigger: 'axis'
+      },
+      xAxis: {
+        type: 'category',
+        data: data.map(item => item.date)
+      },
+      yAxis: {
+        type: 'value',
+        min: 'dataMin'
+      },
+      series: [
+        {
+          name: '价格',
+          type: 'line',
+          data: data.map(item => item.price)
+        }
+      ]
+    }
+
+    packageChartInstance.setOption(option)
+  }
+
+
 
   function openPackageStatusModal(pkg) {
     currentPackage.value = pkg
     packageStatusAction.value = pkg.status === '上架' ? '下架' : '上架'
     showPackageStatusModal.value = true
   }
+
+  function confirmPackageStatusChange() {
+    const payload = {
+      package_id: currentPackage.value.id,
+      action: packageStatusAction.value
+    }
+
+    updatePackageStatus(payload)
+      .then(() => {
+        alert(`套餐已成功${packageStatusAction.value}`)
+        showPackageStatusModal.value = false
+        fetchPackageList() // 刷新列表
+      })
+      .catch(err => {
+        alert('操作失败：' + (err.response?.data?.detail || '未知错误'))
+      })
+  }
+
 
   const editingPackage = ref({
     package_id: null,
@@ -924,6 +1001,39 @@
     items: []
   })
 
+  const updatePackageInfo = () => {
+    const formData = new FormData()
+    formData.append('package_id', editingPackage.value.package_id)
+    formData.append('name', editingPackage.value.name)
+    formData.append('description', editingPackage.value.description)
+    if (editingPackage.value.image) {
+      formData.append('image', editingPackage.value.image)
+    }
+
+    updatePackageInfoRequest(formData)
+      .then(() => {
+        alert('套餐信息更新成功')
+        showPackageInfoModal.value = false
+        fetchPackageList() // 刷新套餐列表
+      })
+      .catch(err => {
+        alert('更新失败：' + (err.response?.data?.detail || '未知错误'))
+      })
+  }
+
+
+  // 编辑套餐时的添加菜品弹窗数据
+  const addableDishList_edit = ref([])
+
+  const addedDishIds_edit = computed(() =>
+    editingPackageFood.value.items.map(item => item.id)
+  )
+
+  const totalItemsPrice_e = computed(() => {
+    return editingPackageFood.value.items.reduce((sum, dish) => {
+      return sum + (dish.price * dish.quantity)
+    }, 0).toFixed(2)
+  })
 
   function openPackageEditModal(pkg) {
     editingPackage.value = {
@@ -943,10 +1053,10 @@
     }
   }
 
+  const currentPackageId = ref(null)
   function openPackageFoodEditModal(pkg) {
-    editingPackageFood.value = {
-      items: pkg.items
-    }
+    currentPackageId.value = pkg.id
+    editingPackageFood.value.items = pkg.items.map(d => ({ ...d }))
     showPackageFoodModal.value = true
   }
 
@@ -967,7 +1077,46 @@
     editingPackageFood.value.items = editingPackageFood.value.items.filter(d => d.id !== dishId);
   }
 
+  function addDishToEditingPackage(dish) {
+    const exists = editingPackageFood.value.items.some(item => item.id === dish.id)
+    if (!exists) {
+      editingPackageFood.value.items.push({
+        id: dish.id,
+        name: dish.name,
+        price: dish.price,
+        image: dish.image,
+        quantity: 1
+      })
+    }
+  }
 
+  function handleConfirm() {
+    const packageId = currentPackageId.value
+    const items = editingPackageFood.value.items.map(item => ({
+      id: item.id,
+      quantity: item.quantity
+    }))
+
+    updatePackageItems({
+      package_id: packageId,
+      items: JSON.stringify(items)
+    })
+      .then(res => {
+        alert('套餐菜品更新成功！')
+        showPackageFoodModal.value = false
+        fetchPackageList()  // 刷新套餐列表（如果有）
+      })
+      .catch(err => {
+        console.error('套餐菜品更新失败', err)
+        alert('套餐菜品更新失败：' + (err.response?.data?.detail || '未知错误'))
+      })
+    
+  }
+
+  function handleCancel() {
+    showPackageFoodModal.value = false;
+    fetchPackageList()
+  }
 
 
   // 创建菜品的表单数据
@@ -1066,7 +1215,12 @@
   const selectedCategoryForAdd = ref('all')  // 弹窗用的下拉筛选分类
 
   watch([selectedCategoryForAdd], () => {
-    fetchAddableDishes()
+    if (showPackageFoodModal.value) {
+      fetchAddableDishesForEdit()
+    } else {
+      fetchAddableDishes()
+    }
+      
   })
 
   async function fetchAddableDishes() {
@@ -1084,15 +1238,37 @@
     
   }
 
+  async function fetchAddableDishesForEdit() {
+    try {
+      const res = await getDishList({
+        category: selectedCategoryForAdd.value,
+        status: 'on-shelf',
+        sort: 'default',
+        keyword: ''
+      })
+      addableDishList_edit.value = res.data
+    } catch (err) {
+      console.error('菜品列表获取失败:', err)
+    }
+  }
 
   const addedDishIds = computed(() =>
     newPackage.value.items.map(item => item.id)
   )
   // 打开/关闭弹窗
   function openAddDishModal() {
-    showAddDishModal.value = true;
-    fetchAddableDishes()
+    // 判断当前是在编辑还是创建
+    if (showPackageFoodModal.value) {
+      // 编辑模式
+      fetchAddableDishesForEdit()
+    } else {
+      // 创建模式（原来已有）
+      fetchAddableDishes()
+    }
+
+    showAddDishModal.value = true
   }
+
 
   function closeAddDishModal() {
     showAddDishModal.value = false;
@@ -1266,6 +1442,10 @@
   font-size: 12px;
   color: #666;
   margin-top: 4px;
+  white-space: nowrap;      /* 禁止换行 */
+  overflow: hidden;         /* 隐藏溢出内容 */
+  text-overflow: ellipsis;  /* 显示省略号 */
+  max-width: 300px;          /* 限制最大宽度 */
 }
 
 .food-price {
@@ -1704,7 +1884,8 @@
   justify-content: center;
 }
 
-.create-dish-form .dish-total-price {
+.create-dish-form .dish-total-price,
+.modal-box .dish-total-price {
   margin-top: 18px;
   margin-bottom: 18px;
   margin-right: 16px;
@@ -1714,7 +1895,8 @@
   font-weight: bold;
 }
 
-.create-dish-form .dish-total-price span {
+.create-dish-form .dish-total-price span,
+.modal-box .dish-total-price span {
   color: #f56c6c;
   font-weight: bold;
   margin-left: 4px;

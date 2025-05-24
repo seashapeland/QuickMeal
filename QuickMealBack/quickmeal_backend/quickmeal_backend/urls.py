@@ -25,4 +25,5 @@ urlpatterns = [
     path('manager/', include('manager.urls')),
     path('dish/', include('dish.urls')),
     path('package/', include('package.urls')),
+    path('user/', include('user.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -12,8 +12,8 @@
     <view class="user-section" bindtap="navigateToAccount">
       <image class="avatar" src="/images/avatar.jpg"></image>
       <view class="user-info">
-        <text class="username">曲辰</text>
-        <text class="phone">138****5678</text>
+        <text class="username">{{username}}</text>
+        <text class="phone">{{phone}}</text>
       </view>
     </view>
 

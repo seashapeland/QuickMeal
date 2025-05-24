@@ -24,3 +24,48 @@ export const createPackageRequest = (data) => {
     }
   })
 }
+
+export const getPackageList = (params) => {
+  return request.get('/package/list/', { params })
+}
+
+// 更新套餐菜品
+export const updatePackageItems = (data) => {
+  const token = localStorage.getItem('token')
+  return request.patch('/package/update_items/', data, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+}
+
+export const updatePackageInfoRequest = (data) => {
+  const token = localStorage.getItem('token')
+  return request.patch('/package/update_info/', data, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
+export const updatePackageStatus = (data) => {
+  const token = localStorage.getItem('token')
+  return request.patch('/package/update_status/', data, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+}
+
+export const updatePackagePrice = (data) => {
+  const token = localStorage.getItem('token')
+  return request.patch('/package/update_price/', data, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+}
+
+export const getPackagePriceHistory = (packageId) => {
+  return request.get(`/package/price_history/${packageId}/`)
+}
+
