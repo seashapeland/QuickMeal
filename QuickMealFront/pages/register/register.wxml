@@ -1,2 +1,49 @@
 <!--pages/register/register.wxml-->
-<text>pages/register/register.wxml</text>
+<view class="navbar">
+  <image src="/icons/return.png" class="navbar-back" bindtap="goToLogin"></image>
+  <view class="navbar-title">注册</view>
+</view>
+<view class="container-inner">
+  <view class="form-group">
+    <input
+      class="input"
+      type="text"
+      placeholder="请输入用户名"
+      value="{{username}}"
+      bindinput="onInputUsername"
+    />
+  </view>
+
+  <view class="form-group">
+    <input
+      class="input"
+      type="text"
+      placeholder="请输入密码"
+      password="{{!showPassword}}"
+      value="{{password}}"
+      bindinput="onInputPassword"
+    />
+    <text class="toggle" bindtap="togglePassword">
+      {{ showPassword ? '隐藏' : '显示' }}
+    </text>
+  </view>
+
+  <view class="form-group">
+    <input
+      class="input"
+      type="text"
+      placeholder="请再次确认密码"
+      password="{{!showPassword}}"
+      value="{{confirmPassword}}"
+      bindinput="onInputConfirmPassword"
+    />
+  </view>
+
+
+  <button class="btn-register" bindtap="onRegister">注册</button>
+
+  <view class="login-tip">
+    <text>已有账号？</text>
+    <text class="login-link" bindtap="goToLogin">去登录</text>
+  </view>
+</view>

@@ -30,15 +30,25 @@
       </scroll-view>
 
       <!-- 右侧菜品展示区 -->
-      <scroll-view class="dish-scroll" scroll-y="true" show-scrollbar="false">
+      <scroll-view class="dish-scroll" scroll-y="true"
+      enhanced show-scrollbar="{{false}}">
         <block wx:for="{{ categories[activeCategoryIndex].dishes }}" wx:key="index">
           <view class="dish-card">
             <image class="dish-img" src="{{ item.img }}" mode="aspectFill" />
             <view class="dish-info">
               <view class="dish-name">{{ item.name }}</view>
               <view class="dish-price-line">
-                <text class="dish-price">¥{{ item.price }}</text>
-                <text wx:if="{{ item.originalPrice }}" class="dish-original">¥{{ item.originalPrice }}</text>
+                <view class="price-group">
+                  <text class="dish-price">¥{{ item.price }}</text>
+                  <text wx:if="{{ item.originalPrice }}" class="dish-original">¥{{ item.originalPrice }}</text>
+                </view>
+                <view class="dish-actions">
+                  <view wx:if="{{ item.count > 0 }}" class="action-group">
+                    <button class="minus-btn">-</button>
+                    <text class="dish-count">{{ item.count }}</text>
+                  </view>
+                  <button class="plus-btn">+</button>
+                </view>
               </view>
             </view>
           </view>

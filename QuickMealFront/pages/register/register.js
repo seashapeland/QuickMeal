@@ -1,66 +1,73 @@
 // pages/register/register.js
+const config = require('../../utils/config');
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    username: '',
+    password: '',
+    confirmPassword: '',
+    showPassword: false
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
+  onInputUsername(e) {
+    this.setData({ username: e.detail.value });
+    console.log(this.data.username)
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+  onInputPassword(e) {
+    this.setData({ password: e.detail.value });
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
+  onInputConfirmPassword(e) {
+    this.setData({ confirmPassword: e.detail.value });
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
+  togglePassword() {
+    this.setData({ showPassword: !this.data.showPassword });
   },
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
+  onRegister() {
+    const { username, password, confirmPassword } = this.data;
 
+    if (!username || !password || !confirmPassword) {
+      wx.showToast({ title: '请填写完整信息', icon: 'none' });
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      wx.showToast({ title: '两次密码不一致', icon: 'none' });
+      return;
+    }
+
+    wx.showLoading({ title: '注册中...' });
+
+    wx.request({
+      url: config.USER_REGISTER_API,  // ✅ 注意结尾要有 `/`
+      method: 'POST',
+      header: { 'content-type': 'application/json' },
+      data: {
+        username,
+        password
+      },
+      success: (res) => {
+        wx.hideLoading();
+        if (res.statusCode === 201) {
+          wx.showToast({ title: '注册成功', icon: 'success' });
+          setTimeout(() => {
+            wx.navigateBack(); // 返回登录页
+          }, 1500);
+        } else {
+          wx.showToast({ title: res.data.message || '注册失败', icon: 'none' });
+        }
+      },
+      fail: () => {
+        wx.hideLoading();
+        wx.showToast({ title: '网络错误', icon: 'none' });
+      }
+    });
   },
 
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
+  goToLogin() {
+    wx.navigateBack(); // 返回上一页
   },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
-  }
-})
+  
+});

@@ -57,7 +57,7 @@
         <div class="food-list-scroll">
           <div class="food-item-card" v-for="item in foodList" :key="item.id">
             <!-- 图片 -->
-            <img :src="`http://localhost:8000${item.image}?v=${Date.now()}`" alt="菜品图" class="food-img" />
+            <img :src="`${BASE_URL}${item.image}?v=${Date.now()}`" alt="菜品图" class="food-img" />
 
             <!-- 主要信息 -->
             <div class="food-info">
@@ -74,7 +74,7 @@
             <!-- 操作 -->
             <div class="food-actions">
               <!-- 查看评价 -->
-              <button class="action-btn" @click="viewReviews(item)">查看评价</button>
+              <button class="action-btn" @click="openViewReviewsModal(item)">查看评价</button>
 
               <!-- 修改价格 -->
               <button class="action-btn" @click="openPriceModal(item)">修改价格</button>
@@ -186,7 +186,7 @@
         <!-- 套餐总览列表 -->
         <div class="food-list-scroll">
           <div class="food-item-card" v-for="item in packageList" :key="item.id">
-            <img :src="`http://localhost:8000${item.image}?v=${Date.now()}`" alt="套餐图" class="food-img" />
+            <img :src="`${BASE_URL}${item.image}?v=${Date.now()}`" alt="套餐图" class="food-img" />
 
             <div class="food-info">
               <h3 class="food-name">{{ item.name }}</h3>
@@ -266,7 +266,7 @@
           <div class="dish-list-scroll">
             <div class="dish-card" v-for="dish in newPackage.items" :key="dish.id">
               <!-- 菜品图片 -->
-              <img :src="`http://localhost:8000${dish.image}?v=${Date.now()}`" class="dish-image" />
+              <img :src="`${BASE_URL}${dish.image}?v=${Date.now()}`" class="dish-image" />
 
               <!-- 菜品信息 -->
               <div class="dish-info">
@@ -300,6 +300,64 @@
     </div>
 
     <!-- 弹窗部分：统一弹窗位置 -->
+    <!-- 菜品评价弹窗 -->
+    <div v-if="showReviewsModal" class="modal-overlay">
+      <div class="modal-box review-modal">
+        <h3>
+          菜品评价 - {{ currentDish.name }}
+        </h3>
+        <p class="average-score">
+          平均评分：{{ averageDishRating }}
+          <span class="star-group">
+            <span
+              v-for="n in 5"
+              :key="n"
+              class="star"
+              :class="{ filled: n <= Math.round(averageDishRating) }"
+            >★</span>
+          </span>
+        </p>
+
+        <div class="review-list-scroll">
+          <div class="review-item" v-for="review in dishReviews" :key="review.id">
+            <!-- 用户信息 -->
+            <div class="review-user-info">
+              <img :src="`${BASE_URL}${review.avatar}?v=${Date.now()}`" class="user-avatar" />
+              <div class="user-meta">
+                <span class="review-username">{{ review.username }}</span>
+                <span class="review-time">{{ review.time }}</span>
+              </div>
+            </div>
+            <!-- 评分 -->
+            <div class="review-stars">
+              <span
+                v-for="n in 5"
+                :key="n"
+                class="star"
+                :class="{ filled: n <= review.rating }"
+              >★</span>
+            </div>
+            <!-- 评论内容 -->
+            <div class="review-text">
+              <p :class="{ collapsed: !review.expanded && review.text.length > maxLength }">
+                {{ review.expanded || review.text.length <= maxLength ? review.text : review.text.slice(0, maxLength) + '...' }}
+              </p>
+              <span
+                v-if="review.text.length > maxLength"
+                class="toggle-link"
+                @click="review.expanded = !review.expanded"
+              >
+                {{ review.expanded ? '收起' : '查看' }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="cancel-btn" @click="closeDishReviewModal">关闭</button>
+        </div>
+      </div>
+    </div>
+
 
     <!-- 修改价格弹窗 -->
     <div v-if="showPriceModal" class="modal-overlay">
@@ -378,12 +436,64 @@
 
     <!-- 套餐相关弹窗 -->
     <!-- 查看评价 -->
+    <!-- 评价弹窗 -->
     <div v-if="showPackageReviewModal" class="modal-overlay">
-      <div class="modal-box">
-        <h3>套餐评价</h3>
-        <p>这里显示 {{ currentPackage.name }} 的评价内容（占位）</p>
+      <div class="modal-box review-modal">
+        <h3>
+          套餐评价 - {{ currentPackage.name }}
+        </h3>
+        <p class="average-score">
+          平均评分：{{ averagePackageRating }}
+          <span class="star-group">
+            <span
+              v-for="n in 5"
+              :key="n"
+              class="star"
+              :class="{ filled: n <= Math.round(averagePackageRating) }"
+            >★</span>
+          </span>
+        </p>
+
+        <div class="review-list-scroll">
+          <div class="review-item" v-for="review in packageReviews" :key="review.id">
+            <!-- 用户信息 -->
+            <div class="review-user-info">
+              <img :src="`${BASE_URL}${review.avatar}?v=${Date.now()}`" class="user-avatar" />
+              <div class="user-meta">
+                <span class="review-username">{{ review.username }}</span>
+                <span class="review-time">{{ review.time }}</span>
+              </div>
+            </div>
+
+            <!-- 评分 -->
+            <div class="review-stars">
+              <span
+                v-for="n in 5"
+                :key="n"
+                class="star"
+                :class="{ filled: n <= review.rating }"
+              >★</span>
+            </div>
+
+            <!-- 文字内容 -->
+            <div class="review-text">
+              <p :class="{ collapsed: !review.expanded && review.text.length > maxLength }">
+                {{ review.expanded || review.text.length <= maxLength ? review.text : review.text.slice(0, maxLength) + '...' }}
+              </p>
+              <span
+                v-if="review.text.length > maxLength"
+                class="toggle-link"
+                @click="review.expanded = !review.expanded"
+              >
+                {{ review.expanded ? '收起' : '查看' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 操作按钮 -->
         <div class="modal-actions">
-          <button class="cancel-btn" @click="showPackageReviewModal = false">关闭</button>
+          <button class="cancel-btn" @click="closePackageReviewModal">关闭</button>
         </div>
       </div>
     </div>
@@ -461,7 +571,7 @@
         <div class="dish-list-scroll" style="height: 320px;">
           <div class="dish-card" v-for="dish in editingPackageFood.items" :key="dish.id">
             <!-- 菜品图片 -->
-            <img :src="`http://localhost:8000${dish.image}?v=${Date.now()}`" alt="菜品图片" class="dish-image" />
+            <img :src="`${BASE_URL}${dish.image}?v=${Date.now()}`" alt="菜品图片" class="dish-image" />
 
             <!-- 菜品信息 -->
             <div class="dish-info">
@@ -513,7 +623,7 @@
             v-for="dish in (showPackageFoodModal ? addableDishList_edit : addableDishList)"
             :key="dish.id"
           >
-            <img :src="`http://localhost:8000${dish.image}?v=${Date.now()}`" class="selectable-dish-image" />
+            <img :src="`${BASE_URL}${dish.image}?v=${Date.now()}`" class="selectable-dish-image" />
             <div class="selectable-dish-info">
               <p class="dish-name">{{ dish.name }}</p>
               <p class="dish-price">¥{{ dish.price }}</p>
@@ -544,9 +654,12 @@
   import { ref, watch, onMounted, nextTick, computed } from 'vue'
   import Dropdown from '@/components/Dropdown.vue'
   import SearchBox from '@/components/SearchBox.vue'
-  import { createDishRequest, getDishCategories, getDishList, updateDishStatus, updateDishPrice, getDishPriceHistory, updateDishInfo } from '@/api/dish'
-  import { createPackageRequest, getPackageList, updatePackageItems, updatePackageInfoRequest, updatePackageStatus, updatePackagePrice, getPackagePriceHistory  } from '@/api/package'
+  import { createDishRequest, getDishCategories, getDishList, updateDishStatus, updateDishPrice, getDishPriceHistory, updateDishInfo, getDishReviews } from '@/api/dish'
+  import { createPackageRequest, getPackageList, updatePackageItems, updatePackageInfoRequest, updatePackageStatus, updatePackagePrice, getPackagePriceHistory, getPackageReviews  } from '@/api/package'
   import * as echarts from 'echarts'
+  import { BASE_URL } from '@/utils/request'
+  import { ElMessage } from 'element-plus'
+  
 
   const tabs = [
     { key: 'overview', label: '菜品总览' },
@@ -680,7 +793,48 @@
     fetchDishList()
   }
 
+  const handlePackageSearch = () => {
+    fetchPackageList()
+  }
+
   const currentDish = ref(null) // 当前选中菜品
+  const showReviewsModal = ref(false) // 查看评价弹窗状态
+
+  const dishReviews = ref([])
+
+  const averageDishRating = computed(() => {
+      if (dishReviews.value.length === 0) return 0
+      const total = dishReviews.value.reduce((sum, r) => sum + r.rating, 0)
+      return (total / dishReviews.value.length).toFixed(1)
+  })
+
+  async function openViewReviewsModal(dish) {
+    currentDish.value = dish
+    showReviewsModal.value = true
+    const res = await getDishReviews(dish.id)
+    if (res.message === '获取成功') {
+      const reviews = res.data.map(item => ({
+        id: item.id,
+        username: item.name,
+        avatar: item.avatar,
+        time: item.date, // 注意字段匹配
+        rating: item.rating,
+        text: item.content,
+        expanded: false
+      }))
+      dishReviews.value = reviews
+    } else {
+      alert('获取评价失败')
+    }
+  }
+
+  function closeDishReviewModal() {
+    dishReviews.value.forEach(review => {
+      review.expanded = false
+    })
+    showReviewsModal.value = false
+  }
+
 
   const showPriceModal = ref(false)
   const newPrice = ref('')
@@ -872,10 +1026,42 @@
   const packageUpdatedPrice = ref('')
   const packageStatusAction = ref('')
 
-  function viewPackageReviews(pkg) {
+  const maxLength = 100 // 最多显示100字后折叠
+
+  const packageReviews = ref([])
+  const averagePackageRating = computed(() => {
+    if (packageReviews.value.length === 0) return 0
+    const total = packageReviews.value.reduce((sum, r) => sum + r.rating, 0)
+    return (total / packageReviews.value.length).toFixed(1)
+  })
+
+  async function viewPackageReviews(pkg) {
     currentPackage.value = pkg
     showPackageReviewModal.value = true
+    const res = await getPackageReviews(pkg.id)
+    if (res.message === '获取成功') {
+      const reviews = res.data.map(item => ({
+        id: item.id,
+        username: item.name,
+        avatar: item.avatar,
+        time: item.date, // 注意字段匹配
+        rating: item.rating,
+        text: item.content,
+        expanded: false
+      }))
+      packageReviews.value = reviews
+    } else {
+      alert('获取评价失败')
+    }
   }
+
+  function closePackageReviewModal() {
+    packageReviews.value.forEach(review => {
+      review.expanded = false
+    })
+    showPackageReviewModal.value = false
+  }
+
 
   function openPackagePriceModal(pkg) {
     currentPackage.value = pkg
@@ -1984,6 +2170,114 @@
 .selectable-dish-list .add-btn:hover {
   background-color: #4c9966;
 }
+
+.review-modal {
+  width: 600px;
+  height: 500px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.average-score {
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 4px;
+  color: #666;
+}
+
+.star-group {
+  margin-left: 6px;
+  font-size: 16px;
+}
+
+.star-group .star {
+  color: #ccc;
+  margin-right: 2px;
+}
+
+.star-group .star.filled {
+  color: #f4b400;
+}
+
+.review-list-scroll {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-top: 10px;
+  margin-bottom: 16px;
+  padding-right: 4px;
+}
+
+.review-item {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.review-user-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+  border: 1px solid #ddd;
+}
+
+.user-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-username {
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+}
+
+.review-time {
+  font-size: 12px;
+  color: #999;
+}
+
+.review-stars {
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.review-stars .star {
+  color: #ccc;
+  margin-right: 2px;
+}
+
+.review-stars .star.filled {
+  color: #f4b400;
+}
+
+.review-text p {
+  font-size: 14px;
+  color: #444;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.review-text p.collapsed {
+  overflow: hidden;
+  max-height: 60px;
+}
+
+.toggle-link {
+  font-size: 13px;
+  color: #3a8ee6;
+  cursor: pointer;
+  margin-top: 4px;
+  display: inline-block;
+}
+
 
 
 </style>

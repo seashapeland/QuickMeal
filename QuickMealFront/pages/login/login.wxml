@@ -1,7 +1,7 @@
 <!-- 自定义导航栏 -->
 <view class="navbar">
-  <image src="/icons/home_active.png" class="navbar-home" bindtap="goToHome"></image>
-  <view class="navbar-title">登录/注册</view>
+  <image src="/icons/backhome.png" class="navbar-home" bindtap="goToHome"></image>
+  <view class="navbar-title">登录</view>
 </view>
 
 <!-- Logo -->
@@ -16,11 +16,11 @@
 
   <view class="form-container">
     <view class="input-group">
-      <input type="text" placeholder="用户名/手机号/邮箱" bindinput="onInputUsername" />
+      <input type="text" placeholder="用户名" value="{{username}}" bindinput="onInputUsername" />
     </view>
     
     <view class="input-group">
-      <input type="password" placeholder="请输入密码" password="{{!showPassword}}" bindinput="onInputPassword" />
+      <input type="password" value="{{password}}" placeholder="请输入密码" password="{{!showPassword}}" bindinput="onInputPassword" />
       <view class="password-actions">
         <text bindtap="togglePassword">{{showPassword ? '隐藏' : '显示'}}</text>
         <text class="forgot-password" bindtap="onForgotPassword">忘记密码？</text>
@@ -39,19 +39,15 @@
     </view>
 
     <view class="other-login">
-      <image src="/icons/weixin.png" class="wechat-icon" bindtap="onWechatLogin"></image>
+      <button 
+        class="wechat-button" 
+        lang="zh_CN"
+        bindtap="onWechatLogin"
+      >
+        <image src="/icons/weixin.png" class="wechat-icon" />
+      </button>
     </view>
   </view>
 
-  <view class="agreement">
-    <checkbox 
-      class="agreement-checkbox" 
-      checked="{{isAgreed}}" 
-      bindchange="onAgreeChange" 
-    />
-    <text>登录即表示您已阅读并同意</text>
-    <text class="agreement-link" bindtap="onUserAgreement">《用户协议》</text>
-    <text>和</text>
-    <text class="agreement-link" bindtap="onPrivacyPolicy">《隐私政策》</text>
-  </view>
+  
 </view>

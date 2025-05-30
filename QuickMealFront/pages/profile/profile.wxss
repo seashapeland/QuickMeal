@@ -31,10 +31,6 @@
   margin-bottom: 10rpx;
 }
 
-.phone {
-  font-size: 28rpx;
-  color: #666;
-}
 
 .section {
   margin: 30rpx;

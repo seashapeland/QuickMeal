@@ -22,17 +22,26 @@
 
   <view class="menu-section">
     <!-- 分类选择 -->
-    <view class="tab-bar">
-      <view 
-        class="tab {{ activeCategoryIndex === index ? 'selected' : '' }}" 
-        wx:for="{{ categories }}" 
-        wx:key="index" 
-        bindtap="onTabChange" 
-        data-index="{{ index }}"
+    <view class="tab-bar-place">
+      <scroll-view
+        class="tab-bar"
+        scroll-x="true"
+        scroll-with-animation
+        enhanced
+        show-scrollbar="{{false}}"
       >
-        {{ item.name }}
-      </view>
+        <view
+          class="tab {{ activeCategoryIndex === index ? 'selected' : '' }}"
+          wx:for="{{ tabs }}"
+          wx:key="index"
+          bindtap="onTabChange"
+          data-index="{{ index }}"
+        >
+          {{ item }}
+        </view>
+      </scroll-view>
     </view>
+    
 
     <!-- 菜品展示 -->
     <scroll-view
@@ -48,12 +57,12 @@
       <view class="dish-grid">
         <view
           class="dish-item"
-          wx:for="{{ categories[activeCategoryIndex].dishes }}"
+          wx:for="{{ dishMap[tabs[activeCategoryIndex]] }}"
           wx:key="index"
           bindtap="goToDishDetail"
           data-index="{{ index }}"
         >
-          <image class="dish-img" src="{{ item.img }}" mode="aspectFill" />
+          <image class="dish-img" src="{{ item.image }}" mode="aspectFill" />
           <view class="dish-info">
             <text class="dish-name">{{ item.name }}</text>
             <view class="price-line">

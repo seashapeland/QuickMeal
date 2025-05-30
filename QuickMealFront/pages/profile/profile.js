@@ -1,32 +1,38 @@
+const config = require('../../utils/config');
 Page({
   data: {
     username: '',
-    phone: ''
+    avatar: '/images/default-avatar.png'
   },
 
-  onLoad() {
-    wx.request({
-      url: 'https://94a4-2001-250-209-2000-cc5a-81eb-2e1d-5c54.ngrok-free.app/user/info/',  // ✅ 注意是 /user/info/
-      method: 'GET',
-      success: (res) => {
-        console.log('接口返回数据：', res.data);
-        this.setData({
-          username: res.data.username,
-          phone: res.data.phone
-        });
-      },
-      fail: (err) => {
-        console.error('请求失败：', err);
-      }
+  onShow() {
+    const username = wx.getStorageSync('username');
+    const avatarPath = wx.getStorageSync('avatar');
+    console.log(avatarPath)
+    const avatar = avatarPath
+    ? config.BASE_URL + avatarPath
+    : '/images/default-avatar.png';
+    this.setData({
+      username: username || '',
+      avatar
     });
   },
 
 
 
-  // 点击头像跳转账号管理
-  navigateToAccount: function() {
-    wx.navigateTo({
-      url: '/pages/account/account'
-    });
+  // 判断是否已登录并跳转
+  handleUserTap: function () {
+    if (this.data.username) {
+      const name = this.data.username;
+      const avatarUrl = this.data.avatar; // 本地默认或后端头像
+  
+      wx.navigateTo({
+        url: `/pages/account/account?name=${encodeURIComponent(name)}&avatarUrl=${encodeURIComponent(avatarUrl)}`
+      });
+    } else {
+      wx.navigateTo({
+        url: '/pages/login/login'
+      });
+    }
   }
 });

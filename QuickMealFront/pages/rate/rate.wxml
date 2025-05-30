@@ -1,0 +1,46 @@
+<!--pages/rate/rate.wxml-->
+<view class="navbar">
+  <image src="/icons/return.png" class="navbar-back" bindtap="goBack"></image>
+  <view class="navbar-title">评价</view>
+</view>
+<view class="rate-page">
+  <!-- 菜品展示 -->
+  <view class="dish-card">
+    <image class="dish-img" src="{{dish.image}}" mode="aspectFill" />
+    <view class="dish-info">
+      <text class="dish-name">{{ dish.name }}</text>
+      <text class="dish-desc">{{ dish.description }}</text>
+    </view>
+  </view>
+
+  <!-- 星级评分 -->
+  <view class="stars-section">
+    <text class="label">评分：</text>
+    <view class="stars">
+      <block wx:for="{{ 5 }}" wx:key="index">
+        <image
+          src="{{ index < rating ? '/icons/star-filled.png' : '/icons/star-empty.png' }}"
+          class="star"
+          data-index="{{ index }}"
+          bindtap="onRate"
+        />
+      </block>
+    </view>
+  </view>
+
+  <!-- 文字评价 -->
+  <view class="textarea-section">
+    <textarea 
+      class="textarea" 
+      placeholder="说说你对这道菜的看法吧～" 
+      maxlength="200" 
+      auto-height
+      bindinput="onInput"
+    />
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-section">
+    <button class="submit-btn" bindtap="onSubmit">提交评价</button>
+  </view>
+</view>

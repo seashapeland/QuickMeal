@@ -56,33 +56,33 @@
 
 
 套餐表（packages）
-    用于存储每个套餐的基本信息。
-
-字段	类型	说明
-package_id	INT	主键，唯一标识每个套餐
-name	VARCHAR(255)	套餐名称，必须唯一
-description	TEXT	套餐描述，介绍套餐特色
-image_url	VARCHAR(255)	套餐图片相对路径
-price	DECIMAL(10, 2)	当前套餐价格
-is_available	BOOLEAN	是否上架（True 表示上架，False 表示下架）
-created_at	DATETIME	套餐创建时间
-updated_at	DATETIME	最近一次更新时间
+这个表用于存储每个套餐的基本信息。
+| 字段         | 类型             | 说明                                      |
+|--------------|------------------|-------------------------------------------|
+| package_id   | INT              | 主键，唯一标识每个套餐                    |
+| name         | VARCHAR(255)     | 套餐名称，必须唯一                        |
+| description  | TEXT             | 套餐描述，介绍套餐特色                    |
+| image_url    | VARCHAR(255)     | 套餐图片的相对路径                        |
+| price        | DECIMAL(10, 2)   | 当前套餐价格                              |
+| is_available | BOOLEAN          | 是否上架（True 表示上架，False 表示下架）|
+| created_at   | DATETIME         | 套餐创建时间                              |
+| updated_at   | DATETIME         | 最近一次更新时间                          |
 
 套餐菜品关联表（package_items）
-    用于表示一个套餐中包含了哪些菜品以及每个菜品的份数（数量）。
+这个表用于表示一个套餐中包含了哪些菜品以及每个菜品的份数（数量）。
+| 字段       | 类型 | 说明                            |
+|------------|------|---------------------------------|
+| id         | INT  | 主键，自增                      |
+| package_id | INT  | 外键，关联套餐表                |
+| dish_id    | INT  | 外键，关联菜品表                |
+| quantity   | INT  | 该菜品在套餐中的份数，默认为 1  |
 
-字段	类型	说明
-id	INT	主键，自增
-package_id	INT	外键，关联 packages 表
-dish_id	INT	外键，关联 dishes 表
-quantity	INT	该菜品在套餐中的份数，默认为 1
-
-套餐历史价格表（package_price_history）
-    用于记录套餐的历史价格变化情况，方便画折线图、做统计分析。
-
-字段	类型	说明
-price_record_id	INT	主键，唯一标识每条价格记录
-package_id	INT	外键，关联 packages 表
-original_price	DECIMAL(10, 2)	修改前的价格
-current_price	DECIMAL(10, 2)	修改后的价格
-effective_date	DATETIME	该价格变动的生效时间
+套餐价格历史表（package_price_history）
+这个表用于记录套餐的价格变化历史。
+| 字段            | 类型           | 说明                               |
+|-----------------|----------------|------------------------------------|
+| price_record_id | INT            | 主键，唯一标识每条价格记录         |
+| package_id      | INT            | 外键，关联套餐表                   |
+| original_price  | DECIMAL(10, 2) | 修改前的价格                       |
+| current_price   | DECIMAL(10, 2) | 修改后的价格                       |
+| effective_date  | DATETIME       | 该价格变动的生效时间               |

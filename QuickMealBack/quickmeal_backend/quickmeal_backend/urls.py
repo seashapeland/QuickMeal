@@ -26,4 +26,8 @@ urlpatterns = [
     path('dish/', include('dish.urls')),
     path('package/', include('package.urls')),
     path('user/', include('user.urls')),
+    path('review/', include('review.urls')),
+    path('table/', include('table.urls')),
+    path('order/', include('order.urls')),
+    path('coupon/', include('coupon.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

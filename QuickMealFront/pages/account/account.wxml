@@ -1,11 +1,9 @@
-<view class="page">
-  <view class="header">
-    <view class="back-button" bindtap="onBack">
-      <image src="/icons/back.png" class="back-icon"></image>
-    </view>
-    <view class="title">账号管理</view>
-  </view>
+<view class="navbar">
+  <image src="/icons/return.png" class="navbar-back" bindtap="goBack"></image>
+  <view class="navbar-title">个人中心</view>
+</view>
 
+<view class="page">
   <view class="content-wrapper">
     <view class="container">
 
@@ -15,18 +13,18 @@
       </view>
 
       <view class="faq-card" bindtap="editName">
-        <view class="faq-question">昵称</view>
+        <view class="faq-question">用户名</view>
         <text>{{name}}</text>
       </view>
 
-      <view class="faq-card" bindtap="editPhone">
-        <view class="faq-question">手机号</view>
-        <text>{{phone}}</text>
+      <view class="update-button-wrapper">
+        <button class="update-button" bindtap="onUpdate">更新</button>
       </view>
 
-      <view class="faq-card delete-account" bindtap="onDeleteAccount">
-        <view class="faq-question delete-text">注销账号</view>
+      <view class="logout-button-wrapper">
+        <button class="logout-button" bindtap="onDeleteAccount">退出登录</button>
       </view>
+
 
     </view>
   </view>

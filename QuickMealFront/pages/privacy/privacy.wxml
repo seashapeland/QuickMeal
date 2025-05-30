@@ -1,12 +1,9 @@
-<view class="page">
-  <!-- 顶部栏：返回图标 + 标题 -->
-  <view class="header">
-    <view class="back-button" bindtap="goBack">
-      <image src="/icons/back.png" class="back-icon" />
-    </view>
-    <view class="title">安全与隐私政策</view>
-  </view>
+<view class="navbar">
+  <image src="/icons/return.png" class="navbar-back" bindtap="goBack"></image>
+  <view class="navbar-title">安全与隐私政策</view>
+</view>
 
+<view class="page">
   <!-- 内容区域 -->
   <scroll-view class="content-wrapper" scroll-y="true">
     <view class="container">

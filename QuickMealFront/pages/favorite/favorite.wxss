@@ -1,3 +1,32 @@
+.navbar {
+  display: flex;
+  align-items: center; /* 垂直居中对齐 */
+  justify-content: space-between; /* 水平两端对齐 */
+  height: 130rpx; /* 增加导航栏高度 */
+  padding: 10rpx 30rpx;
+  position: relative;
+  background-color: #fff;
+  border-bottom: 1rpx solid #f1f1f1;
+}
+
+.navbar-back {
+  width: 44rpx;
+  height: 44rpx;
+  position: absolute; /* 绝对定位 */
+  left: 30rpx; /* 距离左侧30rpx */
+  bottom: 10rpx; /* 距离底部10rpx */
+}
+
+.navbar-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  position: absolute; /* 绝对定位 */
+  left: 50%; /* 水平居中 */
+  transform: translateX(-50%); /* 调整水平居中 */
+  bottom: 10rpx; /* 距离底部10rpx */
+}
+
 .page {
   height: 100vh;
   display: flex;
@@ -5,70 +34,32 @@
   background-color: #ffffff;
 }
 
-/* 白色导航栏 */
-.header {
-  display: flex;
-  align-items: center;
-  padding: 120rpx 20rpx 20rpx;
-  background-color: #ffffff;
-  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
-  position: relative;
-  z-index: 10;
-}
-
-.back-button {
-  position: absolute;
-  top: 115rpx;
-  left: 20rpx;
-  z-index: 999;
-}
-
-.back-icon {
-  width: 60rpx;
-  height: 60rpx;
-}
-
-.title {
+.scroll-wrapper {
   width: 100%;
-  text-align: center;
-  font-size: 36rpx;
-  font-weight: bold;
-  color: #333333;
-}
-
-.content-wrapper {
-  flex: 1;
-  overflow: hidden;
+  height: calc(100vh - 170rpx); /* 保留你已有高度逻辑 */
+  overflow: scroll;
 }
 
 .container {
-  padding: 30rpx 20rpx;
+  padding-top: 30rpx;
+  padding-left: 20rpx;
+  padding-right: 20rpx;
 }
 
-/* 可滑动区域 */
-.movable-area {
-  width: 100%;
-  height: 180rpx;
-  margin-bottom: 20rpx;
-  border-radius: 16rpx;
-  overflow: hidden;
-}
-
-.movable-view {
-  width: 200%;
-  height: 100%;
+.favorite-item {
   display: flex;
-}
-
-/* 收藏卡片样式 */
-.favorite-card {
-  width: 50%;
-  height: 100%;
-  display: flex;
-  background: #ffffff;
+  align-items: center;
+  background: #fff;
   border-radius: 16rpx;
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+  margin-bottom: 20rpx;
   padding: 20rpx;
+}
+
+.card-left {
+  display: flex;
+  flex: 1;
+  align-items: center;
 }
 
 .card-image {
@@ -97,20 +88,16 @@
   color: #999999;
 }
 
-/* 删除按钮 */
-.delete-btn {
-  width: 10%;
-  height: 100%;
-  background-color: #18b654;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.cancel-btn {
+  padding: 10rpx 24rpx;
+  background-color: #60b04e;
+  color: #ffffff;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  margin-left: 20rpx;
 }
 
-.delete-icon {
-  width: 50rpx;
-  height: 50rpx;
-}
+
 
 /* 空状态提示 */
 .empty-tips {

@@ -95,14 +95,21 @@
   margin-top: 20rpx;
  
 }
+.tab-bar-place {
+  display: flex;
+  height: 50rpx;
+  padding: 16rpx 20rpx; 
+  background-color: transparent;
+}
 
 .tab-bar {
-  display: flex;
-  padding: 16rpx 20rpx;   /* 上下加宽一点更舒适 */
+  white-space: nowrap;
+  
   background-color: transparent;
 }
 
 .tab {
+  display: inline-block;
   margin-right: 36rpx;
   font-size: 32rpx;        /* 字体调大 */
   color: #666;
@@ -183,6 +190,7 @@
 .original-price {
   color: #999;
   font-size: 24rpx;
+  margin-left: 10rpx;
   text-decoration: line-through;
 }
 

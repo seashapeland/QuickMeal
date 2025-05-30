@@ -69,3 +69,6 @@ export const getPackagePriceHistory = (packageId) => {
   return request.get(`/package/price_history/${packageId}/`)
 }
 
+export const getPackageReviews = (packageId) => {
+  return request.get(`/review/package/${packageId}/list/`)
+}

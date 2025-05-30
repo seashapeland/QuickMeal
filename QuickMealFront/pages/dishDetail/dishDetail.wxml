@@ -1,29 +1,82 @@
-<view class="page">
-  <view class="header">
-    <view class="back-button" bindtap="goBack">
-      <image class="back-icon" src="/icons/back.png"></image>
-    </view>
-    <view class="title">曲辰在线点餐系统</view>
-  </view>
-  
-  <view class="content-wrapper">
-    <view class="container">
-      <view class="card-wrapper">
-        <image class="card-image" src="{{dish.img}}" mode="aspectFit"></image>
-        <view class="card-info">
-          <text class="card-title">{{dish.name}}</text>
-          <text class="card-desc">¥{{dish.price}}</text>
-          <text class="card-desc" wx:if="{{dish.originalPrice}}">原价：¥{{dish.originalPrice}}</text>
-          <text class="card-desc">{{dish.restriction}}</text>
-          <button class="favorite-button" bindtap="toggleFavorite">{{isFavorite ? '已收藏' : '收藏'}}</button>
-        </view>
-      </view>
-      <view class="card-wrapper price-info">
-        <view class="card-info">
-          <text class="card-title">价格说明</text>
-          <text class="price-rule">满38减1; 满58减2; 满78减3; 满98减5; 满128减8</text>
-        </view>
-      </view>
-    </view>
-  </view>
+
+<view class="navbar">
+  <image src="/icons/return.png" class="navbar-back" bindtap="goBack"></image>
+  <view class="navbar-title">曲辰智慧点餐</view>
 </view>
+
+<scroll-view class="dish-detail-page"
+ scroll-y="true" 
+ refresher-enabled="true" 
+ bindrefresherpulling="onPulling"
+  bindrefresherrefresh="onRefresh"
+  bindrefresherrestore="onRestore"
+  bindrefresherabort="onAbort"
+  refresher-triggered="{{isRefreshing}}"
+ enhanced 
+ show-scrollbar="{{false}}">
+  <!-- 菜品卡片 -->
+  <view class="dish-card">
+    <image class="dish-image" src="{{ dish.image }}" mode="aspectFill" />
+    <view class="dish-info">
+      <view class="title-row">
+        <text class="dish-name">{{ dish.name }}</text>
+        <view class="favorite-icon" bindtap="toggleFavorite">
+          <image src="{{ isFavorite ? '/icons/favor-fill.png' : '/icons/favor.png' }}" class="favorite-img" />
+        </view>
+      </view>
+      <text class="dish-price">¥{{ dish.price }}</text>
+      <text class="dish-description">{{ dish.description }}</text>
+    </view>
+  </view>
+
+  <!-- ✅ 评价模块 -->
+  <view class="review-section">
+    <!-- 标题 -->
+    <view class="review-title">菜品评价</view>
+
+    <!-- 平均评分：数字 + 星星 -->
+    <view class="review-summary">
+      <!-- 左侧评分区域：分数 + 星星 -->
+      <view class="score-stars">
+        <text class="average-score">{{ averageScore }}</text>
+        <view class="stars">
+          <block wx:for="{{ 5 }}" wx:for-index="i" wx:key="i">
+            <image src="{{ i < averageScore ? '/icons/star-filled.png' : '/icons/star-empty.png' }}" class="star-icon"/>
+          </block>
+        </view>
+      </view>
+
+      <!-- 右侧按钮 -->
+      <view class="rate-button" bindtap="goToRate">去评价</view>
+    </view>
+
+    <!-- 顾客评价列表 -->
+    <block wx:for="{{ reviews }}" wx:for-item="item" wx:key="id">
+      <view class="review-card">
+        <view class="review-header">
+          <image class="avatar" src="{{ item.avatar }}" />
+          <view class="review-main">
+            <view class="nickname-row">
+              <text class="nickname">{{ item.name }}</text>
+              <text class="date">{{ item.date }}</text>
+            </view>
+            <view class="stars">
+              <block wx:for="{{ 5 }}" wx:for-index="i" wx:for-item="x" wx:key="i">
+                <image src="{{ i < item.rating ? '/icons/star-filled.png' : '/icons/star-empty.png' }}" class="star-icon" />
+              </block>
+            </view>
+
+          </view>
+        </view>
+
+        <view class="review-main">
+          <text class="review-content">{{ item.content }}</text>
+        </view>
+      </view>
+    </block>
+  </view>
+  <view class="divider">
+    <text class="divider-text">已经到底了</text>
+  </view>
+</scroll-view>
+

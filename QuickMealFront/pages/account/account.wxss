@@ -1,38 +1,37 @@
+.navbar {
+  display: flex;
+  align-items: center; /* 垂直居中对齐 */
+  justify-content: space-between; /* 水平两端对齐 */
+  height: 130rpx; /* 增加导航栏高度 */
+  padding: 10rpx 30rpx;
+  position: relative;
+  background-color: #fff;
+  border-bottom: 1rpx solid #f1f1f1;
+}
+
+.navbar-back {
+  width: 44rpx;
+  height: 44rpx;
+  position: absolute; /* 绝对定位 */
+  left: 30rpx; /* 距离左侧30rpx */
+  bottom: 10rpx; /* 距离底部10rpx */
+}
+
+.navbar-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  position: absolute; /* 绝对定位 */
+  left: 50%; /* 水平居中 */
+  transform: translateX(-50%); /* 调整水平居中 */
+  bottom: 10rpx; /* 距离底部10rpx */
+}
+
 .page {
   height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: #f8f8f8;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  padding: 120rpx 20rpx 20rpx;
-  background-color: #ffffff;
-  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
-  position: relative;
-  z-index: 10;
-}
-
-.back-button {
-  position: absolute;
-  top: 115rpx;
-  left: 20rpx;
-  z-index: 999;
-}
-
-.back-icon {
-  width: 60rpx;
-  height: 60rpx;
-}
-
-.title {
-  width: 100%;
-  text-align: center;
-  font-size: 36rpx;
-  font-weight: bold;
-  color: #333333;
 }
 
 .content-wrapper {
@@ -71,11 +70,31 @@
   border-radius: 50%;
 }
 
-.delete-account {
-  border: 2rpx dashed #e64340;
+.update-button-wrapper {
+  display: flex;
+  justify-content: center;
 }
 
-.delete-text {
-  color: #e64340;
-  text-align: center;
+.update-button {
+  background-color: #6eb04c;
+  color: white;
+  font-size: 32rpx;
+  padding: 16rpx 60rpx;
+  border-radius: 60rpx;
+  margin-top: 30rpx;
+}
+
+.logout-button-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.logout-button {
+  border: 2rpx solid #6eb04c;
+  color: #6eb04c;
+  background-color: #fff;
+  font-size: 28rpx;
+  padding: 16rpx 60rpx;
+  border-radius: 60rpx;
+  margin-top: 30rpx;
 }

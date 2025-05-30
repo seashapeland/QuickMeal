@@ -1,11 +1,9 @@
-<view class="page">
-  <view class="header">
-    <view class="back-button" bindtap="goBack">
-      <image src="/icons/back.png" class="back-icon" />
-    </view>
-    <view class="title">投诉与建议</view>
-  </view>
+<view class="navbar">
+  <image src="/icons/return.png" class="navbar-back" bindtap="goBack"></image>
+  <view class="navbar-title">投诉与建议</view>
+</view>
 
+<view class="page">
   <scroll-view scroll-y class="content-wrapper">
     <view class="container">
       <view class="faq-card">

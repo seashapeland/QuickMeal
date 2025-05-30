@@ -1,1 +1,82 @@
 /* pages/register/register.wxss */
+
+/* 自定义导航栏 */
+.navbar {
+  display: flex;
+  align-items: center; /* 垂直居中对齐 */
+  justify-content: space-between; /* 水平两端对齐 */
+  height: 150rpx; /* 增加导航栏高度 */
+  padding: 0 30rpx;
+  position: relative;
+  background-color: #fff;
+  border-bottom: 1rpx solid #f1f1f1;
+}
+
+.navbar-back {
+  width: 44rpx;
+  height: 44rpx;
+  position: absolute; /* 绝对定位 */
+  left: 30rpx; /* 距离左侧30rpx */
+  bottom: 10rpx; /* 距离底部10rpx */
+}
+
+.navbar-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  position: absolute; /* 绝对定位 */
+  left: 50%; /* 水平居中 */
+  transform: translateX(-50%); /* 调整水平居中 */
+  bottom: 10rpx; /* 距离底部10rpx */
+}
+.container-inner {
+  padding: 60rpx 40rpx;
+  background: #fff;
+  min-height: 100vh;
+}
+
+
+
+.form-group {
+  margin-bottom: 40rpx;
+  position: relative;
+}
+
+.input {
+  width: 100%;
+  padding: 20rpx;
+  font-size: 28rpx;
+  border-bottom: 1rpx solid #ddd;
+  background: transparent;
+}
+
+.toggle {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24rpx;
+  color: #888;
+}
+
+.btn-register {
+  margin-top: 40rpx;
+  background-color: #07C160;
+  color: #fff;
+  font-size: 30rpx;
+  border-radius: 50rpx;
+  padding: 20rpx 0;
+}
+
+.login-tip {
+  display: flex;
+  justify-content: center;
+  margin-top: 30rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.login-link {
+  color: #07C160;
+  margin-left: 12rpx;
+}

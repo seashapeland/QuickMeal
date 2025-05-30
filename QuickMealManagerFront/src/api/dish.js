@@ -93,3 +93,7 @@ export const updateDishInfo = (data) => {
   })
 }
 
+export const getDishReviews = (dishId) => {
+  return request.get(`/review/dish/${dishId}/list/`)
+}
+

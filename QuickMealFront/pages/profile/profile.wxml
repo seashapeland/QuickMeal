@@ -9,11 +9,10 @@
 >
   <!-- 整体下移15rpx的容器 -->
     <!-- 用户信息（头像可点击） -->
-    <view class="user-section" bindtap="navigateToAccount">
-      <image class="avatar" src="/images/avatar.jpg"></image>
+    <view class="user-section" bindtap="handleUserTap">
+      <image class="avatar" src="{{ avatar }}"></image>
       <view class="user-info">
-        <text class="username">{{username}}</text>
-        <text class="phone">{{phone}}</text>
+        <text class="username">{{ username ? username : '去登录' }}</text>
       </view>
     </view>
 

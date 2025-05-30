@@ -20,9 +20,28 @@
     </view>
   </view>
 
-  <view class="search-result">
-  
-  </view>>
+  <scroll-view class="search-result" scroll-y>
+    <block wx:for="{{ searchResults }}" wx:for-item="item" wx:for-index="index" wx:key="id">
+      <view class="result-card" bindtap="goToDetail" data-item="{{ item }}">
+        <image class="card-img" src="{{ item.image }}" mode="aspectFill" />
+        <view class="card-info">
+          <view class="card-title">
+            <text class="card-name">{{ item.name }}</text>
+          </view>
+          <view class="price-row">
+            <view class="card-price">¥{{ item.price }}</view>
+            <text wx:if="{{item.originalPrice}}" class="original-price">¥{{ item.originalPrice }}</text>
+          </view>
+          
+          <view class="card-desc">{{ item.description }}</view>
+        </view>
+      </view>
+    </block>
+
+    <view wx:if="{{ searchResults.length === 0 }}" class="empty-hint">
+      <text>暂无相关结果</text>
+    </view>
+  </scroll-view>
   
 
 </view>

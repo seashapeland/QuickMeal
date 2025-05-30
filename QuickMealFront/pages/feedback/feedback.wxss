@@ -1,3 +1,32 @@
+.navbar {
+  display: flex;
+  align-items: center; /* 垂直居中对齐 */
+  justify-content: space-between; /* 水平两端对齐 */
+  height: 130rpx; /* 增加导航栏高度 */
+  padding: 10rpx 30rpx;
+  position: relative;
+  background-color: #fff;
+  border-bottom: 1rpx solid #f1f1f1;
+}
+
+.navbar-back {
+  width: 44rpx;
+  height: 44rpx;
+  position: absolute; /* 绝对定位 */
+  left: 30rpx; /* 距离左侧30rpx */
+  bottom: 10rpx; /* 距离底部10rpx */
+}
+
+.navbar-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  position: absolute; /* 绝对定位 */
+  left: 50%; /* 水平居中 */
+  transform: translateX(-50%); /* 调整水平居中 */
+  bottom: 10rpx; /* 距离底部10rpx */
+}
+
 .page {
   height: 100vh;
   display: flex;
@@ -5,35 +34,7 @@
   background-color: #f8f8f8;
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  padding: 120rpx 20rpx 20rpx;
-  background-color: #ffffff;
-  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
-  position: relative;
-  z-index: 10;
-}
 
-.back-button {
-  position: absolute;
-  top: 115rpx;
-  left: 20rpx;
-  z-index: 999;
-}
-
-.back-icon {
-  width: 60rpx;
-  height: 60rpx;
-}
-
-.title {
-  width: 100%;
-  text-align: center;
-  font-size: 36rpx;
-  font-weight: bold;
-  color: #333333;
-}
 
 .content-wrapper {
   flex: 1;

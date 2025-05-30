@@ -154,26 +154,23 @@
   margin-top: 40rpx; /* 调整距离顶部的距离 */
 }
 
+.wechat-button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  width: auto;
+  height: auto;
+  line-height: normal;
+  display: inline-block;
+}
+
+.wechat-button::after {
+  border: none; /* 去除按钮点击态 */
+}
+
 .wechat-icon {
   width: 80rpx; /* 放大图标宽度 */
   height: 80rpx; /* 放大图标高度 */
 }
 
-.agreement {
-  position: fixed;
-  bottom: 40rpx;
-  font-size: 24rpx;
-  color: #999;
-  text-align: center;
-  width: 100%;
-  padding: 0 40rpx;
-  box-sizing: border-box;
-}
-
-.agreement-checkbox {
-  margin-right: 10rpx;
-}
-
-.agreement-link {
-  color: #07C160;
-}

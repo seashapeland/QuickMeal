@@ -6,6 +6,7 @@
     "pages/search/search",
     "pages/searchResult/searchResult",
     "pages/dishDetail/dishDetail",
+    "pages/packageDetail/packageDetail",
     "pages/food/food",
     "pages/checkout/checkout",
     "pages/orderDetail/orderDetail",
@@ -18,7 +19,8 @@
     "pages/agreement/agreement",
     "pages/forgot/forgot",
     "pages/register/register",
-    "pages/privacy/privacy"
+    "pages/privacy/privacy",
+    "pages/rate/rate"
   ],
   "window": {
     "navigationBarTextStyle": "black",

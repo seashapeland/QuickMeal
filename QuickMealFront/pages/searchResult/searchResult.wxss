@@ -57,9 +57,83 @@
 }
 
 .search-result {
-  height: 100vh;
+  height: calc(100vh - 305rpx);
   margin-top: 30rpx;
+  padding-top: 30rpx;
   background-color: #ffffff;
   border-top-left-radius: 24rpx;
   border-top-right-radius: 24rpx;
+  overflow: auto;
+}
+
+.result-card {
+  display: flex;
+  background-color: #ffffff;
+  border-radius: 20rpx;
+  overflow: hidden;
+  margin-bottom: 28rpx;
+  transition: transform 0.2s ease;
+  border-bottom: 1rpx solid #eee;
+}
+
+
+.card-img {
+  width: 200rpx;
+  height: 160rpx;
+  object-fit: cover;
+  border-top-left-radius: 20rpx;
+  border-bottom-left-radius: 20rpx;
+}
+
+.card-info {
+  flex: 1;
+  padding: 20rpx 24rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6rpx;
+}
+
+.card-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.price-row {
+  display: flex;
+  align-items: baseline;
+  margin: 6rpx 0 10rpx;
+}
+
+.card-price {
+  font-size: 34rpx;
+  color: #e64340;
+  font-weight: bold;
+}
+
+.original-price {
+  font-size: 26rpx;
+  margin-left: 14rpx;
+  text-decoration: line-through;
+  color: #999;
+}
+
+.card-desc {
+  font-size: 26rpx;
+  color: #777;
+  line-height: 1.5;
+}
+
+.empty-hint {
+  text-align: center;
+  margin-top: 120rpx;
+  color: #bbb;
+  font-size: 28rpx;
 }

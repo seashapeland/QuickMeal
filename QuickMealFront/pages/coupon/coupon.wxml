@@ -1,10 +1,8 @@
+<view class="navbar">
+  <image src="/icons/return.png" class="navbar-back" bindtap="goBack"></image>
+  <view class="navbar-title">优惠券</view>
+</view>
 <view class="page">
-  <view class="header">
-    <view class="back-button" bindtap="goBack">
-      <image class="back-icon" src="/icons/back.png" />
-    </view>
-    <view class="title">优惠券</view>
-  </view>
 
   <view class="filter-bar">
     <text wx:for="{{filterOptions}}" wx:key="value"

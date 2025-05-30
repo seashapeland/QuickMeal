@@ -101,6 +101,13 @@
   border-top-right-radius: 24rpx;
 }
 
+.dish-container {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  min-height: 0; /* 避免子元素撑高 */
+}
+
 /* 容器：左右两栏 */
 .dish-container {
   display: flex;
@@ -109,9 +116,10 @@
 
 /* 左边分类栏 */
 .category-scroll {
-  width: 200rpx;
-  height: calc(100vh - 300rpx);
+  flex-shrink: 0;        /* 不可被压缩 */
+  width: 180rpx;         /* 💡缩窄一点更精致 */
   background-color: #f5f5f5;
+  overflow-y: auto;
 }
 
 .category-item {
@@ -124,33 +132,35 @@
 
 .category-item.active {
   font-weight: bold;
-  color: #00b386;
+  color: rgb(64, 152, 100);
   background-color: #ffffff;
-  border-left: 6rpx solid #00b386;
+  border-left: 6rpx solid rgb(64, 152, 100);
 }
 
 /* 右侧菜品滚动区 */
 .dish-scroll {
   flex: 1;
-  padding: 0rpx;
-  height: calc(100vh - 370rpx);
+  height: 100%;
+  overflow-y: auto;
   background-color: #ffffff;
 }
 
 /* 菜品卡片 */
 .dish-card {
+  position: relative;  /* 🔧 关键修复 */
   display: flex;
   margin: 24rpx;
   background-color: #fff;
   border-radius: 16rpx;
-  border: 2rpx solid green;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+  border-bottom: 1rpx solid #eee;
   padding: 20rpx;
 }
 
+
 .dish-img {
+  flex-shrink: 0;  
   width: 160rpx;
-  height: 120rpx;
+  height: 160rpx;
   border-radius: 12rpx;
   margin-right: 20rpx;
 }
@@ -170,6 +180,13 @@
 
 .dish-price-line {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10rpx;
+}
+
+.price-group {
+  display: flex;
   align-items: baseline;
 }
 
@@ -183,7 +200,51 @@
   font-size: 24rpx;
   color: #999;
   text-decoration: line-through;
+  margin-left: 10rpx;
 }
+
+.dish-actions {
+  display: flex;
+  width: 160rpx;
+  align-items: center;
+}
+
+.plus-btn,
+.minus-btn {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  border: 2rpx solid #18b654;
+  font-size: 32rpx;
+  line-height: 44rpx;
+  text-align: center;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.plus-btn {
+  background-color: #18b654;
+  color: #fff;
+}
+
+.minus-btn {
+  background-color: #fff;
+  color: #18b654;
+}
+
+.dish-count {
+  margin: 0 12rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333333;
+}
+
+.action-group {
+  width: 100rpx;
+  display: flex;
+  align-items: center;
+}
+
 
 /* 结算部分*/
 .checkout-bar {
