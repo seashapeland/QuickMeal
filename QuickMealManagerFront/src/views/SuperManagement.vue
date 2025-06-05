@@ -37,6 +37,14 @@
           </div>
         </div>
       </div>
+      <div v-if="activeTab === '二维码'">
+        <div class="qr-grid">
+          <div class="qr-item" v-for="(item, index) in qrcodes" :key="index">
+            <img :src="`${BASE_URL}/media/${item.qr_code_image}?v=${Date.now()}`" class="qr-image" />
+          </div>
+        </div>
+
+      </div>
     </div>
 
     <!-- 创建管理员弹窗 -->
@@ -124,6 +132,8 @@
 <script setup>
   import { ref, onMounted, watch } from 'vue';
   import { getAdminList, createAdminRequest, changePasswordRequest, disableAdmin, restoreAdmin, deleteAdmin } from '@/api/auth'
+  import { BASE_URL } from '@/utils/request'
+  import { getAllQRCodes } from '@/api/table'
 
   const tabs = [
     { key: '管理员', label: '管理员' },
@@ -133,6 +143,8 @@
   const activeTab = ref('管理员');  // 默认显示“管理员”标签内容
 
   const admins = ref([]);
+  const qrcodes = ref([]);      // 新增二维码数据
+
   const fetchAdminList = async () => {
     try {
       const res = await getAdminList()  // 调用获取管理员列表接口
@@ -153,8 +165,19 @@
   watch(activeTab, (newVal) => {
     if (newVal === '管理员') {
       fetchAdminList()
+    } else if (newVal === '二维码') {
+      loadQRCodes()
     }
   })
+  const loadQRCodes = async () => {
+    try {
+      const data = await getAllQRCodes()
+      qrcodes.value = data
+    } catch (err) {
+      console.error('获取二维码失败:', err)
+    }
+  }
+
   onMounted(() => {
     fetchAdminList()  // 页面加载时获取管理员列表
   })
@@ -517,4 +540,31 @@
 .cancel-btn:hover {
   background-color: #c1c1c1;
 }
+
+.qr-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+
+  max-height: 550px;        /* 根据页面情况设置 */
+  overflow-y: auto;         /* 垂直滚动 */
+  padding-right: 10px;
+}
+
+.qr-item {
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #eee;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.qr-image {
+  width: 100%;
+  max-width: 160px;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+}
+
 </style>

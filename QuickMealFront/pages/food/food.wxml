@@ -9,7 +9,7 @@
   <view class="table-card">
     <image class="table-icon" src="/icons/logo.png" mode="aspectFit" />
     <view class="table-info">
-      <view class="table-circle-number">{{ tableNumber }}</view>
+      <view class="table-circle-number">{{ tableId }}</view>
       <text class="table-text">号桌</text>
     </view>
   </view>
@@ -20,21 +20,27 @@
       <scroll-view class="category-scroll" scroll-y="true" show-scrollbar="false">
         <view
           class="category-item {{ activeCategoryIndex === index ? 'active' : '' }}"
-          wx:for="{{ categories }}"
+          wx:for="{{ tabs }}"
           wx:key="index"
           bindtap="onCategoryTap"
           data-index="{{ index }}"
         >
-          {{ item.name }}
+          {{ item }}
         </view>
       </scroll-view>
 
       <!-- 右侧菜品展示区 -->
       <scroll-view class="dish-scroll" scroll-y="true"
-      enhanced show-scrollbar="{{false}}">
-        <block wx:for="{{ categories[activeCategoryIndex].dishes }}" wx:key="index">
-          <view class="dish-card">
-            <image class="dish-img" src="{{ item.img }}" mode="aspectFill" />
+      enhanced show-scrollbar="{{false}}" refresher-enabled="true"
+      refresher-triggered="{{isRefreshing}}"
+      bindrefresherpulling="onPulling"
+      bindrefresherrefresh="onRefresh"
+      bindrefresherrestore="onRestore"
+      bindrefresherabort="onAbort"
+      >
+        <block wx:for="{{ dishMap[tabs[activeCategoryIndex]] }}" wx:key="index">
+          <view class="dish-card" bindtap="goToDishDetail" data-index="{{ index }}">
+            <image class="dish-img" src="{{ item.image }}" mode="aspectFill" />
             <view class="dish-info">
               <view class="dish-name">{{ item.name }}</view>
               <view class="dish-price-line">
@@ -42,12 +48,12 @@
                   <text class="dish-price">¥{{ item.price }}</text>
                   <text wx:if="{{ item.originalPrice }}" class="dish-original">¥{{ item.originalPrice }}</text>
                 </view>
-                <view class="dish-actions">
+                <view class="dish-actions {{ item.count > 0 ? 'with-count' : 'without-count' }}">
                   <view wx:if="{{ item.count > 0 }}" class="action-group">
-                    <button class="minus-btn">-</button>
+                    <button class="minus-btn" catchtap="handleMinus" data-index="{{index}}" >-</button>
                     <text class="dish-count">{{ item.count }}</text>
                   </view>
-                  <button class="plus-btn">+</button>
+                  <button class="plus-btn" catchtap="handlePlus" data-index="{{index}}">+</button>
                 </view>
               </view>
             </view>
@@ -67,7 +73,7 @@
       <text class="total-price">¥{{ totalPrice }}</text>
     </view>
 
-    <view class="checkout-btn" bindtap="goCheckout">去结算</view>
+    <view class="checkout-btn" catchtap="goCheckout">下单</view>
   </view>
 
   <!-- 遮罩层 -->
@@ -75,6 +81,34 @@
 
   <!-- 购物车弹出层 -->
   <view wx:if="{{ showCartPanel }}" class="cart-panel">
-    <!-- 先只放一个白色占位 -->
+    <view class="cart-header">
+      <text>已选商品</text>
+      <text class="clear-cart" bindtap="clearCart">清空</text>
+    </view>
+
+    <scroll-view class="cart-list" scroll-y enhanced show-scrollbar="{{false}}">
+      <block wx:for="{{ cartItems }}" wx:key="index">
+        <view class="dish-card">
+          <image class="dish-img" src="{{ item.image }}" mode="aspectFill" />
+          <view class="dish-info">
+            <view class="dish-name">{{ item.name }}</view>
+            <view class="dish-price-line">
+              <view class="price-group">
+                <text class="dish-price">¥{{ item.price }}</text>
+                <text wx:if="{{ item.originalPrice }}" class="dish-original">¥{{ item.originalPrice }}</text>
+              </view>
+              <view class="dish-actions {{ item.count > 0 ? 'with-count' : 'without-count' }}">
+                <view wx:if="{{ item.count > 0 }}" class="action-group">
+                  <button class="minus-btn" bindtap="handleCartMinus" data-index="{{index}}">-</button>
+                  <text class="dish-count">{{ item.count }}</text>
+                </view>
+                <button class="plus-btn" bindtap="handleCartPlus" data-index="{{index}}">+</button>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </scroll-view>
   </view>
+
 </view>

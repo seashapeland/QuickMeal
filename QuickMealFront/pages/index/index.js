@@ -23,20 +23,21 @@ Page({
     })
   },
   onScan() {
-    wx.navigateTo({
-      url: '/pages/food/food', // 你的搜索页面路径
-    })
-    /*wx.scanCode({
+    wx.scanCode({
       success(res) {
-        console.log('扫码结果:', res.result); // 扫码得到的字符串
-        console.log('扫码类型:', res.scanType); // 二维码类型（如 QR_CODE）
-        console.log('字符集:', res.charSet); // 编码字符集
-        console.log('原始数据:', res.rawData); // 原始数据（Base64）
-        
-        // 可以根据扫码结果跳转到对应页面
-        wx.navigateTo({
-          url: `/pages/detail/detail?data=${encodeURIComponent(res.result)}`
-        });
+        console.log('扫码结果:', res.result); // 例如 "pages/food/food?table_id=1"
+  
+        // 判断是否是小程序内路径（简易校验）
+        if (res.result.startsWith('pages/')) {
+          wx.navigateTo({
+            url: '/' + res.result  // 注意补上前导斜杠
+          });
+        } else {
+          wx.showToast({
+            title: '二维码无效',
+            icon: 'none'
+          });
+        }
       },
       fail(err) {
         console.error('扫码失败:', err);
@@ -45,8 +46,9 @@ Page({
           icon: 'none'
         });
       }
-    });*/
+    });
   },
+  
   onTabChange(e) {
     this.setData({
       activeCategoryIndex: e.currentTarget.dataset.index

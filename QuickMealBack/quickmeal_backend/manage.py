@@ -28,4 +28,5 @@ if __name__ == "__main__":
     # python manage.py migrate
 
     # python manage.py startapp order
-
+    # cd D:\Desktop\QuickMeal\QuickMealManagerFront
+    

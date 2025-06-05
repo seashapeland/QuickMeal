@@ -4,14 +4,14 @@ Page({
     currentTab: 0,
     tabs: ['全部', '待支付', '已完成', '退款'],
     orders: [
-      { id: '001', time: '2024-04-16 14:22', table: '1号桌', status: '已完成', total: 56.00 },
-      { id: '002', time: '2024-04-17 10:12', table: '3号桌', status: '待支付', total: 88.00 },
-      { id: '003', time: '2024-04-18 18:09', table: '2号桌', status: '已完成', total: 42.00 },
-      { id: '004', time: '2024-04-18 18:09', table: '2号桌', status: '已完成', total: 42.00 },
-      { id: '005', time: '2024-04-18 18:09', table: '2号桌', status: '已完成', total: 42.00 },
-      { id: '006', time: '2024-04-18 18:09', table: '2号桌', status: '已完成', total: 42.00 },
-      { id: '007', time: '2024-04-18 18:09', table: '2号桌', status: '已完成', total: 42.00 },
-      { id: '008', time: '2024-04-18 18:09', table: '2号桌', status: '已完成', total: 42.00 },
+      { id: '001', time: '2024-04-16 14:22', table: '1', status: '已完成', total: 56.00 },
+      { id: '002', time: '2024-04-17 10:12', table: '3', status: '待支付', total: 88.00 },
+      { id: '003', time: '2024-04-18 18:09', table: '2', status: '已完成', total: 42.00 },
+      { id: '004', time: '2024-04-18 18:09', table: '2', status: '已完成', total: 42.00 },
+      { id: '005', time: '2024-04-18 18:09', table: '2', status: '已完成', total: 42.00 },
+      { id: '006', time: '2024-04-18 18:09', table: '2', status: '已完成', total: 42.00 },
+      { id: '007', time: '2024-04-18 18:09', table: '2', status: '已完成', total: 42.00 },
+      { id: '008', time: '2024-04-18 18:09', table: '2', status: '已完成', total: 42.00 },
     ],
     filteredOrders: [], // 显示的订单列表
     isRefreshing: false

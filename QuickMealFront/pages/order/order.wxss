@@ -1,7 +1,7 @@
 /* pages/order/order.wxss */
 .orders-page {
   background-color: #f8f8f8;
-  min-height: 100vh;
+  height: 600rpx;
   font-family: sans-serif;
   background-color: #a6db9f; /* 主色调绿色 */
 }
@@ -65,57 +65,80 @@
 }
 
 .order-card {
-  background-color: #ffffff;
+  background-color: #fff;
   border-radius: 20rpx;
-  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.05);
-  padding: 24rpx;
-  margin: 24rpx;
+  padding: 32rpx;
+  margin: 24rpx 24rpx 0;
 }
 
-.order-info-top {
+.order-title-row {
   display: flex;
-  justify-content: space-between;
-  font-size: 26rpx;
-  color: #888;
-  margin-bottom: 12rpx;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #eee;
 }
 
-.order-summary {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 16rpx;
+.order-icon {
+  width: 60rpx;
+  height: 60rpx;
+  margin-right: 16rpx;
 }
 
-.order-label {
-  font-size: 28rpx;
-  color: #333;
-}
-
-.order-status {
-  color: #00b386;
-  font-weight: 600;
-}
-
-.order-table {
-  color: #444;
+.order-title {
+  font-size: 32rpx;
   font-weight: bold;
+  flex: 1;
+}
+
+.order-status-tag {
+  font-size: 26rpx;
+  color: #00b386;
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+  background-color: #e6f8f2;
+}
+
+.order-info-row {
+  display: flex;
+  font-size: 28rpx;
+  color: #555;
+  margin-top: 12rpx;
+  
+}
+
+.order-info-row-last {
+  display: flex;
+  font-size: 28rpx;
+  color: #555;
+  margin-top: 12rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #eee;
 }
 
 .order-bottom {
   display: flex;
-  justify-content: space-between;
+  margin-left: 500rpx;
+  margin-top: 20rpx;
   align-items: center;
-}
-
-.order-total {
-  font-size: 30rpx;
-  font-weight: bold;
-  color: #e64545;
 }
 
 .order-arrow {
   font-size: 26rpx;
   color: #999;
+}
+
+.order-label {
+  color: #666;
+}
+
+.order-value {
+  font-weight: 500;
+}
+
+.order-price {
+  font-weight: bold;
+  color: #e64545;
 }
 
 /* 空状态 */
@@ -138,5 +161,21 @@
 
 .empty-text {
   font-size: 28rpx;
-  color: rgb(98, 169, 102);
+  color: rgb(187, 187, 187);
+}
+
+.divider {
+  position: relative;
+  text-align: center;
+  margin-top: 15rpx;
+  margin-bottom: 15rpx;
+}
+
+
+.divider-text {
+  position: relative;
+  display: inline-block;
+  z-index: 2;
+  color: #999;
+  font-size: 28rpx;
 }
