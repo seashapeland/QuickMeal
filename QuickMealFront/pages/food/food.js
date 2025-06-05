@@ -35,10 +35,36 @@ Page({
     }
   },
 
-
-  // 保持原有方法不变
   goBack() {
-    wx.navigateBack({ delta: 1 });
+    wx.showModal({
+      title: '提示',
+      content: '你确定要取消点餐吗？',
+      confirmText: '是',
+      cancelText: '否',
+      success: (res) => {
+        if (res.confirm) {
+          // 设置为空闲
+          wx.request({
+            url: config.UPDATE_TABLE_STATUS_API,
+            method: 'POST',
+            header: { 'content-type': 'application/json' },
+            data: {
+              table_id: this.data.tableId,
+              status: '空闲'
+            },
+            success: () => {
+              console.log('桌子状态已设为空闲');
+            },
+            fail: () => {
+              console.warn('状态恢复失败');
+            }
+          });
+  
+          this.clearCart?.(); // ✅ 若有定义
+          wx.navigateBack(); // ✅ 确认后再返回
+        }
+      }
+    });
   },
   
   onCategoryTap(e) {
@@ -55,8 +81,29 @@ Page({
   },
   
   goCheckout() {
-    wx.navigateTo({ url: '/pages/checkout/checkout' });
+    if (this.data.totalPrice > 0) {
+      wx.showModal({
+        title: '确认下单',
+        content: '你确定要下单吗？下单后取消订单需要联系服务员',
+        confirmText: '确定',
+        cancelText: '取消',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({
+              url: '/pages/checkout/checkout'
+            });
+          }
+        }
+      });
+    } else {
+      wx.showToast({
+        title: '请先选择商品',
+        icon: 'none',
+        duration: 2000
+      });
+    }
   },
+  
 
   loadCategory() {
     return new Promise((resolve, reject) => {

@@ -23,28 +23,54 @@ Page({
     })
   },
   onScan() {
+    // 1. 检查是否有本地 token
+    const token = wx.getStorageSync('token');
+    if (!token) {
+      wx.showToast({
+        title: '请先登录',
+        icon: 'none'
+      });
+      return; // 阻止扫码
+    }
     wx.scanCode({
-      success(res) {
-        console.log('扫码结果:', res.result); // 例如 "pages/food/food?table_id=1"
+      success: res => {
+        console.log('扫码结果:', res.result); // 如: pages/food/food?table_id=1
   
-        // 判断是否是小程序内路径（简易校验）
         if (res.result.startsWith('pages/')) {
-          wx.navigateTo({
-            url: '/' + res.result  // 注意补上前导斜杠
-          });
+          // 提取 table_id
+          const tableIdMatch = res.result.match(/table_id=(\d+)/);
+          const table_id = tableIdMatch ? tableIdMatch[1] : null;
+  
+          if (table_id) {
+            // ✅ 发送请求修改餐桌状态为 “点餐中”
+            wx.request({
+              url: config.UPDATE_TABLE_STATUS_API,  // 如 https://your.api/table/update_status/
+              method: 'POST',
+              header: { 'content-type': 'application/json' },
+              data: {
+                table_id: table_id,
+                status: '点菜中'
+              },
+              success: () => {
+                // ✅ 修改成功后跳转页面
+                wx.navigateTo({
+                  url: '/' + res.result
+                });
+              },
+              fail: () => {
+                wx.showToast({ title: '修改桌子状态失败', icon: 'none' });
+              }
+            });
+          } else {
+            wx.showToast({ title: '二维码缺少桌号', icon: 'none' });
+          }
         } else {
-          wx.showToast({
-            title: '二维码无效',
-            icon: 'none'
-          });
+          wx.showToast({ title: '二维码无效', icon: 'none' });
         }
       },
-      fail(err) {
+      fail: err => {
         console.error('扫码失败:', err);
-        wx.showToast({
-          title: '扫码失败',
-          icon: 'none'
-        });
+        wx.showToast({ title: '扫码失败', icon: 'none' });
       }
     });
   },

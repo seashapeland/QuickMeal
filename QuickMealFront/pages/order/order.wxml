@@ -45,7 +45,7 @@
         </view>
       </view>
     </block>
-    <view wx:if="{{ ! (filteredOrders.length == 0) }}" class="divider">
+    <view wx:if="{{ ! (filteredOrders.length <= 4) }}" class="divider">
       <text class="divider-text">已经到底了</text>
     </view>
     <!-- 空状态 -->

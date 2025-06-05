@@ -16,4 +16,5 @@ module.exports = {
   PACKAGE_REVIEW_LIST_API: `${BASE_URL}/review/package/`, // + package_id/list/
   FAVORITE_TOGGLE_API: `${BASE_URL}/user/favorite/toggle/`,
   FAVORITE_STATUS_API: `${BASE_URL}/user/favorite/status/`,
+  UPDATE_TABLE_STATUS_API: `${BASE_URL}/table/update_status/`,
 };

@@ -24,7 +24,7 @@ if __name__ == "__main__":
     # conda activate meal
     # python manage.py runserver 0.0.0.0:8000
 
-    # python manage.py makemigrations user
+    # python manage.py makemigrations table
     # python manage.py migrate
 
     # python manage.py startapp order
