@@ -1,32 +1,36 @@
 // pages/order/order.js
+const config = require('../../utils/config.js');
 Page({
   data: {
     currentTab: 0,
-    tabs: ['全部', '待支付', '已完成', '退款'],
-    orders: [
-      { id: '001', time: '2024-04-16 14:22', table: '1', status: '已完成', total: 56.00 },
-      { id: '002', time: '2024-04-17 10:12', table: '3', status: '待支付', total: 88.00 },
-      { id: '003', time: '2024-04-18 18:09', table: '2', status: '已完成', total: 42.00 },
-      { id: '004', time: '2024-04-18 18:09', table: '2', status: '已完成', total: 42.00 },
-      { id: '005', time: '2024-04-18 18:09', table: '2', status: '已完成', total: 42.00 },
-      { id: '006', time: '2024-04-18 18:09', table: '2', status: '已完成', total: 42.00 },
-      { id: '007', time: '2024-04-18 18:09', table: '2', status: '已完成', total: 42.00 },
-      { id: '008', time: '2024-04-18 18:09', table: '2', status: '已完成', total: 42.00 },
-    ],
-    filteredOrders: [], // 显示的订单列表
+    tabs: ['全部', '进行中', '已完成', '退款'],
+    orders: [],
+    filteredOrders: [],
     isRefreshing: false
   },
 
   onLoad() {
-    this.updateFilteredOrders(); // 页面加载时初始化
+    this.fetchOrders();
   },
 
   onShow() {
+    const token = wx.getStorageSync('token');
+    if (!token) {
+      wx.showToast({
+        title: '请先登录',
+        icon: 'none',
+        duration: 1500
+      });
+  
+      
+      return; // 阻止后续执行
+    }
+  
+    // 如果已登录，则继续正常流程
     this.setData({
       currentTab: 0
     });
-    console.log("Tab" + this.data.currentTab);
-    this.updateFilteredOrders();
+    this.fetchOrders();
   },
 
   switchTab(e) {
@@ -34,58 +38,73 @@ Page({
     this.setData({
       currentTab: index
     }, () => {
-      this.updateFilteredOrders(); // 切换 tab 后更新列表
+      this.updateFilteredOrders();
+    });
+  },
+
+  fetchOrders() {
+    const token = wx.getStorageSync('token');
+    if (!token) {
+      wx.showToast({ title: '请先登录', icon: 'none' });
+      return;
+    }
+
+    wx.request({
+      url: config.USER_ORDER_LIST_API,
+      method: 'GET',
+      header: {
+        'Authorization': `Bearer ${token}`
+      },
+      success: res => {
+        const orders = res.data.map(o => ({
+          id: o.order_id,
+          time: o.created_at,
+          table: o.table_id,
+          status: o.status,
+          total: o.total_price
+        }));
+        this.setData({ orders }, () => {
+          this.updateFilteredOrders();
+        });
+      },
+      fail: () => {
+        wx.showToast({ title: '订单获取失败', icon: 'none' });
+      }
     });
   },
 
   updateFilteredOrders() {
-    const statusMap = ['全部', '待支付', '已完成', '退款'];
-    const current = statusMap[this.data.currentTab];
-
-    if (current === '全部') {
-      this.setData({
-        filteredOrders: this.data.orders
-      });
-    } else {
-      const filtered = this.data.orders.filter(o => o.status === current);
-      this.setData({
-        filteredOrders: filtered
-      });
+    const tab = this.data.tabs[this.data.currentTab];
+    let filtered = [];
+    if (tab === '全部') {
+      filtered = this.data.orders;
+    } else if (tab === '进行中') {
+      filtered = this.data.orders.filter(o => ['待餐中', '待支付'].includes(o.status));
+    } else if (tab === '已完成') {
+      filtered = this.data.orders.filter(o => ['已完成', '已取消'].includes(o.status));
+    } else if (tab === '退款') {
+      filtered = this.data.orders.filter(o => ['申请中', '已退款'].includes(o.status));
     }
+    this.setData({ filteredOrders: filtered });
   },
 
-  // ✅ 下拉刷新触发时
   onRefresh() {
-    console.log("触发下拉刷新");
-
     this.setData({ isRefreshing: true });
-
-    // 模拟请求
+    this.fetchOrders();
     setTimeout(() => {
-      this.updateFilteredOrders(); // 刷新数据
-      this.setData({ isRefreshing: false }); // 停止刷新
-    }, 1000);
+      this.setData({ isRefreshing: false });
+    }, 100);
   },
 
-  onPulling(e) {
-    // 可选：下拉过程中触发
-    // console.log('下拉中：', e.detail);
-  },
-
+  onPulling(e) {},
   onAbort() {
-    // 用户中断下拉
     this.setData({ isRefreshing: false });
   },
-
-  onRestore() {
-    // 可选：恢复原状
-  },
-
+  onRestore() {},
 
   goToDetail(e) {
     const id = e.currentTarget.dataset.id;
-    wx.navigateTo({
-      url: `/pages/orderDetail/orderDetail?id=${id}`
-    });
+    wx.navigateTo({ url: `/pages/orderDetail/orderDetail?id=${id}` });
   }
 });
+

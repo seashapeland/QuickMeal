@@ -45,6 +45,34 @@
         </div>
 
       </div>
+      <div v-if="activeTab === '门店评价'">
+        <div v-if="activeTab === '门店评价'" class="shop-reviews-container">
+          <h2 v-if="reviews.length > 0">顾客评价</h2>
+          <div v-if="loading" class="loading">加载评价中...</div>
+          <div v-else-if="reviews.length === 0" class="no-reviews">暂无评价</div>
+          <div v-else class="reviews-scroll-container">
+            <div 
+              v-for="review in reviews" 
+              :key="review.id" 
+              class="review-card"
+            >
+              <div class="review-header">
+                <img 
+                  :src="`${BASE_URL}${review.avatar}?v=${Date.now()}`" 
+                  alt="用户头像" 
+                  class="avatar"
+                  @error="handleImageError"
+                />
+                <div class="user-info">
+                  <span class="username">{{ review.name }}</span>
+                  <span class="date">{{ review.date }}</span>
+                </div>
+              </div>
+              <div class="review-content">{{ review.content }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- 创建管理员弹窗 -->
@@ -134,11 +162,13 @@
   import { getAdminList, createAdminRequest, changePasswordRequest, disableAdmin, restoreAdmin, deleteAdmin } from '@/api/auth'
   import { BASE_URL } from '@/utils/request'
   import { getAllQRCodes } from '@/api/table'
+  import { getShopReviews } from '@/api/auth'
+
 
   const tabs = [
     { key: '管理员', label: '管理员' },
     { key: '二维码', label: '二维码' },
-    { key: '门店地图', label: '门店地图' }
+    { key: '门店评价', label: '门店评价' }
   ];
   const activeTab = ref('管理员');  // 默认显示“管理员”标签内容
 
@@ -167,6 +197,8 @@
       fetchAdminList()
     } else if (newVal === '二维码') {
       loadQRCodes()
+    } else if (newVal === '门店评价') {
+      fetchReviews()
     }
   })
   const loadQRCodes = async () => {
@@ -175,6 +207,21 @@
       qrcodes.value = data
     } catch (err) {
       console.error('获取二维码失败:', err)
+    }
+  }
+
+  const reviews = ref([])
+  const loading = ref(false)
+
+  const fetchReviews = async () => {
+    try {
+      loading.value = true
+      const response = await getShopReviews()
+      reviews.value = response.data
+    } catch (error) {
+      console.error('获取评价失败:', error)
+    } finally {
+      loading.value = false
     }
   }
 
@@ -316,6 +363,8 @@
       alert('删除管理员失败：' + error.response.data.detail)
     }
   }
+
+
 </script>
 
 <style scoped>
@@ -567,4 +616,98 @@
   object-fit: contain;
 }
 
+.shop-reviews-container {
+  padding: 16px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.loading, .no-reviews {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reviews-scroll-container {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 18px;
+  max-height: 520px; /* 增加最大高度 */
+}
+
+/* 滚动条样式 */
+.reviews-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.reviews-scroll-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.reviews-scroll-container::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.review-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+
+
+.review-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 12px;
+  background-color: #f5f5f5;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.username {
+  font-weight: 600;
+  font-size: 15px;
+  color: #333;
+}
+
+.date {
+  font-size: 12px;
+  color: #999;
+  margin-top: 4px;
+}
+
+.review-content {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  white-space: pre-line;
+}
 </style>

@@ -23,47 +23,68 @@ Page({
     })
   },
   onScan() {
-    // 1. 检查是否有本地 token
     const token = wx.getStorageSync('token');
     if (!token) {
-      wx.showToast({
-        title: '请先登录',
-        icon: 'none'
-      });
-      return; // 阻止扫码
+      wx.showToast({ title: '请先登录', icon: 'none' });
+      return;
     }
+  
     wx.scanCode({
       success: res => {
-        console.log('扫码结果:', res.result); // 如: pages/food/food?table_id=1
+        console.log('扫码结果:', res.result);
   
         if (res.result.startsWith('pages/')) {
-          // 提取 table_id
           const tableIdMatch = res.result.match(/table_id=(\d+)/);
           const table_id = tableIdMatch ? tableIdMatch[1] : null;
   
-          if (table_id) {
-            // ✅ 发送请求修改餐桌状态为 “点餐中”
-            wx.request({
-              url: config.UPDATE_TABLE_STATUS_API,  // 如 https://your.api/table/update_status/
-              method: 'POST',
-              header: { 'content-type': 'application/json' },
-              data: {
-                table_id: table_id,
-                status: '点菜中'
-              },
-              success: () => {
-                // ✅ 修改成功后跳转页面
-                wx.navigateTo({
-                  url: '/' + res.result
-                });
-              },
-              fail: () => {
-                wx.showToast({ title: '修改桌子状态失败', icon: 'none' });
-              }
-            });
-          } else {
+          if (!table_id) {
             wx.showToast({ title: '二维码缺少桌号', icon: 'none' });
+            return;
           }
+  
+          // 1. 查询所有桌子状态
+          wx.request({
+            url: config.TABLE_STATUS_LIST_API,  // ✅ 接口路径
+            method: 'GET',
+            success: (statusRes) => {
+              if (statusRes.statusCode === 200 && statusRes.data && statusRes.data.data) {
+                const allStatus = statusRes.data.data;
+                const tableInfo = allStatus.find(t => t.table_id == table_id);
+  
+                if (!tableInfo) {
+                  wx.showToast({ title: '桌号不存在', icon: 'none' });
+                  return;
+                }
+  
+                if (tableInfo.status !== '空闲') {
+                  wx.showToast({ title: `该桌正在使用中`, icon: 'none' });
+                  return;
+                }
+  
+                // 2. 设置桌子为点菜中
+                wx.request({
+                  url: config.UPDATE_TABLE_STATUS_API,
+                  method: 'POST',
+                  header: { 'content-type': 'application/json' },
+                  data: {
+                    table_id: table_id,
+                    status: '点菜中'
+                  },
+                  success: () => {
+                    wx.navigateTo({ url: '/' + res.result });
+                  },
+                  fail: () => {
+                    wx.showToast({ title: '修改桌子状态失败', icon: 'none' });
+                  }
+                });
+              } else {
+                wx.showToast({ title: '桌子状态加载失败', icon: 'none' });
+              }
+            },
+            fail: () => {
+              wx.showToast({ title: '网络错误', icon: 'none' });
+            }
+          });
         } else {
           wx.showToast({ title: '二维码无效', icon: 'none' });
         }
@@ -74,6 +95,7 @@ Page({
       }
     });
   },
+  
   
   onTabChange(e) {
     this.setData({

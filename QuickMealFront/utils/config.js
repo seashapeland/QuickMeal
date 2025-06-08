@@ -17,4 +17,11 @@ module.exports = {
   FAVORITE_TOGGLE_API: `${BASE_URL}/user/favorite/toggle/`,
   FAVORITE_STATUS_API: `${BASE_URL}/user/favorite/status/`,
   UPDATE_TABLE_STATUS_API: `${BASE_URL}/table/update_status/`,
+  CREATE_ORDER_API: `${BASE_URL}/order/create/`,
+  USER_ORDER_LIST_API: `${BASE_URL}/order/user/orders/`,
+  ORDER_DETAIL_API: `${BASE_URL}/order/order/`,
+  TABLE_STATUS_LIST_API: `${BASE_URL}/table/status/list/`,
+  ORDER_UPDATE_STATUS_API: `${BASE_URL}/order/update_status/`,
+  UPDATE_TABLE_STATUS_API: `${BASE_URL}/table/update_status/`,
+  UNBIND_ORDER_API:`${BASE_URL}/table/unbind_order/`,
 };

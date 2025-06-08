@@ -6,6 +6,7 @@ from rest_framework import status
 from .models import Table, TableStatus
 from utils.token import decode_token
 from django.utils import timezone
+from order.models import Order
 
 class TableQRCodeListView(APIView):
     def get(self, request):
@@ -43,7 +44,6 @@ class UpdateTableStatusView(APIView):
         except Table.DoesNotExist:
             return Response({'message': '餐桌不存在'}, status=status.HTTP_404_NOT_FOUND)
 
-
 class UnbindOrderFromTableView(APIView):
     """
     解除餐桌绑定的当前订单ID
@@ -64,3 +64,32 @@ class UnbindOrderFromTableView(APIView):
             return Response({'message': '餐桌不存在'}, status=status.HTTP_404_NOT_FOUND)
         except TableStatus.DoesNotExist:
             return Response({'message': '餐桌状态不存在'}, status=status.HTTP_404_NOT_FOUND)
+
+class TableStatusListView(APIView):
+    """
+    获取所有餐桌的状态信息（无需 Token）
+    """
+    def get(self, request):
+        tables = Table.objects.all().select_related('status')
+        data = []
+
+        for table in tables:
+            status_obj = getattr(table, 'status', None)
+            if status_obj:
+                current_order_id = status_obj.current_order.id if status_obj.current_order else None
+                data.append({
+                    'table_id': table.table_id,
+                    'status': status_obj.status,
+                    'updated_at': status_obj.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                    'current_order_id': current_order_id
+                })
+            else:
+                # 如果没有状态记录，视为“空闲”
+                data.append({
+                    'table_id': table.table_id,
+                    'status': '空闲',
+                    'updated_at': None,
+                    'current_order_id': None
+                })
+
+        return Response({'data': data}, status=status.HTTP_200_OK)

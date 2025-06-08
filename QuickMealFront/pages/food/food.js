@@ -81,28 +81,69 @@ Page({
   },
   
   goCheckout() {
-    if (this.data.totalPrice > 0) {
-      wx.showModal({
-        title: '确认下单',
-        content: '你确定要下单吗？下单后取消订单需要联系服务员',
-        confirmText: '确定',
-        cancelText: '取消',
-        success: (res) => {
-          if (res.confirm) {
-            wx.navigateTo({
-              url: '/pages/checkout/checkout'
-            });
-          }
-        }
-      });
-    } else {
+    if (this.data.totalPrice <= 0) {
       wx.showToast({
         title: '请先选择商品',
         icon: 'none',
         duration: 2000
       });
+      return;
     }
+  
+    wx.showModal({
+      title: '确认下单',
+      content: '你确定要下单吗？下单后取消订单需要联系服务员',
+      confirmText: '确定',
+      cancelText: '取消',
+      success: (res) => {
+        if (!res.confirm) return;
+  
+        const token = wx.getStorageSync('token');
+        if (!token) {
+          wx.showToast({ title: '请先登录', icon: 'none' });
+          return;
+        }
+  
+        // 组装订单数据
+        const items = this.data.cartItems.map(item => ({
+          id: item.id,
+          type: item.type,        // 'dish' or 'package'
+          count: item.count,
+          price: item.price
+        }));
+  
+        wx.request({
+          url: config.CREATE_ORDER_API,  // 如 https://your.api/order/create/
+          method: 'POST',
+          header: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          data: {
+            table_id: this.data.tableId,
+            total_price: this.data.totalPrice,
+            items: items
+          },
+          success: res => {
+            if (res.statusCode === 201) {
+              wx.showToast({ title: '下单成功', icon: 'success' });
+              this.clearCart();
+              // ✅ 跳转订单页面（tabBar 跳转必须用 switchTab）
+              wx.switchTab({
+                url: '/pages/order/order'
+              });
+            } else {
+              wx.showToast({ title: res.data.message || '下单失败', icon: 'none' });
+            }
+          },
+          fail: () => {
+            wx.showToast({ title: '请求失败', icon: 'none' });
+          }
+        });
+      }
+    });
   },
+  
   
 
   loadCategory() {

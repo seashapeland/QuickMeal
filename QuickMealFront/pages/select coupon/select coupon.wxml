@@ -1,0 +1,45 @@
+<view class="navbar">
+  <image src="/icons/return.png" class="navbar-back" bindtap="goBack"></image>
+  <view class="navbar-title">选择优惠券</view>
+</view>
+<view class="page">
+  <view class="filter-bar">
+    <text wx:for="{{filterOptions}}" wx:key="value"
+          class="filter-option {{selectedFilter === item.value ? 'active' : ''}}"
+          data-value="{{item.value}}" bindtap="changeFilter">
+      {{item.label}}
+    </text>
+  </view>
+
+  <scroll-view scroll-y class="content-wrapper">
+    <view class="container">
+      <!-- 新增：不使用优惠券选项 -->
+      <view class="no-coupon" bindtap="useNoCoupon">
+        <text>不使用优惠券</text>
+      </view>
+      
+      <view wx:for="{{filteredCoupons}}" wx:key="id" class="coupon-box {{item.expired || !item.conditionMet ? 'expired' : ''}}">
+        <view class="left-part">
+          <text class="amount">￥{{item.discount}}</text>
+          <text class="condition">{{item.condition === 0 ? '无门槛' : '满' + item.condition + '元可用'}}</text>
+        </view>
+        <view class="right-part">
+          <view class="title-line">
+            <text class="coupon-title">{{item.name}}</text>
+            <text class="tag" wx:if="{{item.expired}}">已过期</text>
+            <text class="tag" wx:elif="{{!item.conditionMet}}">不可用</text>
+          </view>
+          <view class="desc">{{item.description}}</view>
+          <view class="expiry">有效期：{{item.expiry}}</view>
+          <view class="btns">
+            <button class="btn receive" bindtap="claimCoupon" data-id="{{item.id}}">领取</button>
+            <button class="btn use {{item.expired || !item.conditionMet ? 'disabled' : ''}}"
+                    bindtap="useCoupon"
+                    data-id="{{item.id}}"
+                    disabled="{{item.expired || !item.conditionMet}}">使用</button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view>

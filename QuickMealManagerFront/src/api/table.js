@@ -12,3 +12,15 @@ export function getAllQRCodes() {
     }
   })
 }
+
+export function getTableStatusList() {
+  return request({
+    url: '/table/status/list/',
+    method: 'get'
+  });
+}
+
+// 获取订单详情
+export function getOrderDetail(orderId) {
+  return request.get(`/order/order/${orderId}/`);
+}

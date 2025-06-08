@@ -33,7 +33,7 @@
     width?: number
     /** 自定义高度（竖放时高，宽度自动）；可选 */
     height?: number
-    theme?: 'green' | 'blue' | 'yellow' | 'orange' | 'red' | 'black' | 'deepblue'
+    theme?: keyof typeof THEMES // 改为动态获取 THEMES 的键
   }>()
   
   /* 颜色字典 */
@@ -46,6 +46,10 @@
         black : { bg:'#d9d9d9', border:'#595959', seat:'#595959', text:'#141414' },
         deepblue: {bg: '#cce0ff', border: '#003366', seat: '#003366', text: '#001d3d'}
     }
+    // 使用 watchEffect 确保深度响应
+  const currentTheme = computed(() => {
+    return THEMES[props.theme || 'green']
+  })
   
   /* ====== 计算属性 ====== */
   const seatCount = computed(() => props.size)

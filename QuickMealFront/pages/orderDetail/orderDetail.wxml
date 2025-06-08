@@ -1,6 +1,5 @@
 <!--pages/orderDetail/orderDetail.wxml-->
 <view class="order-detail-page">
-  <!-- 顶部导航 -->
   <view class="header">
     <view class="back-btn" bindtap="backToList">
       <image src="/icons/return.png" class="back-icon" mode="widthFix"></image>
@@ -8,57 +7,68 @@
     <text>订单详情</text>
   </view>
 
-  <!-- 订单基本信息 -->
   <view class="order-info-card">
     <view class="order-status-row">
       <text class="order-status {{order.status === '已完成' ? 'completed' : 'pending'}}">{{order.status}}</text>
       <text class="order-id">订单号: {{order.id}}</text>
     </view>
-    
     <view class="info-row">
       <text class="info-label">下单时间</text>
       <text class="info-value">{{order.time}}</text>
     </view>
-    
     <view class="info-row">
       <text class="info-label">桌号</text>
-      <text class="info-value">{{order.table}}</text>
-    </view>
-    
-    <view class="info-row">
-      <text class="info-label">支付方式</text>
-      <text class="info-value">{{order.paymentMethod}}</text>
-    </view>
-    
-    <view class="info-row" wx:if="{{order.remark}}">
-      <text class="info-label">备注</text>
-      <text class="info-value">{{order.remark}}</text>
+      <text class="info-value">{{order.table}}号桌</text>
     </view>
   </view>
 
-  <!-- 菜品列表 -->
   <view class="dishes-card">
     <text class="section-title">菜品清单</text>
-    
+
     <block wx:for="{{order.dishes}}" wx:key="name">
       <view class="dish-item">
         <view class="dish-left">
           <text class="dish-name">{{item.name}}</text>
+          <view wx:if="{{item.type === 'package'}}" bindtap="togglePackage" data-index="{{index}}">
+            <text class="toggle-btn">{{item.showDetails ? '▼' : '▶'}} 套餐详情</text>
+          </view>
         </view>
         <view class="dish-right">
           <text class="dish-quantity">×{{item.quantity}}</text>
-          <text class="dish-price">¥{{item.total.toFixed(2)}}</text>
+          <text class="dish-price">¥{{item.total}}</text>
         </view>
       </view>
+
+      <view wx:if="{{item.type === 'package' && item.showDetails}}" class="package-details">
+        <block wx:for="{{item.details}}" wx:key="name">
+          <view class="dish-item sub-item">
+            <view class="dish-left">
+              <text class="dish-name">{{item.name}}</text>
+            </view>
+            <view class="dish-right">
+              <text class="dish-quantity">×{{item.quantity}}</text>
+              <text class="dish-price">¥{{item.price}}</text>
+            </view>
+          </view>
+        </block>
+      </view>
     </block>
-    
+
+    <view wx:if="{{order.status === '待支付'}}" class="coupon-row" bindtap="selectCoupon">
+      <text class="coupon-label">优惠券</text>
+      <view class="coupon-value">
+        <text wx:if="{{selectedCoupon}}">{{selectedCoupon.name}}（-¥{{selectedCoupon.discount}}）</text>
+        <text wx:else>选择优惠券</text>
+        <image src="/icons/inter.png" class="arrow-icon"></image>
+      </view>
+    </view>
+
     <view class="total-row">
       <text class="total-label">合计</text>
-      <text class="total-amount">¥{{order.total.toFixed(2)}}</text>
+      <text class="total-amount">¥{{actualTotal}}</text>
     </view>
   </view>
 
-  <!-- 优化后的操作按钮 -->
   <view class="action-buttons">
     <button 
       wx:if="{{order.status === '待支付'}}" 
@@ -68,7 +78,16 @@
       <image src="/icons/pay.png" class="btn-icon"></image>
       立即支付
     </button>
-    
+
+    <button 
+      wx:if="{{order.status === '已完成'}}" 
+      class="pay-btn" 
+      bindtap="requestRefund"
+    >
+      <image src="/icons/pay.png" class="btn-icon"></image>
+      申请退款
+    </button>
+
     <button 
       class="contact-btn" 
       bindtap="contactWaiter"

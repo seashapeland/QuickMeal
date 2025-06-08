@@ -20,7 +20,8 @@
     "pages/forgot/forgot",
     "pages/register/register",
     "pages/privacy/privacy",
-    "pages/rate/rate"
+    "pages/rate/rate",
+    "pages/select coupon/select coupon"
   ],
   "window": {
     "navigationBarTextStyle": "black",

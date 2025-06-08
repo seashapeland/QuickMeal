@@ -63,3 +63,11 @@ export const deleteAdmin = (data) => {
     }
   })
 }
+
+export function getShopReviews() {
+  return request({
+    url: '/review/store/list/',
+    method: 'get'
+  })
+}
+

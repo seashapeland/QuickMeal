@@ -5,7 +5,6 @@
   padding-bottom: 40rpx;
 }
 
-/* 顶部导航 */
 .header {
   font-size: 34rpx;
   font-weight: bold;
@@ -16,7 +15,7 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: #a6db9f;
+  background-color: #aedb9e;
 }
 
 .back-btn {
@@ -34,7 +33,6 @@
   filter: brightness(0) invert(1);
 }
 
-/* 订单信息卡片 */
 .order-info-card {
   background-color: white;
   border-radius: 16rpx;
@@ -85,7 +83,6 @@
   color: #333;
 }
 
-/* 菜品列表卡片 */
 .dishes-card {
   background-color: white;
   border-radius: 16rpx;
@@ -119,6 +116,26 @@
   color: #333;
 }
 
+.toggle-btn {
+  font-size: 26rpx;
+  color: #00b386;
+  margin-top: 10rpx;
+}
+
+.package-details {
+  padding-left: 30rpx;
+  background-color: #f9f9f9;
+  border-left: 6rpx solid #aedb9e;
+  margin-bottom: 20rpx;
+  border-radius: 10rpx;
+  padding-top: 10rpx;
+  padding-bottom: 10rpx;
+}
+
+.sub-item {
+  margin-bottom: 15rpx;
+}
+
 .dish-right {
   display: flex;
   align-items: center;
@@ -138,11 +155,38 @@
   text-align: right;
 }
 
+.coupon-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx 0;
+  margin-top: 20rpx;
+  border-top: 1rpx solid #eee;
+}
+
+.coupon-label {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.coupon-value {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+  color: #e64545;
+}
+
+.arrow-icon {
+  width: 30rpx;
+  height: 30rpx;
+  margin-left: 15rpx;
+}
+
 .total-row {
   display: flex;
   justify-content: space-between;
-  margin-top: 30rpx;
-  padding-top: 20rpx;
+  margin-top: 20rpx;
+  padding-top: 30rpx;
   border-top: 1rpx dashed #ddd;
 }
 
@@ -158,7 +202,6 @@
   color: #e64545;
 }
 
-/* 优化后的操作按钮 */
 .action-buttons {
   display: flex;
   justify-content: space-between;
@@ -179,21 +222,18 @@
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
 }
 
-/* 默认图标样式 */
 .btn-icon {
   width: 40rpx;
   height: 40rpx;
   margin-right: 12rpx;
 }
 
-/* 支付按钮 */
 .pay-btn {
   background: linear-gradient(135deg, #00b386, #00d4a0);
   color: white;
   border: none;
 }
 
-/* 支付按钮图标放大 */
 .pay-btn .btn-icon {
   width: 60rpx;
   height: 60rpx;
@@ -205,7 +245,6 @@
   box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.1);
 }
 
-/* 联系按钮 */
 .contact-btn {
   background: white;
   color: #00b386;
@@ -214,7 +253,6 @@
   overflow: hidden;
 }
 
-/* 联系按钮图标保持原大小 */
 .contact-btn .btn-icon {
   width: 40rpx;
   height: 40rpx;

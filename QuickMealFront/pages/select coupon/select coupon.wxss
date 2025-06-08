@@ -61,6 +61,7 @@
   border-bottom: 4rpx solid #34C759; /* 主色调 */
 }
 
+
 .content-wrapper {
   flex: 1;
 }
@@ -69,9 +70,22 @@
   padding: 20rpx;
 }
 
+/* 新增：不使用优惠券样式 */
+.no-coupon {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #34C759;
+  margin-bottom: 24rpx;
+  box-shadow: 0 6rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
 .coupon-box {
   display: flex;
-  background: linear-gradient(135deg, #E8F5E9, #A5D6A7); /* 背景渐变 */
+  background: linear-gradient(135deg, #E8F5E9, #A5D6A7);
   border-radius: 20rpx;
   box-shadow: 0 6rpx 12rpx rgba(0, 0, 0, 0.06);
   margin-bottom: 24rpx;
@@ -80,7 +94,7 @@
 
 .left-part {
   width: 200rpx;
-  background: #A5D6A7; /* 辅助色调 */
+  background: #A5D6A7;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -91,12 +105,12 @@
 .amount {
   font-size: 42rpx;
   font-weight: bold;
-  color: #388E3C; /* 深绿色 */
+  color: #388E3C;
 }
 
 .condition {
   font-size: 24rpx;
-  color: #689F7C; /* 较浅的绿色 */
+  color: #689F7C;
   margin-top: 10rpx;
 }
 
@@ -157,11 +171,11 @@
 }
 
 .receive {
-  background-color: #34C759;
+  background-color: #34C759; /* 改为与订单页一致的主色调 */
 }
 
 .use {
-  background-color: #43A047;
+  background-color: #43A047; /* 改为与订单页一致的主色调 */
 }
 
 .disabled {

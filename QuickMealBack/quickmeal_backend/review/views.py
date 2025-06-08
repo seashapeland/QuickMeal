@@ -158,10 +158,10 @@ class ShopReviewListView(APIView):
             user = r.user
             result.append({
                 'id': r.id,
-                'content': r.review_content,
+                'content': r.content,
                 'date': timezone.localtime(r.created_at).strftime('%Y-%m-%d %H:%M:%S'),
-                'name': user.username or user.nickname,
-                'avatar': user.avatar.url if user.avatar else ''
+                'name': user.username or getattr(user, 'nickname', '匿名用户'),
+                'avatar': user.avatar.url if hasattr(user, 'avatar') and user.avatar else ''
             })
 
         return Response({
