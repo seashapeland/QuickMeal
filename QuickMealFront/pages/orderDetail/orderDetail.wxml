@@ -54,12 +54,18 @@
       </view>
     </block>
 
-    <view wx:if="{{order.status === '待支付'}}" class="coupon-row" bindtap="selectCoupon">
+    <view class="coupon-row">
       <text class="coupon-label">优惠券</text>
-      <view class="coupon-value">
-        <text wx:if="{{selectedCoupon}}">{{selectedCoupon.name}}（-¥{{selectedCoupon.discount}}）</text>
+      <view class="coupon-value" bindtap="selectCoupon" wx:if="{{order.status === '待支付'}}">
+        <text wx:if="{{selectedCoupon}}">
+          {{selectedCoupon.name}}（-¥{{selectedCoupon.amount}}）
+        </text>
         <text wx:else>选择优惠券</text>
         <image src="/icons/inter.png" class="arrow-icon"></image>
+      </view>
+
+      <view class="coupon-value" wx:if="{{order.status !== '待支付' && couponInfo}}">
+        <text>{{couponInfo.name}}（-¥{{couponInfo.amount}}）</text>
       </view>
     </view>
 

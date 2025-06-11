@@ -34,9 +34,13 @@ export function markOrderAsServed(orderId, tableId) {
   ]);
 }
 
-// 处理退款：只更新订单状态为“已退款”
-export function processRefund(orderId) {
-  return request({
+
+// ✅ 整合订单退款 + 优惠券退还
+export async function processRefund(orderId) {
+  const token = localStorage.getItem('token');
+
+  // Step 1: 更新订单状态为已退款
+  await request({
     url: '/order/update_status/',
     method: 'post',
     data: {
@@ -44,7 +48,25 @@ export function processRefund(orderId) {
       status: '已退款'
     }
   });
+
+  // Step 2: 尝试退还优惠券（如果有绑定）
+  try {
+    await request({
+      url: '/coupon/return/',
+      method: 'post',
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      data: {
+        order_id: orderId
+      }
+    });
+    console.log(`优惠券已成功退还（订单 ${orderId}）`);
+  } catch (err) {
+    console.warn(`订单 ${orderId} 没有可退还的优惠券或已过期：`, err.response?.data || err.message);
+  }
 }
+
 
 // 取消订单：更新订单状态、餐桌状态，并解绑订单
 export async function cancelOrder(orderId, tableId) {

@@ -61,7 +61,9 @@ Page({
           time: o.created_at,
           table: o.table_id,
           status: o.status,
-          total: o.total_price
+          total: o.real_price,
+          discount: parseFloat(o.discount || 0), // 优惠金额
+          origin: parseFloat(o.total_price)       // 原始金额
         }));
         this.setData({ orders }, () => {
           this.updateFilteredOrders();

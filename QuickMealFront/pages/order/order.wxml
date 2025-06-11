@@ -38,7 +38,9 @@
         </view>
         <view class="order-info-row-last">
           <text class="order-label">订单金额：</text>
-          <text class="order-price">¥{{ item.total }}</text>
+          <text class="order-price">
+            ¥{{ item.total }}<text wx:if="{{ item.discount > 0 }}" class="discount-note">（¥-{{ item.discount }}）</text>
+          </text>
         </view>
         <view class="order-bottom">
           <text class="order-arrow">查看详情 ></text>

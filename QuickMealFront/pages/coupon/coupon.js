@@ -1,3 +1,5 @@
+const config = require('../../utils/config.js');
+
 Page({
   data: {
     filterOptions: [
@@ -6,89 +8,131 @@ Page({
       { label: '已过期', value: 'expired' }
     ],
     selectedFilter: 'all',
-    coupons: [],
-    filteredCoupons: []
+    coupons: [], // 原始完整数据
+    filteredCoupons: [],
+    isRefreshing: false
   },
 
   onLoad() {
-    const now = Date.now();
-    const rawCoupons = [
-      {
-        id: 1,
-        title: '满50减10元',
-        value: 10,
-        description: '单笔消费满50元使用',
-        limit: '满50元可用',
-        expiry: '2025-06-30'
+    const userId = wx.getStorageSync('user_id');
+    if (userId) {
+      this.getUserCoupons(userId);
+    } else {
+      wx.showToast({
+        title: '未登录',
+        icon: 'error'
+      });
+    }
+  },
+
+  // 获取优惠券列表
+  getUserCoupons(userId) {
+    const that = this;
+    wx.request({
+      url: `${config.BASE_URL}/coupon/user/${userId}/`,
+      method: 'GET',
+      success(res) {
+        if (res.statusCode === 200 && res.data.coupons) {
+          const processed = that.processCouponData(res.data.coupons);
+          that.setData({
+            coupons: processed,
+            filteredCoupons: processed
+          });
+        } else {
+          wx.showToast({
+            title: '获取失败',
+            icon: 'error'
+          });
+        }
       },
-      {
-        id: 2,
-        title: '新用户立减5元',
-        value: 5,
-        description: '注册后7天内可用',
-        limit: '仅限新用户',
-        expiry: '2024-12-31'
+      fail(err) {
+        console.error('获取优惠券失败:', err);
+        wx.showToast({
+          title: '网络错误',
+          icon: 'error'
+        });
       },
-      {
-        id: 3,
-        title: '周末8元优惠',
-        value: 8,
-        description: '每周六日可使用',
-        limit: '仅限周末',
-        expiry: '2025-05-01'
+      complete() {
+        that.setData({ isRefreshing: false });
       }
-    ];
-
-    const coupons = rawCoupons.map(c => ({
-      ...c,
-      expired: new Date(c.expiry).getTime() < now
-    }));
-
-    this.setData({
-      coupons,
-      filteredCoupons: coupons
     });
   },
 
-  goBack() {
-    wx.navigateBack();
-  },
-
-  useCoupon(e) {
-    const id = e.currentTarget.dataset.id;
-    const coupon = this.data.coupons.find(c => c.id === id);
-    if (!coupon || coupon.expired) return;
-
-    wx.showToast({
-      title: '优惠券使用成功',
-      icon: 'success'
+  // 处理原始数据，注入额外字段
+  processCouponData(rawData) {
+    const now = new Date();
+    return rawData.map(item => {
+      const validToDate = new Date(item.valid_to);
+      return {
+        ...item,
+        expired: validToDate < now,
+        weekdaysText: this.formatWeekdays(item.weekdays),
+        validRangeText: `${this.formatDate(item.valid_from)} 至 ${this.formatDate(item.valid_to)}`,
+        isWeekdayLimited: !!item.weekdays
+      };
     });
   },
 
-  claimCoupon(e) {
-    const id = e.currentTarget.dataset.id;
-    wx.showToast({
-      title: `领取成功（ID: ${id}）`,
-      icon: 'success'
-    });
+  // 判断是否过期（供模板使用）
+  isExpired(validTo) {
+    return new Date(validTo) < new Date();
   },
 
+  // 格式化日期为 "6月10日"
+  formatDate(dateStr) {
+    const date = new Date(dateStr);
+    return `${date.getMonth() + 1}月${date.getDate()}日`;
+  },
+
+  // 将 weekday 字符串转换为“周几”列表
+  formatWeekdays(weekdays) {
+    if (!weekdays) return '不限';
+    const daysMap = {
+      '1': '周一',
+      '2': '周二',
+      '3': '周三',
+      '4': '周四',
+      '5': '周五',
+      '6': '周六',
+      '7': '周日'
+    };
+    return weekdays.split(',').map(d => daysMap[d]).join('、');
+  },
+
+  // 顶部筛选切换逻辑
   changeFilter(e) {
     const value = e.currentTarget.dataset.value;
-    const { coupons } = this.data;
+    const all = this.data.coupons;
     let filtered = [];
 
     if (value === 'valid') {
-      filtered = coupons.filter(c => !c.expired);
+      filtered = all.filter(c => !c.expired && c.status !== 'used');
     } else if (value === 'expired') {
-      filtered = coupons.filter(c => c.expired);
+      filtered = all.filter(c => c.expired);
     } else {
-      filtered = coupons;
+      filtered = all;
     }
 
     this.setData({
       selectedFilter: value,
       filteredCoupons: filtered
     });
-  }
+  },
+
+  // 下拉刷新逻辑
+  onRefresh() {
+    this.setData({ isRefreshing: true });
+    const userId = wx.getStorageSync('user_id');
+    this.getUserCoupons(userId);
+  },
+
+  goBack() {
+    wx.navigateBack();
+  },
+
+  onPulling() {},
+  onAbort() {
+    this.setData({ isRefreshing: false });
+  },
+  onRestore() {}
 });

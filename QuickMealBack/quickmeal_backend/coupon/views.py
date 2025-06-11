@@ -7,6 +7,7 @@ from utils.token import decode_token
 from django.utils.dateparse import parse_datetime
 from django.utils import timezone
 from user.models import User
+from order.models import Order
 
 class CreateCouponView(APIView):
     def post(self, request):
@@ -173,3 +174,107 @@ class AssignCouponView(APIView):
             'user_coupon_id': user_coupon.id
         }, status=status.HTTP_201_CREATED)
 
+class UserCouponListView(APIView):
+    def get(self, request, user_id):
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({'detail': '用户不存在'}, status=status.HTTP_404_NOT_FOUND)
+
+        user_coupons = UserCoupon.objects.filter(user=user).select_related('coupon').order_by('-assigned_at')
+
+        data = []
+        for uc in user_coupons:
+            c = uc.coupon
+            data.append({
+                'user_coupon_id': uc.id,
+                'coupon_id': c.coupon_id,
+                'name': c.name,
+                'amount': float(c.amount),
+                'min_amount': float(c.min_amount),
+                'valid_from': timezone.localtime(c.valid_from).strftime('%Y-%m-%d %H:%M:%S'),
+                'valid_to': timezone.localtime(c.valid_to).strftime('%Y-%m-%d %H:%M:%S'),
+                'expire_at': timezone.localtime(uc.expire_at).strftime('%Y-%m-%d %H:%M:%S'),
+                'status': uc.status,
+                'assigned_at': timezone.localtime(uc.assigned_at).strftime('%Y-%m-%d %H:%M:%S'),
+                'used_at': timezone.localtime(uc.used_at).strftime('%Y-%m-%d %H:%M:%S') if uc.used_at else None,
+                'order_id': uc.order_id,
+                'description': c.description,
+                'weekdays': c.weekdays
+            })
+
+        return Response({'coupons': data}, status=status.HTTP_200_OK)
+    
+class UseCouponView(APIView):
+    def post(self, request):
+        token = request.META.get('HTTP_AUTHORIZATION', '')
+        if not token.startswith('Bearer '):
+            return Response({'detail': '未提供Token'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        payload = decode_token(token[7:])
+        if not payload or not payload.get('user_id'):
+            return Response({'detail': '无效Token'}, status=status.HTTP_403_FORBIDDEN)
+
+        user_id = payload['user_id']
+        order_id = request.data.get('order_id')
+        user_coupon_id = request.data.get('user_coupon_id')
+
+        if not order_id or not user_coupon_id:
+            return Response({'detail': '参数不完整'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # 订单验证
+        try:
+            order = Order.objects.get(id=order_id, user_id=user_id)
+        except Order.DoesNotExist:
+            return Response({'detail': '订单不存在或无权操作'}, status=status.HTTP_404_NOT_FOUND)
+
+        # 优惠券验证
+        try:
+            user_coupon = UserCoupon.objects.get(id=user_coupon_id, user_id=user_id)
+        except UserCoupon.DoesNotExist:
+            return Response({'detail': '优惠券不存在或不属于当前用户'}, status=status.HTTP_404_NOT_FOUND)
+
+        if user_coupon.status != 'unused':
+            return Response({'detail': '该优惠券已被使用'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if timezone.now() > user_coupon.expire_at:
+            return Response({'detail': '优惠券已过期'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # ✅ 更新优惠券使用状态
+        user_coupon.status = 'used'
+        user_coupon.used_at = timezone.now()
+        user_coupon.order_id = order.id
+        user_coupon.save()
+
+        return Response({'message': '优惠券使用成功'}, status=status.HTTP_200_OK)
+    
+class ReturnCouponView(APIView):
+    def post(self, request):
+        token = request.META.get('HTTP_AUTHORIZATION', '')
+        if not token.startswith('Bearer '):
+            return Response({'detail': '未提供Token'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        payload = decode_token(token[7:])
+        if not payload or payload.get('role') not in ['admin', 'super_admin']:
+            return Response({'detail': '无权限操作，仅限管理员'}, status=status.HTTP_403_FORBIDDEN)
+
+        order_id = request.data.get('order_id')
+
+        if not order_id:
+            return Response({'detail': '缺少订单ID'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user_coupon = UserCoupon.objects.get(order_id=order_id)
+        except UserCoupon.DoesNotExist:
+            return Response({'detail': '该订单未绑定任何优惠券'}, status=status.HTTP_404_NOT_FOUND)
+
+        if user_coupon.status != 'used':
+            return Response({'detail': '优惠券未使用，无需退还'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+        user_coupon.status = 'unused'
+        user_coupon.used_at = None
+        user_coupon.order_id = None
+        user_coupon.save()
+
+        return Response({'message': '优惠券已成功退还'}, status=status.HTTP_200_OK)

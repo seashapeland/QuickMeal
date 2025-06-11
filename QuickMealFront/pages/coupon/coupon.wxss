@@ -28,10 +28,10 @@
 }
 
 .page {
-  height: 100vh;
   background: #f6f7fb;
   display: flex;
   flex-direction: column;
+  height: 100vh;
 }
 
 
@@ -63,9 +63,12 @@
 
 .content-wrapper {
   flex: 1;
+  background-color: #f5f5f5;
+  height: calc(100vh - 224rpx);
 }
 
 .container {
+  height: 100vh; /* 确保容器继承正确高度 */
   padding: 20rpx;
 }
 
@@ -128,11 +131,23 @@
   border-radius: 20rpx;
 }
 
+/* 新增样式 */
+.tag.active {
+  background-color: #34C759;
+}
+
 .desc {
   font-size: 26rpx;
   color: #666;
   margin: 10rpx 0;
 }
+
+.weekdays {
+  font-size: 24rpx;
+  color: #666;
+  margin-top: 8rpx;
+}
+
 
 .expiry {
   font-size: 24rpx;

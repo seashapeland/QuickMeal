@@ -9,6 +9,7 @@ from table.models import TableStatus, Table
 from dish.models import Dish
 from package.models import Package, PackageItem
 from user.models import User
+from coupon.models import UserCoupon
 
 class CreateOrderView(APIView):
     """
@@ -117,6 +118,26 @@ class AdminOrderListView(APIView):
                         })
                     except Package.DoesNotExist:
                         continue
+            
+            # 查询是否有绑定的优惠券
+            user_coupon = UserCoupon.objects.filter(order_id=order.id).select_related('coupon').first()
+
+            if user_coupon:
+                discount = float(user_coupon.coupon.amount)
+                real_price = float(order.total_price) - discount
+                coupon_info = {
+                    'name': user_coupon.coupon.name,
+                    'amount': float(user_coupon.coupon.amount),
+                    'min_amount': float(user_coupon.coupon.min_amount),
+                    'description': user_coupon.coupon.description
+                }
+                coupon_id = user_coupon.id
+            else:
+                discount = 0.0
+                real_price = float(order.total_price)
+                coupon_info = None
+                coupon_id = None
+
             order_data.append({
                 'order_id': order.id,
                 'status': order.status,
@@ -125,7 +146,11 @@ class AdminOrderListView(APIView):
                 'paid_at': timezone.localtime(order.paid_at).strftime('%Y-%m-%d %H:%M:%S'),
                 'table_id': order.table.table_id if order.table else None,
                 'total_price': order.total_price,
-                'items': items_data
+                'items': items_data,
+                'real_price': round(real_price, 2),
+                'discount': discount,
+                'user_coupon': coupon_id,
+                'coupon_info': coupon_info,  # ✅ 可选：管理端不展示，但保留
             })
         return Response(order_data, status=status.HTTP_200_OK)
 
@@ -181,13 +206,26 @@ class UserOrderListView(APIView):
                         })
                     except Package.DoesNotExist:
                         continue
+                    
+            # 获取该订单是否使用了优惠券
+            user_coupon = UserCoupon.objects.filter(order_id=order.id).select_related('coupon').first()
+
+            if user_coupon:
+                discount = user_coupon.coupon.amount
+                real_price = float(order.total_price) - float(discount)
+            else:
+                discount = 0
+                real_price = float(order.total_price)
+
             order_data.append({
                 'order_id': order.id,
                 'status': order.status,
                 'created_at': timezone.localtime(order.created_at).strftime('%Y-%m-%d %H:%M:%S'),
-                'paid_at': timezone.localtime(order.paid_at).strftime('%Y-%m-%d %H:%M:%S'),
+                'paid_at': timezone.localtime(order.paid_at).strftime('%Y-%m-%d %H:%M:%S') if order.paid_at else None,
                 'table_id': order.table.table_id if order.table else None,
-                'total_price': order.total_price,
+                'total_price': float(order.total_price),
+                'real_price': round(real_price, 2),  # ✅ 新增字段
+                'discount': float(discount),         # ✅ 可选字段：优惠金额
                 'items': items_data
             })
         return Response(order_data, status=status.HTTP_200_OK)
@@ -236,6 +274,25 @@ class OrderDetailView(APIView):
                 except Package.DoesNotExist:
                     continue
 
+        # 查找使用的用户优惠券记录
+        user_coupon = UserCoupon.objects.filter(order_id=order.id).select_related('coupon').first()
+
+        if user_coupon:
+            discount = float(user_coupon.coupon.amount)
+            real_price = float(order.total_price) - discount
+            coupon_info = {
+                'name': user_coupon.coupon.name,
+                'amount': float(user_coupon.coupon.amount),
+                'min_amount': float(user_coupon.coupon.min_amount),
+                'description': user_coupon.coupon.description
+            }
+            coupon_id = user_coupon.id
+        else:
+            discount = 0.0
+            real_price = float(order.total_price)
+            coupon_info = None
+            coupon_id = None
+
         result = {
             'order_id': order.id,
             'status': order.status,
@@ -248,7 +305,11 @@ class OrderDetailView(APIView):
             'paid_at': order.paid_at,
             'table_id': order.table.table_id if order.table else None,
             'total_price': order.total_price,
-            'items': items_data
+            'items': items_data,
+            'discount': discount,
+            'real_price': round(real_price, 2),
+            'user_coupon': coupon_id,
+            'coupon_info': coupon_info,
         }
 
         return Response(result, status=status.HTTP_200_OK)

@@ -5,7 +5,8 @@ Page({
     orderId: null,
     order: null,
     actualTotal: 0.0,
-    selectedCoupon: null
+    selectedCoupon: null,
+    couponInfo: null,
   },
 
   onLoad(options) {
@@ -55,7 +56,8 @@ Page({
 
         this.setData({
           order,
-          actualTotal: parseFloat(data.total_price)
+          actualTotal: parseFloat(data.real_price || data.total_price),
+          couponInfo: data.coupon_info || null  // ✅ 新增绑定
         });
       },
       fail: () => {
@@ -77,15 +79,20 @@ Page({
   },
 
   setSelectedCoupon(coupon) {
+    const orderTotal = parseFloat(this.data.order?.total) || 0;
+    const discount = parseFloat(coupon?.amount) || 0;
+    const finalPrice = Math.max(0, orderTotal - discount);
+  
     if (coupon) {
+      console.log(coupon);
       this.setData({
         selectedCoupon: coupon,
-        actualTotal: this.data.order.total - coupon.discount
+        actualTotal: parseFloat(finalPrice.toFixed(2))
       });
     } else {
       this.setData({
         selectedCoupon: null,
-        actualTotal: this.data.order.total
+        actualTotal: parseFloat(orderTotal.toFixed(2))
       });
     }
   },
@@ -93,59 +100,96 @@ Page({
   payOrder() {
     const orderId = this.data.order.id;
     const tableId = this.data.order.table;
+    const selectedCoupon = this.data.selectedCoupon;
+    const token = wx.getStorageSync('token');
   
     wx.showLoading({ title: '支付中...' });
   
-    // 第一步：修改订单状态为已完成
-    wx.request({
-      url: config.ORDER_UPDATE_STATUS_API,
-      method: 'POST',
-      data: {
-        order_id: orderId,
-        status: '已完成'
-      },
-      success: () => {
-        // 第二步：修改餐桌状态为空闲
-        wx.request({
-          url: config.UPDATE_TABLE_STATUS_API,
-          method: 'POST',
-          data: {
-            table_id: tableId,
-            status: '空闲'
-          },
-          success: () => {
-            // 第三步：解绑订单
-            wx.request({
-              url: config.UNBIND_ORDER_API,
-              method: 'POST',
-              data: {
-                table_id: tableId
-              },
-              success: () => {
-                wx.hideLoading();
-                wx.showToast({ title: '支付成功', icon: 'success' });
-                this.setData({
-                  'order.status': '已完成'
-                });
-              },
-              fail: () => {
-                wx.hideLoading();
-                wx.showToast({ title: '解绑失败', icon: 'none' });
-              }
-            });
-          },
-          fail: () => {
+    const proceedToPayment = () => {
+      // ✅ 继续正常支付流程
+      wx.request({
+        url: config.ORDER_UPDATE_STATUS_API,
+        method: 'POST',
+        data: {
+          order_id: orderId,
+          status: '已完成'
+        },
+        success: () => {
+          wx.request({
+            url: config.UPDATE_TABLE_STATUS_API,
+            method: 'POST',
+            data: {
+              table_id: tableId,
+              status: '空闲'
+            },
+            success: () => {
+              wx.request({
+                url: config.UNBIND_ORDER_API,
+                method: 'POST',
+                data: {
+                  table_id: tableId
+                },
+                success: () => {
+                  wx.hideLoading();
+                  wx.showToast({ title: '支付成功', icon: 'success' });
+                  this.setData({
+                    'order.status': '已完成'
+                  });
+            
+                },
+                fail: () => {
+                  wx.hideLoading();
+                  wx.showToast({ title: '解绑失败', icon: 'none' });
+                }
+              });
+            },
+            fail: () => {
+              wx.hideLoading();
+              wx.showToast({ title: '餐桌状态修改失败', icon: 'none' });
+            }
+          });
+        },
+        fail: () => {
+          wx.hideLoading();
+          wx.showToast({ title: '支付失败', icon: 'none' });
+        }
+      });
+    };
+  
+    // ✅ 如果使用了优惠券，先调用优惠券使用接口
+    if (selectedCoupon && selectedCoupon.user_coupon_id) {
+      wx.request({
+        url: `${config.BASE_URL}/coupon/coupon/use/`,
+        method: 'POST',
+        header: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        data: {
+          order_id: orderId,
+          user_coupon_id: selectedCoupon.user_coupon_id
+        },
+        success: res => {
+          if (res.statusCode === 200) {
+            proceedToPayment();  // ✅ 优惠券成功后再支付
+          } else {
             wx.hideLoading();
-            wx.showToast({ title: '餐桌状态修改失败', icon: 'none' });
+            wx.showToast({
+              title: res.data.detail || '优惠券使用失败',
+              icon: 'none'
+            });
           }
-        });
-      },
-      fail: () => {
-        wx.hideLoading();
-        wx.showToast({ title: '支付失败', icon: 'none' });
-      }
-    });
+        },
+        fail: () => {
+          wx.hideLoading();
+          wx.showToast({ title: '优惠券使用请求失败', icon: 'none' });
+        }
+      });
+    } else {
+      proceedToPayment(); // ✅ 未使用优惠券，直接付款
+    }
   },
+  
   
   requestRefund() {
     const orderId = this.data.order.id;

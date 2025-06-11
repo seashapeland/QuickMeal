@@ -110,6 +110,8 @@
 .order-info-row-last {
   display: flex;
   font-size: 28rpx;
+  
+  align-items: center;            /* ✅ 垂直居中 */
   color: #555;
   margin-top: 12rpx;
   padding-bottom: 20rpx;
@@ -137,8 +139,14 @@
 }
 
 .order-price {
+  margin-top: -30rpx;
   font-weight: bold;
   color: #e64545;
+}
+
+.discount-note {
+  color: #f56c6c;
+  font-size: 12px;
 }
 
 /* 空状态 */

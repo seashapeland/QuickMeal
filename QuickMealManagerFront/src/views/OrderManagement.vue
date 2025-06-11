@@ -43,7 +43,10 @@
                   <p class="order-status" :data-status="order.status">状态：{{ order.status }}</p>
                   <p class="order-time">下单时间：{{ order.created_at }}</p>
                   <p class="order-table">桌号：{{ order.table_id }}</p>
-                  <p class="order-total">金额：¥{{ order.total_price }}</p>
+                  <p class="order-total">
+                    金额：¥{{ order.real_price }}
+                    <span v-if="Number(order.discount) > 0" class="order-discount">（¥-{{ order.discount }}）</span>
+                  </p>
                 </div>
               </div>
 
@@ -116,7 +119,10 @@
                   <p class="order-status" :data-status="order.status">状态：{{ order.status }}</p>
                   <p class="order-time">下单时间：{{ order.created_at }}</p>
                   <p class="order-table">桌号：{{ order.table_id }}</p>
-                  <p class="order-total">金额：¥{{ order.total_price }}</p>
+                  <p class="order-total">
+                    金额：¥{{ order.real_price }}
+                    <span v-if="Number(order.discount) > 0" class="order-discount">（¥-{{ order.discount }}）</span>
+                  </p>
                 </div>
               </div>
 
@@ -189,7 +195,10 @@
                   <p class="order-status" :data-status="order.status">状态：{{ order.status }}</p>
                   <p class="order-time">下单时间：{{ order.created_at }}</p>
                   <p class="order-table">桌号：{{ order.table_id }}</p>
-                  <p class="order-total">金额：¥{{ order.total_price }}</p>
+                  <p class="order-total">
+                    金额：¥{{ order.real_price }}
+                    <span v-if="Number(order.discount) > 0" class="order-discount">（¥-{{ order.discount }}）</span>
+                  </p>
                 </div>
               </div>
 
@@ -302,7 +311,9 @@
           }));
           return {
             ...order,
-            items
+            items,
+            real_price: Number(order.real_price).toFixed(2),
+            discount: Number(order.discount || 0).toFixed(2)
           };
         });
         orders.value = processed;
@@ -323,7 +334,7 @@
           case '今日订单':
             return orderDate === today
           case '待处理':
-            return ['待餐中', '申请中'].includes(order.status)
+            return ['待餐中', '申请中', '待支付'].includes(order.status)
           case '历史订单':
             return orderDate !== today
           default:

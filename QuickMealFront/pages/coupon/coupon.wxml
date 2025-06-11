@@ -12,27 +12,33 @@
     </text>
   </view>
 
-  <scroll-view scroll-y class="content-wrapper">
+  <scroll-view 
+  scroll-y 
+  class="content-wrapper"
+  refresher-enabled="true"
+    refresher-triggered="{{isRefreshing}}"
+    bindrefresherrefresh="onRefresh"
+    bindrefresherpulling="onPulling"
+    bindrefresherabort="onAbort"
+    bindrefresherrestore="onRestore"
+    enhanced show-scrollbar="{{false}}">
     <view class="container">
-      <view wx:for="{{filteredCoupons}}" wx:key="id" class="coupon-box {{item.expired ? 'expired' : ''}}">
+      <view wx:for="{{filteredCoupons}}" wx:key="user_coupon_id" class="coupon-box {{item.expired ? 'expired' : ''}}">
         <view class="left-part">
-          <text class="amount">￥{{item.value}}</text>
-          <text class="condition">{{item.limit}}</text>
+          <text class="amount">￥{{item.amount}}</text>
+          <text class="condition" wx:if="{{item.min_amount == 0}}">无门槛</text>
+          <text class="condition" wx:else>满{{item.min_amount}}元可用</text>
         </view>
         <view class="right-part">
           <view class="title-line">
-            <text class="coupon-title">{{item.title}}</text>
+            <text class="coupon-title">{{item.name}}</text>
             <text class="tag" wx:if="{{item.expired}}">已过期</text>
+            <text class="tag active" wx:if="{{item.status === 'used'}}">已使用</text>
           </view>
           <view class="desc">{{item.description}}</view>
-          <view class="expiry">有效期：{{item.expiry}}</view>
-          <view class="btns">
-            <button class="btn receive" bindtap="claimCoupon" data-id="{{item.id}}">领取</button>
-            <button class="btn use {{item.expired ? 'disabled' : ''}}"
-                    bindtap="useCoupon"
-                    data-id="{{item.id}}"
-                    disabled="{{item.expired}}">使用</button>
-          </view>
+          <view class="expiry">有效期：{{item.valid_from}}</view>
+          <view class="expiry">至 {{item.valid_to}}</view>
+          <view class="weekdays" wx:if="{{item.weekdays}}">适用星期：{{item.weekdaysText}}</view>
         </view>
       </view>
     </view>
