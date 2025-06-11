@@ -155,19 +155,22 @@
 }
 
 .wechat-button {
-  background: transparent;
-  border: none;
-  padding: 0;
-  margin: 0;
-  width: auto;
-  height: auto;
-  line-height: normal;
-  display: inline-block;
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 auto !important;
+  width: 80rpx;
+  height: 80rpx;
+  line-height: 1 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 0; /* ✅ 避免字体影响行高 */
 }
 
-.wechat-button::after {
-  border: none; /* 去除按钮点击态 */
-}
+
+
 
 .wechat-icon {
   width: 80rpx; /* 放大图标宽度 */
