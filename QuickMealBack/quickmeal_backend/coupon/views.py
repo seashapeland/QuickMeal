@@ -17,7 +17,7 @@ class CreateCouponView(APIView):
             return Response({'detail': '未提供Token'}, status=status.HTTP_401_UNAUTHORIZED)
 
         payload = decode_token(token[7:])
-        if not payload or payload.get('role') != 'super_admin':
+        if not payload or payload.get('role') not in ['admin', 'super_admin']:
             return Response({'detail': '无权限操作'}, status=status.HTTP_403_FORBIDDEN)
 
         # 2. 获取请求数据
@@ -79,7 +79,7 @@ class CouponListView(APIView):
             return Response({'detail': '未提供Token'}, status=status.HTTP_401_UNAUTHORIZED)
 
         payload = decode_token(token[7:])
-        if not payload or payload.get('role') != 'super_admin':
+        if not payload or payload.get('role') not in ['admin', 'super_admin']:
             return Response({'detail': '无权限操作'}, status=status.HTTP_403_FORBIDDEN)
 
         # 获取所有优惠券
@@ -104,14 +104,13 @@ class CouponListView(APIView):
     
 class DeleteCouponView(APIView):
     def delete(self, request, coupon_id):
-        # ✅ Token 校验
         # Token 校验
         token = request.META.get('HTTP_AUTHORIZATION', '')
         if not token.startswith('Bearer '):
             return Response({'detail': '未提供Token'}, status=status.HTTP_401_UNAUTHORIZED)
 
         payload = decode_token(token[7:])
-        if not payload or payload.get('role') != 'super_admin':
+        if not payload or payload.get('role') not in ['admin', 'super_admin']:
             return Response({'detail': '无权限操作'}, status=status.HTTP_403_FORBIDDEN)
 
         try:
@@ -129,13 +128,13 @@ class DeleteCouponView(APIView):
     
 class AssignCouponView(APIView):
     def post(self, request):
-        # ✅ Token 权限校验
+        # Token 校验
         token = request.META.get('HTTP_AUTHORIZATION', '')
         if not token.startswith('Bearer '):
             return Response({'detail': '未提供Token'}, status=status.HTTP_401_UNAUTHORIZED)
 
         payload = decode_token(token[7:])
-        if not payload or payload.get('role') != 'super_admin':
+        if not payload or payload.get('role') not in ['admin', 'super_admin']:
             return Response({'detail': '无权限操作'}, status=status.HTTP_403_FORBIDDEN)
 
         # ✅ 获取参数

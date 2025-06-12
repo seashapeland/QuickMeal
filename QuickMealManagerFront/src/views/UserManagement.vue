@@ -417,7 +417,7 @@
         if (res?.data) {
           userList.value = res.data.map(item => ({
             id: item.id,
-            username: item.nickname || item.username || '未知用户',
+            username: item.username || item.nickname || '未知用户',
             avatar: item.avatar,
             createdAt: item.created_at
           }))

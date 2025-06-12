@@ -34,19 +34,9 @@
       <text class="register-text" bindtap="onRegister">立即注册</text>
     </view>
 
-    <view class="divider">
-      <text class="divider-text">其他登录方式</text>
-    </view>
+    
 
-    <view class="other-login">
-      <button 
-        class="wechat-button" 
-        lang="zh_CN"
-        bindtap="onWechatLogin"
-      >
-        <image src="/icons/weixin.png" class="wechat-icon" />
-      </button>
-    </view>
+    
   </view>
 
   

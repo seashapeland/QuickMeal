@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-const BASE_URL = 'http://101.201.39.232:8000';// http://localhost:8000  http://101.201.39.232:8000
+const BASE_URL = 'http://localhost:8000';// http://localhost:8000  http://101.201.39.232:8000
 const instance = axios.create({
-  baseURL: 'http://101.201.39.232:8000', // 改为你的后端地址
+  baseURL: 'http://localhost:8000', // 改为你的后端地址
   timeout: 5000,
 })
 

@@ -23,6 +23,7 @@ if __name__ == "__main__":
     # cd D:\Desktop\QuickMeal\QuickMealBack\quickmeal_backend
     # conda activate meal
     # python manage.py runserver 0.0.0.0:8000
+    # .venv\Scripts\Activate.ps1
 
     # python manage.py makemigrations coupon
     # python manage.py migrate

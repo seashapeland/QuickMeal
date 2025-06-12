@@ -50,10 +50,10 @@
                 </view>
                 <view class="dish-actions {{ item.count > 0 ? 'with-count' : 'without-count' }}">
                   <view wx:if="{{ item.count > 0 }}" class="action-group">
-                    <button class="minus-btn" catchtap="handleMinus" data-index="{{index}}" >-</button>
+                    <view class="minus-btn" catchtap="handleMinus" data-index="{{index}}" >-</view>
                     <text class="dish-count">{{ item.count }}</text>
                   </view>
-                  <button class="plus-btn" catchtap="handlePlus" data-index="{{index}}">+</button>
+                  <view class="plus-btn"  catchtap="handlePlus" data-index="{{index}}">+</view>
                 </view>
               </view>
             </view>
@@ -99,10 +99,10 @@
               </view>
               <view class="dish-actions {{ item.count > 0 ? 'with-count' : 'without-count' }}">
                 <view wx:if="{{ item.count > 0 }}" class="action-group">
-                  <button class="minus-btn" bindtap="handleCartMinus" data-index="{{index}}">-</button>
+                  <view class="minus-btn" bindtap="handleCartMinus" data-index="{{index}}">-</view>
                   <text class="dish-count">{{ item.count }}</text>
                 </view>
-                <button class="plus-btn" bindtap="handleCartPlus" data-index="{{index}}">+</button>
+                <view class="plus-btn" bindtap="handleCartPlus" data-index="{{index}}">+</view>
               </view>
             </view>
           </view>

@@ -1,4 +1,4 @@
-const BASE_URL = 'http://101.201.39.232:8000'; // http://localhost:8000
+const BASE_URL = 'http://localhost:8000'; // http://localhost:8000
 // http://101.201.39.232:8000
 
 module.exports = {
