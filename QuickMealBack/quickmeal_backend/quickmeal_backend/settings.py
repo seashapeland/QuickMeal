@@ -97,7 +97,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',    # 不变，使用MySQL
         'NAME': 'quickmeal_db',                  # 你的数据库名，刚才Navicat新建的就是这个！
         'USER': 'root',                          # Navicat连接用的用户名（一般是 root）
-        'PASSWORD': '657595',                   # 这里填你设置的root账户的密码
+        'PASSWORD': '',                   # 这里填你设置的root账户的密码
         'HOST': 'localhost',                     # 本地连接，填 localhost
         'PORT': '3306',                          # 默认3306端口
     }
